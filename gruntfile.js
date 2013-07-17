@@ -1,34 +1,51 @@
-{
-  "name": "mdwiki",
-  "description": "A simple markdown driven wiki",
-  "version": "0.0.1",
-  "author": "Jan Baer",
-  "contributors ": [],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/janbaer/mdwikie"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
+module.exports = function (grunt) {
+  // See http://www.jshint.com/docs/#strict
+  "use strict";
+
+  // Project configuration.
+  grunt.initConfig({
+    // Metadata.
+    pkg: grunt.file.readJSON('package.json'),
+
+    // Task configuration.
+    jshint: {
+      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json'],
+      options: {
+        jshintrc: '.jshintrc'
+      }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['default']
+    },
+    'mocha-hack': {
+      options: {
+        globals: ['should'],
+        timeout: 3000,
+        ignoreLeaks: false,
+        ui: 'bdd',
+        reporter: 'spec'
+      },
+
+      all: { src: ['test/**/*.js']}
     }
-  ],
-  "main": "",
-  "engines": {
-    "node": ">0.8"
-  },
-  "dependencies": {
-    "express": "~3.1",
-    "underscore": "~1.4.4",
-    "underscore.string": "~2.3.0",
-    "markdown": "0.4.x"
-  },
-  "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-contrib-jshint": "~0.2",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-contrib-qunit": "0.2.1",
-    "grunt-exec": "~0.4.0"
-  }
-}
+  });
+
+  // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mocha-hack');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-exec');
+
+
+  // Default task.
+  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
+
+  // Dev task
+  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit']);
+
+  // Travis-CI task
+  grunt.registerTask('travis', ['default']);
+};

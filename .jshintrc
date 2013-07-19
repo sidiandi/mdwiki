@@ -24,6 +24,7 @@
     "before": true,
     "after": true,
     "beforeEach": true,
-    "afterEach": true
+    "afterEach": true,
+    "should": true
   }
 }

@@ -29,6 +29,8 @@
     "grunt-contrib-jshint": "~0.2",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-contrib-qunit": "0.2.1",
-    "grunt-mocha-hack": "~0.1.0"
+    "grunt-mocha-hack": "~0.1.0",
+    "supertest": "~0.7.1",
+    "should": "~1.2.2"
   }
 }

@@ -18,7 +18,7 @@ describe('Route tests', function () {
       .expect(200, done);
   });
 
-  it('should answer with an 404 message when the requestet md file not exists', function () {
+  it('should answer with an 404 message when the requestet md file not exists', function (done) {
     request(app)
       .get('/notexists')
       .expect(404, done);

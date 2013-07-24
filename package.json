@@ -22,7 +22,9 @@
     "express": "~3.1",
     "underscore": "~1.4.4",
     "underscore.string": "~2.3.0",
-    "markdown": "0.4.x"
+    "markdown": "0.4.x",
+    "q": "~0.9.6",
+    "marked": "~0.2.9"
   },
   "devDependencies": {
     "grunt": "~0.4",

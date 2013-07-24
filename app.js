@@ -1,9 +1,10 @@
 'use strict';
 
 var express = require("express"),
-    path = require('path');
+    api = require('./api');
 
-var routes = require("./routes");
+var routes = require("./routes"),
+    path = require('path');
 
 
 var app = express();
@@ -20,9 +21,25 @@ app.configure(function () {
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.get('/', routes.index);
+// development only
+if (app.get('env') === 'development') {
+  app.use(express.errorHandler());
+}
+
+// production only
+if (app.get('env') === 'production') {
+  // TODO
+};
+
+//app.get('/', routes.index);
+//app.get('/partials/:name', routes.partials);
 //app.get('/users', user.list);
 
+// JSON API
+app.get('/api', api.index);
+
+// redirect all others to the index (HTML5 history)
+//app.get('*', routes.index);
 
 var port = app.get('port');
 

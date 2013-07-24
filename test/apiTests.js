@@ -1,6 +1,6 @@
 var request = require('supertest');
 
-describe.only('API tests', function () {
+describe('API tests', function () {
   'use strict';
 
   var server;

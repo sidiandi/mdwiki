@@ -7,7 +7,14 @@ var fs = require('fs'),
 
 
 exports.index = function (req, res) {
-  var fileName = path.join(__dirname, '../content', 'index.md');
+  console.log('show content of: ' + req.params.page);
+  var fileName = 'index.md';
+
+  if (req.params.page) {
+    fileName = req.params.page + '.md';
+  }
+
+  fileName = path.join(__dirname, '../content', fileName);
 
   var existsFile = q.nfbind(fs.existsFile);
   var readFile = q.nfbind(fs.readFile);

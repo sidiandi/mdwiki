@@ -36,7 +36,8 @@ if (app.get('env') === 'production') {
 //app.get('/users', user.list);
 
 // JSON API
-app.get('/api', api.index);
+//app.get('/api/', api.index);
+app.get('/api/:page?', api.index);
 
 // redirect all others to the index (HTML5 history)
 //app.get('*', routes.index);

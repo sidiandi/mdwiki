@@ -3,21 +3,20 @@
 /* Controllers */
 
 angular.module('mdWiki.controllers', []).
-  controller('AppCtrl', function ($scope, $http) {
-
+  controller('ContentCtrl', function ($scope, $routeParams, $http) {
     $http({
       method: 'GET',
-      url: '/api/name'
+      url: '/api/' + $routeParams.page;
     }).
     success(function (data, status, headers, config) {
-      $scope.name = data.name;
+      $scope.content = data;
     }).
     error(function (data, status, headers, config) {
-      $scope.name = 'Error!'
+      $scope.content = 'Content not found!';
     });
 
   }).
-  controller('MyCtrl1', function ($scope) {
+  controller('SearchCtrl', function ($scope) {
     // write Ctrl here
 
   }).

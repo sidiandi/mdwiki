@@ -10,16 +10,16 @@ angular.module('mdWiki', [
 ]).
 config(function ($routeProvider, $locationProvider) {
   $routeProvider.
-    when('/view1', {
-      templateUrl: 'partials/partial1',
-      controller: 'MyCtrl1'
+    when('/:page', {
+      templateUrl: '/content.html',
+      controller: 'ContentCtrl'
     }).
     when('/view2', {
       templateUrl: 'partials/partial2',
       controller: 'MyCtrl2'
     }).
     otherwise({
-      redirectTo: '/view1'
+      redirectTo: '/index'
     });
 
   $locationProvider.html5Mode(true);

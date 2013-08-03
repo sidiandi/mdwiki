@@ -9,7 +9,18 @@ module.exports = function (grunt) {
 
     // Task configuration.
     jshint: {
-      files: ['**/*.js', '**/*.json', '.jshintrc', '!node_modules/**/*.js', '!node_modules/**/*.json', '!public/**/*.js', '!public/**/*.json', '!frontendtests/lib/**/*.js', '!frontendtests/lib/**/*.json'],
+      files: [
+        '.jshintrc',
+        'gruntfile.js',
+        'public/js/**/*.js',
+        'test/**/*.js',
+        'test_client/**/*.js',
+        '!node_modules/**/*.js',
+        '!node_modules/**/*.json',
+        '!public/**/*.json',
+        '!public/js/lib/**/*.js',
+        '!test_client/lib/**/*.js'
+      ],
       options: {
         jshintrc: '.jshintrc'
       }
@@ -36,8 +47,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-hack');
   grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-exec');
+//  grunt.loadNpmTasks('grunt-contrib-clean');
+//  grunt.loadNpmTasks('grunt-exec');
 
 
   // Default task.

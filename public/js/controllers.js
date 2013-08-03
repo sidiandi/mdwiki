@@ -1,7 +1,5 @@
 'use strict';
 
-/* Controllers */
-
 var controllers = angular.module('mdwiki.controllers', []);
 
 controllers.controller('ContentCtrl', function ($scope, $routeParams, $http) {
@@ -20,10 +18,10 @@ controllers.controller('ContentCtrl', function ($scope, $routeParams, $http) {
     $scope.content = 'Content not found!';
   });
 
-  }).controller('SearchCtrl', function ($scope) {
+}).controller('SearchCtrl', function ($scope) {
     // write Ctrl here
 
-  }).controller('MyCtrl2', function ($scope) {
+}).controller('MyCtrl2', function ($scope) {
     // write Ctrl here
 
-  });
+});

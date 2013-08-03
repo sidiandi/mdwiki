@@ -15,7 +15,9 @@ describe('API tests', function () {
             .expect('Content-Type', "text/html")
             .expect(200)
             .end(function (err, res) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               done();
             });
     });
@@ -26,7 +28,9 @@ describe('API tests', function () {
             .expect('Content-Type', "text/html")
             .expect(200)
             .end(function (err, res) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               done();
             });
     });
@@ -38,19 +42,22 @@ describe('API tests', function () {
             .expect('Content-Type', "text/plain")
             .expect(404)
             .end(function (err, res) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               done();
             });
     });
   });
 
-
   describe('Pages query tests', function () {
-    it('return a list of all existing pages with their titles except the index page', function () {
+    it('return a list of all existing pages with their titles except the index page', function (done) {
       server.get('/api/pages')
             .expect('Content-Type', "application/json")
             .end(function (err, res) {
-              if (err) return done(err);
+              if (err) {
+                return done(err);
+              }
               done();
             });
     });

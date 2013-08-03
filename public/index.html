@@ -1,22 +1,50 @@
-<!DOCTYPE html ng-app="mdWiki">
+<!DOCTYPE html >
 <html>
 <head>
   <title>MD Wiki</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="A simple wiki that is using markdown">
+  <meta name="author" content="Jan Baer">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
+<body ng-app="mdwiki">
 
-  <h1>My first webapp</h1>
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">Markdown Wiki</a>
+    <div class="nav-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Pages <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="active"><a href="#page1">Page1</a></li>
+            <li class="active"><a href="#page2">Page2</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
 
-  <div ng-view ng-controller="ContentCtrl">{{ content }}</div>
+<div class="container">
+  <div class="ng-view" />
+</div>
 
 
   <script src="js/lib/jquery.js"></script>
   <script src="js/lib/underscore.js"></script>
   <script src="js/lib/bootstrap.js"></script>
   <script src="js/lib/angular/angular.js"></script>
+  <script src="js/lib/angular/angular-sanitize.js"></script>
 
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>

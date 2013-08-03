@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
   // See http://www.jshint.com/docs/#strict
-  "use strict";
+  'use strict';
 
   // Project configuration.
   grunt.initConfig({
@@ -26,8 +26,18 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['default']
+      jsfiles: {
+        files: ['<%= jshint.files %>'],
+        tasks: ['default'],
+        options: {
+          livereload: true
+        },
+      },
+      htmlfiles: {
+        options: {
+          livereload: true
+        }
+      }
     },
     'mocha-hack': {
       options: {

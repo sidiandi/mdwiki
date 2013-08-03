@@ -1,10 +1,9 @@
 'use strict';
 
 var fs = require('fs'),
-    path = require('path'),
-    q = require('q'),
-    marked = require('marked');
-
+  path = require('path'),
+  q = require('q'),
+  marked = require('marked');
 
 exports.index = function (req, res) {
   console.log('show content of: ' + req.params.page);
@@ -30,17 +29,18 @@ exports.index = function (req, res) {
         res.status(200);
         res.end(html);
       })
-      .catch(function (error) {
-        console.error(error);
-        res.setHeader('Content-Type', 'text/plain');
-        res.send(500, 'server error: ' + error);
-        res.end();
-      })
+      .
+    catch (function (error) {
+      console.error(error);
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(500, 'server error: ' + error);
+      res.end();
+    })
       .done();
   } else {
-      res.setHeader('Content-Type', 'text/plain');
-      res.send(404, 'page not found');
-      res.end();
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(404, 'page not found');
+    res.end();
   }
 
 

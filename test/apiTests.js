@@ -1,4 +1,5 @@
-var request = require('supertest');
+var request = require('supertest'),
+    should = require('should');
 
 describe('API tests', function () {
   'use strict';
@@ -50,14 +51,21 @@ describe('API tests', function () {
     });
   });
 
-  describe('Pages query tests', function () {
-    it('return a list of all existing pages with their titles except the index page', function (done) {
+  describe('When user wants to list all existing pages', function () {
+    it('should return a list of the pages with their titles except the index page', function (done) {
       server.get('/api/pages')
             .expect('Content-Type', "application/json")
             .end(function (err, res) {
               if (err) {
                 return done(err);
               }
+
+              var pages = res.body;
+
+              should.exists(pages);
+
+              pages.length.should.equal(2);
+
               done();
             });
     });

@@ -17,6 +17,8 @@ public/test/
 version.jade
 .sass-cache
 
+.tern-port
+
 test/tempbeans.json
 docs/generated
 

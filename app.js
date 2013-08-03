@@ -1,11 +1,9 @@
 'use strict';
 
 var express = require("express"),
-    api = require('./api');
-
-var routes = require("./routes"),
-    path = require('path');
-
+    path = require('path'),
+    api = require('./api'),
+    apiPages = require('./api/pages');
 
 var app = express();
 
@@ -29,7 +27,7 @@ if (app.get('env') === 'development') {
 // production only
 if (app.get('env') === 'production') {
   // TODO
-};
+}
 
 //app.get('/', routes.index);
 //app.get('/partials/:name', routes.partials);
@@ -37,6 +35,7 @@ if (app.get('env') === 'production') {
 
 // JSON API
 //app.get('/api/', api.index);
+app.get('/api/pages', apiPages.pages);
 app.get('/api/:page?', api.index);
 
 // redirect all others to the index (HTML5 history)

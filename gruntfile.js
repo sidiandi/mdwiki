@@ -34,9 +34,11 @@ module.exports = function (grunt) {
         },
       },
       htmlfiles: {
+        files: ['public/**/*.html'],
         options: {
           livereload: true
-        }
+        },
+        tasks: [],
       }
     },
     'mocha-hack': {
@@ -56,16 +58,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-hack');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
 //  grunt.loadNpmTasks('grunt-contrib-clean');
 //  grunt.loadNpmTasks('grunt-exec');
 
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
+  grunt.registerTask('default', ['jshint', 'mocha-hack', 'watch']);
 
   // Dev task
-  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'qunit']);
+  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'watch']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

@@ -1,5 +1,8 @@
 var request = require('supertest'),
-    should = require('should');
+    should = require('should'),
+    sinon = require('sinon'),
+    fs = require('fs'),
+    when = require('when');
 
 describe('API tests', function () {
   'use strict';
@@ -52,7 +55,21 @@ describe('API tests', function () {
   });
 
   describe('When user wants to list all existing pages', function () {
+    var sandbox;
+
+    beforeEach(function () {
+      sandbox = sinon.sandbox.create();
+
+      sandbox.stub(fs, "readdir")
+             .callsArgWith(1, ['content/index.md', 'content/page1.md', 'content/page2.md', 'content/page3.md']);
+    });
+
+    afterEach(function () {
+      sandbox.restore();
+    });
+
     it('should return a list of the pages with their titles except the index page', function (done) {
+
       server.get('/api/pages')
             .expect('Content-Type', "application/json")
             .end(function (err, res) {

@@ -3,7 +3,7 @@
 var express = require("express"),
     path = require('path'),
     api = require('./api'),
-    apiPages = require('./api/pages');
+    pages = require('./api/pages').pages;
 
 var app = express();
 
@@ -35,7 +35,7 @@ if (app.get('env') === 'production') {
 
 // JSON API
 //app.get('/api/', api.index);
-app.get('/api/pages', apiPages.pages);
+app.get('/api/pages', pages);
 app.get('/api/:page?', api.index);
 
 // redirect all others to the index (HTML5 history)

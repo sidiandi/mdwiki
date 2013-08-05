@@ -2,8 +2,7 @@
 
 var fs = require('fs'),
   path = require('path'),
-  q = require('q'),
-  _ = require('underscore');
+  q = require('q');
 
 exports.pages = function (req, res) {
   var directoryName = path.join(__dirname, '../content');
@@ -14,7 +13,7 @@ exports.pages = function (req, res) {
     .then(function (files) {
       var pages = [];
 
-      _.each(files, function (file) {
+      files.forEach(function (file) {
         if (path.extname(file) === '.md' && file !== 'index.md') {
           var fileWithoutExt = path.basename(file, '.md');
 

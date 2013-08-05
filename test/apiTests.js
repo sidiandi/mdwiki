@@ -1,16 +1,20 @@
 var request = require('supertest'),
+    express = require('express'),
     should = require('should'),
     sinon = require('sinon'),
     fs = require('fs'),
     when = require('when');
+
+var pagesRoute = require('../api/pages').pages;
 
 describe('API tests', function () {
   'use strict';
 
   var server;
 
-  beforeEach(function () {
+  beforeEach(function (done) {
     server = request('http://localhost:3000');
+    done();
   });
 
   describe('When no parameter is given', function () {
@@ -56,35 +60,41 @@ describe('API tests', function () {
 
   describe('When user wants to list all existing pages', function () {
     var sandbox;
+    var app = express();
 
-    beforeEach(function () {
+    beforeEach(function (done) {
       sandbox = sinon.sandbox.create();
 
-      sandbox.stub(fs, "readdir")
-             .callsArgWith(1, ['content/index.md', 'content/page1.md', 'content/page2.md', 'content/page3.md']);
+      app.get('/api/pages', pagesRoute);
+      done();
     });
 
-    afterEach(function () {
+    afterEach(function (done) {
       sandbox.restore();
+      done();
     });
 
     it('should return a list of the pages with their titles except the index page', function (done) {
+      sandbox.stub(fs, 'readdir', function (path, callback) {
+        callback(null, ['index.md', 'page1.md', 'page2.md']);
+      });
 
-      server.get('/api/pages')
-            .expect('Content-Type', "application/json")
-            .end(function (err, res) {
-              if (err) {
-                return done(err);
-              }
+      request(app).get('/api/pages')
+        .expect('Content-Type', "application/json")
+        .expect(200)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
 
-              var pages = res.body;
+          var pages = res.body;
 
-              should.exists(pages);
+          should.exists(pages);
 
-              pages.length.should.equal(2);
+          pages.length.should.equal(2);
 
-              done();
-            });
+          done();
+        });
     });
   });
 });

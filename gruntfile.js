@@ -1,13 +1,9 @@
 module.exports = function (grunt) {
-  // See http://www.jshint.com/docs/#strict
   'use strict';
 
-  // Project configuration.
   grunt.initConfig({
-    // Metadata.
     pkg: grunt.file.readJSON('package.json'),
 
-    // Task configuration.
     jshint: {
       files: [
         '.jshintrc',
@@ -25,6 +21,19 @@ module.exports = function (grunt) {
         jshintrc: '.jshintrc'
       }
     },
+
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          require: 'should',
+          timeout: 3000,
+          ui: 'bdd'
+        },
+        src: ['test/**/*.js']
+      }
+    },
+
     watch: {
       jsfiles: {
         files: ['<%= jshint.files %>'],
@@ -40,33 +49,19 @@ module.exports = function (grunt) {
         },
         tasks: [],
       }
-    },
-    'mocha-hack': {
-      options: {
-        globals: ['should'],
-        timeout: 3000,
-        ignoreLeaks: false,
-        ui: 'bdd',
-        reporter: 'spec'
-      },
-
-      all: { src: ['test/**/*.js']}
     }
+
   });
 
-  // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-mocha-hack');
-//  grunt.loadNpmTasks('grunt-contrib-clean');
-//  grunt.loadNpmTasks('grunt-exec');
-
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mocha-hack', 'watch']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'watch']);
 
   // Dev task
-  grunt.registerTask('dev', ['jshint', 'mocha-hack', 'watch']);
+  grunt.registerTask('dev', ['jshint', 'mochaTest', 'watch']);
 
   // Travis-CI task
   grunt.registerTask('travis', ['default']);

@@ -2,8 +2,7 @@ var request = require('supertest'),
     express = require('express'),
     should = require('should'),
     sinon = require('sinon'),
-    fs = require('fs'),
-    when = require('when');
+    fs = require('fs');
 
 var pagesRoute = require('../api/pages').pages;
 

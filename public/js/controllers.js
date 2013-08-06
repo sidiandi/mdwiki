@@ -18,10 +18,18 @@ controllers.controller('ContentCtrl', function ($scope, $routeParams, $http) {
     $scope.content = 'Content not found!';
   });
 
-}).controller('SearchCtrl', function ($scope) {
-    // write Ctrl here
+});
 
-}).controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
+controllers.controller('PagesCtrl', function ($scope, $http) {
+  $scope.pages = [];
+
+  $http({
+    method: 'GET',
+    url: '/api/pages'
+  }).success(function (data, status, headers, config) {
+    $scope.pages = data;
+  }).error(function (data, status, headers, config) {
+    $scope.pages = [];
+  });
 
 });

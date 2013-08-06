@@ -45,7 +45,6 @@
     "karma-phantomjs-launcher": "0.0.2",
     "karma": "~0.9.7",
     "karma-ng-scenario": "0.0.2",
-    "sinon": "~1.7.3",
-    "when": "~2.2.1"
+    "sinon": "~1.7.3"
   }
 }

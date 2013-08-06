@@ -34,7 +34,6 @@ if (app.get('env') === 'production') {
 //app.get('/users', user.list);
 
 // JSON API
-//app.get('/api/', api.index);
 app.get('/api/pages', pages);
 app.get('/api/:page?', api.index);
 

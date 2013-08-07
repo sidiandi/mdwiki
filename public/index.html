@@ -10,7 +10,7 @@
 </head>
 <body ng-app="mdwiki">
 
-<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="PagesCtrl">
+<div class="navbar navbar-inverse navbar-fixed-top" >
   <div class="container">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
       <span class="icon-bar"></span>
@@ -18,19 +18,22 @@
       <span class="icon-bar"></span>
     </button>
     <a class="navbar-brand" href="#">Markdown Wiki</a>
-    <div class="nav-collapse collapse">
+    <div class="collapse nav-collapse" ng-controller="PagesCtrl">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#">Home</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             Pages <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu">
-            <li class="active" ng-repeat="page in pages | orderBy:name">
-              <a ng-href="#{{page.name}}" href="#">{{ page.title }}</a></li>
+          <ul class="dropdown-menu pull-left">
+            <li ng-repeat="page in pages | orderBy:name">
+              <a ng-href="#/{{page.name}}">{{ page.title }}</a></li>
           </ul>
         </li>
       </ul>
+      <form class="navbar-form pull-left" action="">
+        <input type="text" class="form-control" placeholder="Search">
+      </form>
     </div>
   </div>
 </div>

@@ -6,3 +6,8 @@ body {
 .ng-view {
 
 }
+
+.dropdown-menu {
+  max-height: 800px;
+  overflow:scroll;
+}

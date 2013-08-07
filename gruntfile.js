@@ -35,18 +35,17 @@ module.exports = function (grunt) {
     },
 
     watch: {
+      options: {
+        livereload: true,
+      },
+
       jsfiles: {
         files: ['<%= jshint.files %>'],
-        tasks: ['default'],
-        options: {
-          livereload: true
-        },
+        tasks: ['default']
       },
-      htmlfiles: {
+
+      livereload: {
         files: ['public/**/*.html'],
-        options: {
-          livereload: true
-        },
         tasks: [],
       }
     }

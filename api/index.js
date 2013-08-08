@@ -3,45 +3,35 @@
 var fs = require('fs'),
   path = require('path'),
   q = require('q'),
-  marked = require('marked');
+  marked = require('marked'),
+  storage = require('../lib/pageStorageFS');
 
 exports.index = function (req, res) {
   console.log('show content of: ' + req.params.page);
-  var fileName = 'index.md';
+  var pageName = 'index';
 
   if (req.params.page) {
-    fileName = req.params.page + '.md';
+    pageName = req.params.page;
   }
 
-  fileName = path.join(__dirname, '../content', fileName);
-
-  var existsFile = q.nfbind(fs.existsFile);
-  var readFile = q.nfbind(fs.readFile);
-
-  if (fs.existsSync(fileName)) {
-    readFile(fileName, 'UTF8')
-      .then(marked)
-      .then(function (html) {
-        //var html = marked(markdown);
-
-        res.setHeader('Content-Type', 'text/html');
-        res.setHeader('Content-Length', html.length);
-        res.status(200);
-        res.end(html);
-      })
-      .
-    catch (function (error) {
-      console.error(error);
-      res.setHeader('Content-Type', 'text/plain');
-      res.send(500, 'server error: ' + error);
-      res.end();
+  storage.getPageContent(pageName)
+    .then(function (html) {
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Length', html.length);
+      res.status(200);
+      res.end(html);
     })
-      .done();
-  } else {
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(404, 'page not found');
-    res.end();
-  }
-
-
+    .catch(function (error) {
+      console.error(error);
+      if (error.message === 'page not found') {
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(404, 'page not found');
+        res.end();
+      } else {
+        res.setHeader('Content-Type', 'text/plain');
+        res.send(500, 'server error: ' + error);
+        res.end();
+      }
+    })
+    .done();
 };

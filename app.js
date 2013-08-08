@@ -2,7 +2,7 @@
 
 var express = require("express"),
     path = require('path'),
-    api = require('./api'),
+    api = require('./api/index'),
     pages = require('./api/pages').pages;
 
 var app = express();

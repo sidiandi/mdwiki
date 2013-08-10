@@ -4,10 +4,10 @@ var fs = require('fs'),
   path = require('path'),
   q = require('q'),
   marked = require('marked'),
-  storage = require('../lib/pageStorageFS');
+  storage = require('../lib/pageStorageFS'),
+  errors = require('../lib/errors');
 
 exports.index = function (req, res) {
-  console.log('show content of: ' + req.params.page);
   var pageName = 'index';
 
   if (req.params.page) {
@@ -22,8 +22,7 @@ exports.index = function (req, res) {
       res.end(html);
     })
     .catch(function (error) {
-      console.error(error);
-      if (error.message === 'page not found') {
+      if (error instanceof errors.FileNotFoundError) {
         res.setHeader('Content-Type', 'text/plain');
         res.send(404, 'page not found');
         res.end();

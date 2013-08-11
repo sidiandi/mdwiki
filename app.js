@@ -4,7 +4,7 @@ var express = require("express"),
     path = require('path'),
     logger = require('./lib/logger'),
     api = require('./api/index'),
-    pages = require('./api/pages').pages;
+    pages = require('./api/pages');
 
 var app = express();
 
@@ -29,7 +29,7 @@ if (app.get('env') === 'production') {
 
 // JSON API
 app.get('/api/pages', pages);
-app.get('/api/:page?', api.index);
+app.get('/api/:page?', api);
 
 // redirect all others to the index (HTML5 history)
 //app.get('*', routes.index);

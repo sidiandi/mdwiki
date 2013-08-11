@@ -95,5 +95,35 @@ describe('PageStorageTests', function () {
       });
   });
 
+  describe('getPages tests', function () {
+
+    describe('When Pages exists', function () {
+      var sandbox;
+
+      beforeEach(function () {
+          sandbox = sinon.sandbox.create();
+          sandbox.stub(fs, 'readdir', function (fileName, callback) {
+            callback(null, ['index.md', 'page1.md', 'page2.md']);
+          });
+        });
+
+      it('should return all pages', function (done) {
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+
+            pages.should.have.length(3);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+  });
+
 
 });

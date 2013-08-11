@@ -7,7 +7,7 @@ var fs = require('fs'),
   storage = require('../lib/pageStorageFS'),
   errors = require('../lib/errors');
 
-exports.index = function (req, res) {
+module.exports = function (req, res) {
   var pageName = 'index';
 
   if (req.params.page) {

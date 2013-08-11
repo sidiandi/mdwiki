@@ -4,6 +4,8 @@
 *.sublime*
 *.iml
 /node_modules/
+/norchindex/
+test/norchindex/
 *~
 .DS_Store
 lib/persistence/memberstore/

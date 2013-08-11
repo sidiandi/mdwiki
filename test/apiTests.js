@@ -2,9 +2,11 @@ var request = require('supertest'),
     express = require('express'),
     should = require('should'),
     sinon = require('sinon'),
-    fs = require('fs');
+    fs = require('fs'),
+    Q = require('q'),
+    storage = require('../lib/pageStorageFS');
 
-var pagesRoute = require('../api/pages').pages;
+var pagesRoute = require('../api/pages');
 
 describe('API tests', function () {
   'use strict';
@@ -74,8 +76,10 @@ describe('API tests', function () {
     });
 
     it('should return a list of the pages with their titles except the index page', function (done) {
-      sandbox.stub(fs, 'readdir', function (path, callback) {
-        callback(null, ['index.md', 'page1.md', 'page2.md']);
+      sandbox.stub(storage, 'getPages', function () {
+        var d = Q.defer();
+        d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'} ]);
+        return d.promise;
       });
 
       request(app).get('/api/pages')

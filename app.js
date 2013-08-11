@@ -2,7 +2,7 @@
 
 var express = require("express"),
     path = require('path'),
-    logger = require('./lib/logger').logger,
+    logger = require('./lib/logger'),
     api = require('./api/index'),
     pages = require('./api/pages').pages;
 
@@ -25,7 +25,6 @@ if (app.get('env') === 'development') {
 
 // production only
 if (app.get('env') === 'production') {
-  // TODO
 }
 
 // JSON API

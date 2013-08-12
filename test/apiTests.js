@@ -4,23 +4,45 @@ var request = require('supertest'),
     sinon = require('sinon'),
     fs = require('fs'),
     Q = require('q'),
-    storage = require('../lib/pageStorageFS');
+    storage = require('../lib/pageStorageFS'),
+    errors = require('../lib/errors');
 
-var pagesRoute = require('../api/pages');
+var pageRoute = require('../api/index'),
+    pagesRoute = require('../api/pages');
 
 describe('API tests', function () {
   'use strict';
 
-  var server;
+  var app;
+  var sandbox;
 
   beforeEach(function (done) {
-    server = request('http://localhost:3000');
+    app = express();
+
+    app.get('/api/pages', pagesRoute);
+    app.get('/api/:page?', pageRoute);
+
+    sandbox = sinon.sandbox.create();
+
     done();
   });
 
   describe('When no parameter is given', function () {
+    beforeEach(function (done) {
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(fs, 'readFile', function (path, callback) {
+        callback(null, '#Test');
+      });
+      done();
+    });
+
+    afterEach(function (done) {
+      sandbox.restore();
+      done();
+    });
+
     it('should return the index page', function (done) {
-      server.get('/api')
+      request(app).get('/api')
             .expect('Content-Type', "text/html")
             .expect(200)
             .end(function (err, res) {
@@ -32,8 +54,21 @@ describe('API tests', function () {
     });
   });
   describe('When parameter index is given', function () {
+    beforeEach(function (done) {
+      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(fs, 'readFile', function (path, callback) {
+        callback(null, '#Test');
+      });
+      done();
+    });
+
+    afterEach(function (done) {
+      sandbox.restore();
+      done();
+    });
+
     it('should return the index page', function (done) {
-      server.get('/api/index')
+      request(app).get('/api/index')
             .expect('Content-Type', "text/html")
             .expect(200)
             .end(function (err, res) {
@@ -47,7 +82,7 @@ describe('API tests', function () {
 
   describe('When an non existing page is given', function () {
     it('should return an 404 http code', function (done) {
-      server.get('/api/nonexistingPage')
+      request(app).get('/api/nonexistingPage')
             .expect('Content-Type', "text/plain")
             .expect(404)
             .end(function (err, res) {
@@ -60,13 +95,13 @@ describe('API tests', function () {
   });
 
   describe('When user wants to list all existing pages', function () {
-    var sandbox;
-    var app = express();
-
     beforeEach(function (done) {
-      sandbox = sinon.sandbox.create();
+      sandbox.stub(storage, 'getPages', function () {
+        var d = Q.defer();
+        d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'} ]);
+        return d.promise;
+      });
 
-      app.get('/api/pages', pagesRoute);
       done();
     });
 
@@ -76,12 +111,6 @@ describe('API tests', function () {
     });
 
     it('should return a list of the pages with their titles except the index page', function (done) {
-      sandbox.stub(storage, 'getPages', function () {
-        var d = Q.defer();
-        d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'} ]);
-        return d.promise;
-      });
-
       request(app).get('/api/pages')
         .expect('Content-Type', "application/json")
         .expect(200)

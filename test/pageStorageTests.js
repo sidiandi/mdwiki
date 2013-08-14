@@ -123,7 +123,35 @@ describe('PageStorageTests', function () {
         sandbox.restore();
       });
     });
+
+    describe('When not Pages exists', function () {
+      var sandbox;
+
+      beforeEach(function () {
+          sandbox = sinon.sandbox.create();
+          sandbox.stub(fs, 'readdir', function (fileName, callback) {
+            callback(null, undefined);
+          });
+        });
+
+      it('should return an empty array', function (done) {
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+            pages.should.have.length(0);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
   });
+
+
 
 
 });

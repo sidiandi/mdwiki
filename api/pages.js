@@ -9,7 +9,6 @@ var fs = require('fs'),
 module.exports = function (req, res) {
   storage.getPages()
     .then(function (pages) {
-
       pages = _.filter(pages, function (page) {
         return page.name !== 'index';
       });

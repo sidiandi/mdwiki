@@ -53,6 +53,7 @@ describe('API tests', function () {
             });
     });
   });
+
   describe('When parameter index is given', function () {
     beforeEach(function (done) {
       sandbox.stub(fs, 'existsSync').returns(true);

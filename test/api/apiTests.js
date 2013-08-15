@@ -33,7 +33,9 @@ describe('API tests', function () {
 
   describe('When no parameter is given', function () {
     beforeEach(function () {
-      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(fs, 'exists', function (path, callback) {
+        callback(true);
+      });
       sandbox.stub(fs, 'readFile', function (path, callback) {
         callback(null, '#Test');
       });
@@ -58,7 +60,9 @@ describe('API tests', function () {
 
   describe('When parameter index is given', function () {
     beforeEach(function () {
-      sandbox.stub(fs, 'existsSync').returns(true);
+      sandbox.stub(fs, 'exists', function (path, callback) {
+        callback(true);
+      });
       sandbox.stub(fs, 'readFile', function (path, callback) {
         callback(null, '#Test');
       });

@@ -1,5 +1,6 @@
 --reporter spec
 --require should
 --ui bdd
+--recursive
 
 

@@ -13,11 +13,14 @@ describe('PageStorageTests', function () {
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
-        sandbox.stub(fs, 'existsSync').returns(true);
+        sandbox.stub(fs, 'exists', function (path, callback) {
+          callback(true);
+        });
         sandbox.stub(fs, 'readFile', function (fileName, callback) {
           callback(null, '#Test');
         });
       });
+
       it('it should return the content as markdown', function (done) {
         storage.getPageContent('index')
           .then(function (markdown) {
@@ -41,18 +44,24 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'existsSync').returns(false);
+          sandbox.stub(fs, 'exists', function (path, callback) {
+            callback(false);
+          });
         });
 
         it('it should throw an FileNotFoundError', function (done) {
+          var lastError;
+
           storage.getPageContent('non_existing_page')
             .then(function (html) {
               should.fail('we have an error expected');
             })
             .catch(function (error) {
-              error.should.be.an.instanceof(errors.FileNotFoundError);
+              lastError = error;
             })
             .done(function () {
+              should.exists(lastError);
+              lastError.should.be.an.instanceof(errors.FileNotFoundError);
               done();
             });
         });
@@ -70,7 +79,9 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'existsSync').returns(true);
+          sandbox.stub(fs, 'exists', function (path, callback) {
+            callback(true);
+          });
           sandbox.stub(fs, 'readFile', function (fileName, callback) {
             callback(null, '#Test');
           });
@@ -124,7 +135,7 @@ describe('PageStorageTests', function () {
       });
     });
 
-    describe('When not Pages exists', function () {
+    describe('When no pages exists', function () {
       var sandbox;
 
       beforeEach(function () {

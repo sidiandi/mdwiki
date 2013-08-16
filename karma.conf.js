@@ -1,30 +1,32 @@
 // Karma configuration
-// Generated on Sat Aug 03 2013 12:09:52 GMT+0200 (CEST)
+// Generated on Fri Aug 16 2013 16:22:37 GMT+0200 (W. Europe Daylight Time)
 
 module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: './public',
+    basePath: '',
 
 
     // frameworks to use
-    frameworks: ['ng-scenario'],
+    frameworks: ['mocha'],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'js/lib/angular/angular.js',
-      'js/lib/angular/angular-sanitize.js',
-      'js/*.js',
-      '../test_client/lib/angular/angular-mocks.js',
-      '../test_client/*.js'
+      'public/js/lib/jquery.js',
+      'public/js/lib/bootstrap.js',
+      'public/js/lib/underscore.js',
+      'public/js/lib/angular/angular.js',
+      'public/js/lib/angular/angular-*.js',
+      'public/js/**/*.js',
+      'test_client/**/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-
+      
     ],
 
 

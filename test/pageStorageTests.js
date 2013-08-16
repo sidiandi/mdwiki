@@ -112,13 +112,30 @@ describe('PageStorageTests', function () {
       var sandbox;
 
       beforeEach(function () {
-          sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'readdir', function (fileName, callback) {
-            callback(null, ['index.md', 'page1.md', 'page2.md']);
-          });
-        });
+        sandbox = sinon.sandbox.create();
+      });
 
       it('should return all pages', function (done) {
+        sandbox.stub(fs, 'readdir', function (fileName, callback) {
+          callback(null, ['index.md', 'page1.md', 'page2.md']);
+        });
+
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+
+            pages.should.have.length(3);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      it('should return only the markdown files of the directory', function (done) {
+        sandbox.stub(fs, 'readdir', function (fileName, callback) {
+          callback(null, ['index.md', 'page1.md', 'page2.md', 'page3.txt']);
+        });
+
         storage.getPages()
           .then(function (pages) {
             should.exists(pages);

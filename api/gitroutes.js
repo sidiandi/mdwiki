@@ -28,7 +28,9 @@ var clone = function (req, res) {
 };
 
 var pull = function (req, res) {
-  git.pull()
+  var rootPath = path.join(__dirname, '..');
+
+  git.pull(rootPath)
     .then(function () {
       res.statusCode = 200;
       res.send('ok');

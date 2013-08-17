@@ -1,6 +1,7 @@
 'use strict';
 
-var git = require('../lib/git'),
+var path = require('path'),
+    git = require('../lib/git'),
     logger = require('../lib/logger');
 
 var clone = function (req, res) {
@@ -9,7 +10,9 @@ var clone = function (req, res) {
     return res.send('Error 400: repositoryUrl required');
   }
 
-  git.clone(__dirname, req.body.repositoryUrl)
+  var rootPath = path.join(__dirname, '..');
+
+  git.clone(rootPath, 'content', req.body.repositoryUrl)
     .then(function () {
       res.statusCode = 200;
       res.send('ok');
@@ -23,7 +26,6 @@ var clone = function (req, res) {
       res.end();
     });
 };
-
 
 var pull = function (req, res) {
   git.pull()

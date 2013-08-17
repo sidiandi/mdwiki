@@ -14,23 +14,24 @@ module.exports = function (req, res) {
     pageName = req.params.page;
   }
 
-  storage.getPageContent(pageName)
+  storage.getPageContentAsHtml(pageName)
     .then(function (html) {
-      res.setHeader('Content-Type', 'text/html');
-      res.setHeader('Content-Length', html.length);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      // the Buffer solves the problem with the automatic UTF-8 conversion
+      res.setHeader('Content-Length', new Buffer(html).length);
       res.status(200);
-      res.end(html);
+      res.send(html);
     })
     .catch(function (error) {
       if (error instanceof errors.FileNotFoundError) {
         res.setHeader('Content-Type', 'text/plain');
         res.send(404, 'page not found');
-        res.end();
       } else {
         res.setHeader('Content-Type', 'text/plain');
         res.send(500, 'server error: ' + error);
-        res.end();
       }
     })
-    .done();
+    .done(function () {
+      res.end();
+    });
 };

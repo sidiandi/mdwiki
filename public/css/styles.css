@@ -1,8 +1,9 @@
-@import  'bootstrap.css';
+@import 'bootstrap.css';
 
 body {
   padding-top: 50px;
 }
+
 .ng-view {
 
 }
@@ -10,4 +11,12 @@ body {
 .dropdown-menu {
   max-height: 800px;
   overflow:scroll;
+}
+
+form {
+  margin-top: 20px;
+}
+
+input.ng-invalid.ng-dirty {
+    background-color:red;
 }

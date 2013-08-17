@@ -11,9 +11,9 @@ var $sanitizeMinErr = angular.$$minErr('$sanitize');
  * @ngdoc overview
  * @name ngSanitize
  * @description
- * 
+ *
  * The `ngSanitize` module provides functionality to sanitize HTML.
- * 
+ *
  * # Installation
  * As a separate module, it must be loaded after Angular core is loaded; otherwise, an 'Uncaught Error:
  * No module: ngSanitize' runtime error will occur.
@@ -152,7 +152,7 @@ var START_TAG_REGEXP = /^<\s*([\w:-]+)((?:\s+[\w:-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:
   BEGING_END_TAGE_REGEXP = /^<\s*\//,
   COMMENT_REGEXP = /<!--(.*?)-->/g,
   CDATA_REGEXP = /<!\[CDATA\[(.*?)]]>/g,
-  URI_REGEXP = /^((ftp|https?):\/\/|mailto:|tel:|#)/i,
+  URI_REGEXP = /^((ftp|https?):\/\/|mailto:|tel:|#|\/)/i,
   NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g; // Match everything outside of normal chars and " (quote character)
 
 

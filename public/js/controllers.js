@@ -95,6 +95,7 @@ controllers.controller('GitPullCtrl', function ($scope, $http, $location, $route
     .success(function (data, status, headers, config) {
       $scope.message = 'The repository was successful update...';
       $scope.isBusy = false;
+      $('#pullButton').button('reset');
       $route.reload();
     })
     .error(function (data, status, headers, config) {

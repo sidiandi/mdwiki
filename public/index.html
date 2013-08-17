@@ -21,7 +21,7 @@
       <a class="navbar-brand" href="/index">Markdown Wiki</a>
       <div class="collapse nav-collapse" ng-controller="PagesCtrl">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/index">Home</a></li>
+          <li class="active"><a href="/index"><i class="icon-home icon-large"></i> Home</a></li>
           <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
               Pages <span class="caret"></span>
@@ -32,14 +32,14 @@
             </ul>
           </li>
         </ul>
-        <form class="navbar-form pull-left" action="">
+        <form class="navbar-form pull-left" >
           <input type="text" class="form-control" placeholder="Search">
         </form>
         <div class="btn-group pull-right" ng-controller="GitPullCtrl">
-          <button type="button" class="btn btn-default navbar-btn" ng-click="pull()">
-            <img class='pull-icon' src="images/git.png" alt="Pull the latest changes" title="Pull the latest changes">
+          <button id="pullButton" type="button" title="Pull latest changes"
+                  class="btn btn-default navbar-btn" ng-click="pull()" data-loading-text="Pulling...">
+            <i class="icon-cloud-download icon-large"></i>
           </button>
-          <img class='progress-icon' src="images/progress.gif" ng-show="isBusy">
         </div>
       </div>
     </div>
@@ -62,5 +62,13 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+
+  <script type="text/javascript">
+    var $pullButton = $('#pullButton');
+    $pullButton.click(function () {
+        $(this).button('loading');
+    }).tooltip( {animation: true, placement: 'bottom', delay: { show: 100, hide: 100 }})
+
+  </script>
 </body>
 </html>

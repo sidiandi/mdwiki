@@ -20,3 +20,13 @@ form {
 input.ng-invalid.ng-dirty {
     background-color:red;
 }
+
+img.pull-icon {
+  height: 20px;
+  width: 20px;
+}
+
+img.progress-icon {
+  width: 35px;
+  margin-top: 8px;
+}

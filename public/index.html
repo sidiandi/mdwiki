@@ -35,6 +35,12 @@
         <form class="navbar-form pull-left" action="">
           <input type="text" class="form-control" placeholder="Search">
         </form>
+        <div class="btn-group pull-right" ng-controller="GitPullCtrl">
+          <button type="button" class="btn btn-default navbar-btn" ng-click="pull()">
+            <img class='pull-icon' src="images/git.png" alt="Pull the latest changes" title="Pull the latest changes">
+          </button>
+          <img class='progress-icon' src="images/progress.gif" ng-show="isBusy">
+        </div>
       </div>
     </div>
   </div>

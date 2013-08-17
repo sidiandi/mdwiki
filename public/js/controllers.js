@@ -74,3 +74,34 @@ controllers.controller('GitCloneCtrl', function ($scope, $http, $location) {
     });
   };
 });
+
+controllers.controller('GitPullCtrl', function ($scope, $http, $location, $route) {
+  $scope.isBusy = false;
+  $scope.message = '';
+  $scope.hasError = false;
+
+  $scope.pull = function () {
+    $scope.isBusy = true;
+    $scope.message = 'Please wait while pull the latest changes in your repository...';
+    $scope.hasError = false;
+
+    $http({
+      method: 'POST',
+      url: '/api/git/pull',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .success(function (data, status, headers, config) {
+      $scope.message = 'The repository was successful update...';
+      $scope.isBusy = false;
+      $route.reload();
+    })
+    .error(function (data, status, headers, config) {
+      data = data || '';
+      $scope.message = 'There is an error occured while updating your repository: ' + data.toString();
+      $scope.isBusy = false;
+      $scope.hasError = true;
+    });
+  };
+});

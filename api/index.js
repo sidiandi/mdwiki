@@ -1,9 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-  path = require('path'),
-  q = require('q'),
-  marked = require('marked'),
+var q = require('q'),
   storage = require('../lib/pageStorageFS'),
   errors = require('../lib/errors');
 

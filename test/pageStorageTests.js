@@ -92,7 +92,7 @@ describe('PageStorageTests', function () {
             .then(function (html) {
               should.exists(html);
               html.should.not.be.empty;
-              html.should.be.eql('<h1>Test</h1>\n');
+              html.should.be.eql('<h1>Test</h1>');
             })
             .done(function () {
               done();

@@ -4,7 +4,8 @@ var express = require("express"),
     path = require('path'),
     logger = require('./lib/logger'),
     api = require('./api/index'),
-    pages = require('./api/pages');
+    pages = require('./api/pages'),
+    git = require('./api/gitroutes');
 
 var app = express();
 
@@ -29,10 +30,14 @@ if (app.get('env') === 'production') {
 
 // JSON API
 app.get('/api/pages', pages);
-app.get('/api/:page?', api);
+app.get('/api/page/:page?', api);
+app.post('/api/git/clone', git.clone);
+app.post('/api/git/pull', git.pull);
 
 // redirect all others to the index (HTML5 history)
-//app.get('*', routes.index);
+app.get(['/git/clone', '/page/*'], function (req, res) {
+  res.sendfile('./public/index.html');
+});
 
 var port = app.get('port');
 

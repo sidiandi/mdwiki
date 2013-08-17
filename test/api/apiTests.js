@@ -24,7 +24,7 @@ describe('API tests', function () {
     app.use(express.bodyParser());
 
     app.get('/api/pages', pagesRoute);
-    app.get('/api/:page?', pageRoute);
+    app.get('/api/page/:page?', pageRoute);
     app.post('/api/git/clone', cloneRoute);
     app.post('/api/git/pull', pullRoute);
 
@@ -46,9 +46,9 @@ describe('API tests', function () {
     });
 
     it('should return the index page', function (done) {
-      request(app).get('/api')
-            .expect('Content-Type', "text/html")
-            .expect(200)
+      request(app).get('/api/page')
+            .expect('Content-Type', "text/html; charset=utf-8")
+            .expect(200, '<h1>Test</h1>')
             .end(function (err, res) {
               if (err) {
                 return done(err);
@@ -73,9 +73,9 @@ describe('API tests', function () {
     });
 
     it('should return the index page', function (done) {
-      request(app).get('/api/index')
-            .expect('Content-Type', "text/html")
-            .expect(200)
+      request(app).get('/api/page/index')
+            .expect('Content-Type', "text/html; charset=utf-8")
+            .expect(200, '<h1>Test</h1>')
             .end(function (err, res) {
               if (err) {
                 return done(err);
@@ -87,7 +87,7 @@ describe('API tests', function () {
 
   describe('When an non existing page is given', function () {
     it('should return an 404 http code', function (done) {
-      request(app).get('/api/nonexistingPage')
+      request(app).get('/api/page/nonexistingPage')
             .expect('Content-Type', "text/plain")
             .expect(404)
             .end(function (err, res) {
@@ -100,14 +100,12 @@ describe('API tests', function () {
   });
 
   describe('When user wants to list all existing pages', function () {
-    beforeEach(function (done) {
+    beforeEach(function () {
       sandbox.stub(storage, 'getPages', function () {
         var d = Q.defer();
         d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'} ]);
         return d.promise;
       });
-
-      done();
     });
 
     afterEach(function () {

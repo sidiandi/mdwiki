@@ -8,6 +8,7 @@ module.exports = function (grunt) {
       files: [
         '.jshintrc',
         'gruntfile.js',
+        'app.js',
         'public/js/**/*.js',
         'api/**/*.js',
         'lib/**/*.js',

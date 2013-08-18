@@ -2,28 +2,15 @@
 
 var fs = require('fs'),
   path = require('path'),
-  q = require('q');
+  q = require('q'),
+  _ = require('underscore'),
+  storage = require('../lib/pageStorageFS');
 
-exports.pages = function (req, res) {
-  var directoryName = path.join(__dirname, '../content');
-
-  var readdir = q.nfbind(fs.readdir);
-
-  readdir(directoryName)
-    .then(function (files) {
-      var pages = [];
-
-      files.forEach(function (file) {
-        if (path.extname(file) === '.md' && file !== 'index.md') {
-          var fileWithoutExt = path.basename(file, '.md');
-
-          var page = {
-            title: fileWithoutExt,
-            name: fileWithoutExt
-          };
-
-          pages.push(page);
-        }
+module.exports = function (req, res) {
+  storage.getPages()
+    .then(function (pages) {
+      pages = _.filter(pages, function (page) {
+        return page.name !== 'index';
       });
 
       var json = JSON.stringify(pages);

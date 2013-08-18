@@ -13,11 +13,14 @@ describe('PageStorageTests', function () {
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
-        sandbox.stub(fs, 'existsSync').returns(true);
+        sandbox.stub(fs, 'exists', function (path, callback) {
+          callback(true);
+        });
         sandbox.stub(fs, 'readFile', function (fileName, callback) {
           callback(null, '#Test');
         });
       });
+
       it('it should return the content as markdown', function (done) {
         storage.getPageContent('index')
           .then(function (markdown) {
@@ -41,18 +44,24 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'existsSync').returns(false);
+          sandbox.stub(fs, 'exists', function (path, callback) {
+            callback(false);
+          });
         });
 
         it('it should throw an FileNotFoundError', function (done) {
+          var lastError;
+
           storage.getPageContent('non_existing_page')
             .then(function (html) {
               should.fail('we have an error expected');
             })
             .catch(function (error) {
-              error.should.be.an.instanceof(errors.FileNotFoundError);
+              lastError = error;
             })
             .done(function () {
+              should.exists(lastError);
+              lastError.should.be.an.instanceof(errors.FileNotFoundError);
               done();
             });
         });
@@ -70,7 +79,9 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'existsSync').returns(true);
+          sandbox.stub(fs, 'exists', function (path, callback) {
+            callback(true);
+          });
           sandbox.stub(fs, 'readFile', function (fileName, callback) {
             callback(null, '#Test');
           });
@@ -81,7 +92,7 @@ describe('PageStorageTests', function () {
             .then(function (html) {
               should.exists(html);
               html.should.not.be.empty;
-              html.should.be.eql('<h1>Test</h1>\n');
+              html.should.be.eql('<h1>Test</h1>');
             })
             .done(function () {
               done();
@@ -94,6 +105,81 @@ describe('PageStorageTests', function () {
         });
       });
   });
+
+  describe('getPages tests', function () {
+
+    describe('When Pages exists', function () {
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+      });
+
+      it('should return all pages', function (done) {
+        sandbox.stub(fs, 'readdir', function (fileName, callback) {
+          callback(null, ['index.md', 'page1.md', 'page2.md']);
+        });
+
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+
+            pages.should.have.length(3);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      it('should return only the markdown files of the directory', function (done) {
+        sandbox.stub(fs, 'readdir', function (fileName, callback) {
+          callback(null, ['index.md', 'page1.md', 'page2.md', 'page3.txt']);
+        });
+
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+
+            pages.should.have.length(3);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+
+    describe('When no pages exists', function () {
+      var sandbox;
+
+      beforeEach(function () {
+          sandbox = sinon.sandbox.create();
+          sandbox.stub(fs, 'readdir', function (fileName, callback) {
+            callback(null, undefined);
+          });
+        });
+
+      it('should return an empty array', function (done) {
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+            pages.should.have.length(0);
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+  });
+
+
 
 
 });

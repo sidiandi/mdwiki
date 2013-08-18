@@ -2,15 +2,15 @@
 
 var express = require("express"),
     path = require('path'),
+    logger = require('./lib/logger'),
     api = require('./api/index'),
-    pages = require('./api/pages').pages;
+    pages = require('./api/pages'),
+    git = require('./api/gitroutes');
 
 var app = express();
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
-//  app.set('views', __dirname + '/views');
-//  app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -26,22 +26,21 @@ if (app.get('env') === 'development') {
 
 // production only
 if (app.get('env') === 'production') {
-  // TODO
 }
-
-//app.get('/', routes.index);
-//app.get('/partials/:name', routes.partials);
-//app.get('/users', user.list);
 
 // JSON API
 app.get('/api/pages', pages);
-app.get('/api/:page?', api.index);
+app.get('/api/page/:page?', api);
+app.post('/api/git/clone', git.clone);
+app.post('/api/git/pull', git.pull);
 
 // redirect all others to the index (HTML5 history)
-//app.get('*', routes.index);
+app.get(['/git/clone', '/page/*'], function (req, res) {
+  res.sendfile('./public/index.html');
+});
 
 var port = app.get('port');
 
 app.listen(port);
 
-console.log('Listening on port %s', port);
+logger.info('Listening on port %s', port);

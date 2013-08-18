@@ -1,0 +1,23 @@
+<form name="cloneRepositoryForm">
+  <fieldset>
+    <div>
+      <legend>Content repository clonen</legend>
+    </div>
+
+
+    <div class="alert alert-info" ng-hide="hasError">{{ message }}</div>
+    <div class="alert alert-danger" ng-show="hasError">{{ message }}</div>
+
+    <div class="form-group">
+      <label></label>
+      <input type="text" class="form-control" id="repositoryUrl" ng-model="repositoryUrl"  required>
+    </div>
+
+    <button ng-click='clone()' class="btn btn-default" ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Clone</button>
+    <img src="images/progress.gif" alt="Cloning" title="Cloning" ng-show="isBusy">
+
+  </fieldset>
+</form>
+
+
+

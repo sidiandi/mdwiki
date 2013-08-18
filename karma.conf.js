@@ -9,7 +9,7 @@ module.exports = function(config) {
 
 
     // frameworks to use
-    frameworks: ['mocha'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
@@ -20,13 +20,15 @@ module.exports = function(config) {
       'public/js/lib/angular/angular.js',
       'public/js/lib/angular/angular-*.js',
       'public/js/**/*.js',
+      'node_modules/sinon/lib/sinon.js',
+      'test_client/lib/angular/angular-*.js',
       'test_client/**/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
 
 

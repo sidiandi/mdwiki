@@ -26,9 +26,9 @@ controllers.controller('ContentCtrl', function ($scope, $routeParams, $http, $lo
 
 });
 
-controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location) {
+controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location, $route, searchService) {
     $scope.textToSearch = '';
-    $scope.searchResult = '';
+    $scope.searchResult = searchService.searchResult;
 
     $scope.search = function () {
         console.log('searching ' + $scope.textToSearch);
@@ -42,8 +42,9 @@ controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $loc
         })
             .success(function (data, status, headers, config) {
                 $scope.message = 'Search successfully finished';
-                $scope.searchResult = data;
+                searchService.searchResult = data;
                 $location.path('/search');
+                $route.reload();
             })
             .error(function (data, status, headers, config) {
                 data = data || '';

@@ -19,10 +19,10 @@ module.exports = function(config) {
       'public/js/lib/underscore.js',
       'public/js/lib/angular/angular.js',
       'public/js/lib/angular/angular-*.js',
-      'public/js/**/*.js',
       'node_modules/sinon/lib/sinon.js',
-      'test_client/lib/angular/angular-*.js',
-      'test_client/**/*.js'
+      'test_client/lib/angular/angular-mocks.js',
+      'public/js/**/*.js',
+      'test_client/*Specs.js'
     ],
 
 
@@ -34,7 +34,7 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'growl'],
 
 
     // web server port

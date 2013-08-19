@@ -32,9 +32,11 @@
             </ul>
           </li>
         </ul>
-        <form class="navbar-form pull-left" >
-          <input type="text" class="form-control" placeholder="Search">
-        </form>
+        <div ng-controller="SearchCtrl">
+            <form class="navbar-form pull-left">
+                <input type="text" ng-model="textToSearch" placeholder="Search" />
+            </form>
+        </div>
         <div class="btn-group pull-right" ng-controller="GitPullCtrl">
           <button id="pullButton" type="button" title="Pull latest changes"
                   class="btn btn-default navbar-btn" ng-click="pull()" data-loading-text="Pulling...">

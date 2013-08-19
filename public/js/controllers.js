@@ -26,6 +26,32 @@ controllers.controller('ContentCtrl', function ($scope, $routeParams, $http, $lo
 
 });
 
+controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location) {
+    $scope.textToSearch = '';
+    $scope.searchResult = '';
+
+    $scope.search = function () {
+        console.log('searching ' + $scope.textToSearch);
+        $http({
+            method: 'POST',
+            url: '/api/search',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: { textToSearch: $scope.textToSearch }
+        })
+            .success(function (data, status, headers, config) {
+                $scope.message = 'Search successfully finished';
+                $scope.searchResult = data;
+                $location.path('/search');
+            })
+            .error(function (data, status, headers, config) {
+                data = data || '';
+                $scope.message = 'There is an error occured while searching for the text: ' + data.toString();
+            });
+    }
+});
+
 controllers.controller('PagesCtrl', function ($scope, $http) {
   $scope.pages = [];
 

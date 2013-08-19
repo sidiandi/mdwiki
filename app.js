@@ -5,7 +5,8 @@ var express = require("express"),
     logger = require('./lib/logger'),
     api = require('./api/index'),
     pages = require('./api/pages'),
-    git = require('./api/gitroutes');
+    git = require('./api/gitroutes'),
+    searchRoutes = require('./api/searchroutes');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.get('/api/pages', pages);
 app.get('/api/page/:page?', api);
 app.post('/api/git/clone', git.clone);
 app.post('/api/git/pull', git.pull);
+app.post('/api/search', searchRoutes.search);
 
 // redirect all others to the index (HTML5 history)
 app.get(['/git/clone', '/page/*'], function (req, res) {

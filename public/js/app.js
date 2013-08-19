@@ -17,6 +17,10 @@ var mdwiki = angular.module('mdwiki', [
       templateUrl: './views/content.html',
       controller: 'ContentCtrl'
     })
+    .when('/search', {
+      templateUrl: './views/searchResult.html',
+      controller: 'SearchCtrl'
+     })
     .when('/:page', {
       templateUrl: './views/content.html',
       controller: 'ContentCtrl'

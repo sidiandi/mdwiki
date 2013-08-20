@@ -1,2 +1,7 @@
 Search result: <br>
-{{ searchResult[0] }}
+<ul>
+    <li ng-repeat="result in searchResult">
+        <a href="/{{result.fileNameWithoutExtension}}">{{result.fileNameWithoutExtension}}</a>
+        <p>{{result.fileContext}}</p>
+    </li>
+</ul>

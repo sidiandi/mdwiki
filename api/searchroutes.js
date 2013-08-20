@@ -2,6 +2,7 @@
 
 var path = require('path'),
     grepSearcher = require('../lib/grepSearcher'),
+    grepResultParser = require('../lib/grepResultParser'),
     logger = require('../lib/logger');
 
 var search = function (req, res) {
@@ -12,7 +13,13 @@ var search = function (req, res) {
     .then(function (data) {
       console.log(data);
       res.statusCode = 200;
-      res.send(data);
+      var parsedResult = grepResultParser.parse(data[0]);
+      parsedResult.then(function (resultObjects){
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          var stringifiedResult = JSON.stringify(resultObjects);
+          res.write(stringifiedResult);
+          res.end();
+      });
     })
     .catch(function (error) {
       logger.error(error);

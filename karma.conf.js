@@ -22,7 +22,7 @@ module.exports = function(config) {
       'node_modules/sinon/lib/sinon.js',
       'test_client/lib/angular/angular-mocks.js',
       'public/js/**/*.js',
-      'test_client/*Specs.js'
+      'test_client/**/*Specs.js'
     ],
 
 

@@ -2,27 +2,23 @@
 
 var controllers = angular.module('mdwiki.controllers', []);
 
-controllers.controller('ContentCtrl', function ($scope, $routeParams, $http, $location) {
+controllers.controller('ContentCtrl', function ($scope, $routeParams, $location, pageService) {
   var page = 'index';
 
   if ($routeParams.page) {
     page = $routeParams.page;
   }
 
-  $http({
-    method: 'GET',
-    url: '/api/page/' + page
-  })
-  .success(function (data, status, headers, config) {
-    $scope.content = data;
-  })
-  .error(function (data, status, headers, config) {
-    if (page === 'index' && status === 404) {
-      $location.path('/git/clone');
-    } else {
-      $scope.content = 'Content not found!';
-    }
-  });
+  pageService.getPage(page)
+    .then(function (page) {
+      $scope.content = page;
+    }, function (error) {
+      if (page === 'index' && error.code === 404) {
+        $location.path('/git/clone');
+      } else {
+        $scope.content = 'Content not found!';
+      }
+    });
 
 });
 
@@ -53,19 +49,13 @@ controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $loc
     }
 });
 
-controllers.controller('PagesCtrl', function ($scope, $http) {
+controllers.controller('PagesCtrl', function ($scope, pageService) {
   $scope.pages = [];
 
-  $http({
-    method: 'GET',
-    url: '/api/pages'
-  })
-  .success(function (data, status, headers, config) {
-    $scope.pages = data;
-  })
-  .error(function (data, status, headers, config) {
-    $scope.pages = [];
-  });
+  pageService.getPages()
+    .then(function (pages) {
+      $scope.pages = pages;
+    });
 
 });
 

@@ -44,6 +44,6 @@ app.get(['/git/clone', '/page/*'], function (req, res) {
 
 var port = app.get('port');
 
-app.listen(port);
+app.listen(port, app.get('ip'));
 
-logger.info('Listening on port %s', port);
+logger.info('Listening on port %s over ip %s', port, app.get('ip'));

@@ -14,7 +14,7 @@
       "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "main": "",
+  "main": "./app.js",
   "engines": {
     "node": "0.10.x",
     "npm": "1.3.x"

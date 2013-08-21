@@ -25,7 +25,8 @@
     "underscore.string": "~2.3.0",
     "q": "~0.9.6",
     "winston": "~0.7.2",
-    "node-markdown": "~0.1.1"
+    "node-markdown": "~0.1.1",
+    "marked": "~0.2.9"
   },
   "devDependencies": {
     "grunt": "~0.4",

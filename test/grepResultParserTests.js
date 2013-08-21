@@ -48,7 +48,7 @@ describe('grep result parser module tests', function () {
                     // ASSERT
                     parseResult.length.should.be.eql(1);
                     parseResult[0].fileName.should.be.eql('file.md');
-                    parseResult[0].fileContext.should.be.eql('this was found');
+                    parseResult[0].fileContext.should.be.eql('<p>this was found</p>\n');
                     done();
                 });
             });
@@ -73,7 +73,7 @@ describe('grep result parser module tests', function () {
                     // ASSERT
                     parseResult.length.should.be.eql(1);
                     parseResult[0].fileName.should.be.eql('file.md');
-                    parseResult[0].fileContext.should.be.eql('this was found');
+                    parseResult[0].fileContext.should.be.eql('<p>this was found</p>\n');
                     done();
                 });
             });
@@ -98,7 +98,7 @@ describe('grep result parser module tests', function () {
                     // ASSERT
                     parseResult.length.should.be.eql(1);
                     parseResult[0].fileName.should.be.eql('file.md');
-                    parseResult[0].fileContext.should.be.eql('this was found');
+                    parseResult[0].fileContext.should.be.eql('<p>this was found</p>\n');
                     done();
                 });
             });
@@ -123,9 +123,9 @@ describe('grep result parser module tests', function () {
                     // ASSERT
                     parseResult.length.should.be.eql(2);
                     parseResult[0].fileName.should.be.eql('file.md');
-                    parseResult[0].fileContext.should.be.eql('this was found');
+                    parseResult[0].fileContext.should.be.eql('<p>this was found </p>\n');
                     parseResult[1].fileName.should.be.eql('file2.md');
-                    parseResult[1].fileContext.should.be.eql('this was found as well');
+                    parseResult[1].fileContext.should.be.eql('<p>this was found as well</p>\n');
                     done();
                 });
             });

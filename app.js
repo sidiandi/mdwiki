@@ -11,7 +11,8 @@ var express = require("express"),
 var app = express();
 
 app.configure(function () {
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000);
+  app.set('ip', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
@@ -43,6 +44,6 @@ app.get(['/git/clone', '/page/*'], function (req, res) {
 
 var port = app.get('port');
 
-app.listen(port);
+app.listen(port, app.get('ip'));
 
-logger.info('Listening on port %s', port);
+logger.info('Listening on port %s over ip %s', port, app.get('ip'));

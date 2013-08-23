@@ -66,7 +66,7 @@ describe('grep result parser module tests', function () {
 
       it('should return an empty array', function (done) {
         // ARRANGE
-        grepResult = 'c:/path/to/file/file.md:this was found\n';
+        grepResult = 'X:/path/to/file/file.md:this was found\n';
 
         // ACT
         grepResultParser.parse(grepResult).done(function (parseResult) {

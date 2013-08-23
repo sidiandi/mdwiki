@@ -22,7 +22,7 @@ controllers.controller('ContentCtrl', function ($scope, $routeParams, $location,
 
 });
 
-controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location, $route, searchService) {
+controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location, $route, $, searchService) {
     $scope.textToSearch = '';
     $scope.searchResult = searchService.searchResult;
 
@@ -33,21 +33,21 @@ controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $loc
             url: '/api/search',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            data: { textToSearch: $scope.textToSearch }
-        })
+              },
+              data: { textToSearch: $scope.textToSearch }
+            })
             .success(function (data, status, headers, config) {
-                $scope.message = 'Search successfully finished';
-                searchService.searchResult = data;
-                $location.path('/search');
-                $route.reload();
+              $scope.message = 'Search successfully finished';
+              searchService.searchResult = data;
+              $location.path('/search');
+              $route.reload();
             })
             .error(function (data, status, headers, config) {
                 data = data || '';
                 $scope.message = 'There is an error occured while searching for the text: ' + data.toString();
-            });
-    }
-});
+              });
+      };
+  });
 
 controllers.controller('PagesCtrl', function ($scope, pageService) {
   $scope.pages = [];
@@ -92,7 +92,7 @@ controllers.controller('GitCloneCtrl', function ($scope, $http, $location) {
   };
 });
 
-controllers.controller('GitPullCtrl', function ($scope, $http, $location, $route) {
+controllers.controller('GitPullCtrl', function ($scope, $http, $location, $route, $) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;

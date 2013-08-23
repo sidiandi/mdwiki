@@ -14,12 +14,12 @@ var search = function (req, res) {
       console.log(data);
       res.statusCode = 200;
       var parsedResult = grepResultParser.parse(data[0]);
-      parsedResult.then(function (resultObjects){
+      parsedResult.then(function (resultObjects) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           var stringifiedResult = JSON.stringify(resultObjects);
           res.write(stringifiedResult);
           res.end();
-      });
+        });
     })
     .catch(function (error) {
       logger.error(error);

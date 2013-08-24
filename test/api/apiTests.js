@@ -103,7 +103,7 @@ describe('API tests', function () {
     beforeEach(function () {
       sandbox.stub(storage, 'getPages', function () {
         var d = Q.defer();
-        d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'} ]);
+        d.resolve([ {name: 'page1'}, {name: 'page2'}, {name: 'index'}, {name: 'home'}, {name: 'readme'}, {name: 'README'}]);
         return d.promise;
       });
     });
@@ -112,7 +112,7 @@ describe('API tests', function () {
       sandbox.restore();
     });
 
-    it('should return a list of the pages with their titles except the index page', function (done) {
+    it('should return a list of the pages with their titles except the following pages: index, home, readme', function (done) {
       request(app).get('/api/pages')
         .expect('Content-Type', "application/json")
         .expect(200)

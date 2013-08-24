@@ -14,7 +14,7 @@ describe('Content Controller Tests', function () {
       $scope = $rootScope.$new();
       $controller = $injector.get('$controller');
 
-      pageService = $injector.get('pageService');
+      pageService = $injector.get('PageService');
       var deferred = $q.defer();
       deferred.resolve('<h1>Test</h1>');
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
@@ -44,7 +44,7 @@ describe('Content Controller Tests', function () {
       $controller = $injector.get('$controller');
       $location = $injector.get('$location');
 
-      pageService = $injector.get('pageService');
+      pageService = $injector.get('PageService');
       var deferred = $q.defer();
 
       var error = new Error();
@@ -78,7 +78,7 @@ describe('Content Controller Tests', function () {
       $controller = $injector.get('$controller');
       $location = $injector.get('$location');
 
-      pageService = $injector.get('pageService');
+      pageService = $injector.get('PageService');
       var deferred = $q.defer();
 
       var error = new Error();

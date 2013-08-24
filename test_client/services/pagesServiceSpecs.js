@@ -2,16 +2,16 @@
 
 describe('Page Service tests', function () {
   var httpMock;
-  var service;
+  var pageService;
 
   beforeEach(function () {
     module('mdwiki');
     module('mdwiki.services');
   });
 
-  beforeEach(inject(function ($injector, pageService) {
+  beforeEach(inject(function ($injector) {
     httpMock = $injector.get('$httpBackend');
-    service = pageService;
+    pageService = $injector.get('PageService');
   }));
 
   it('should fetch the requested page over the reset api', function () {
@@ -20,7 +20,7 @@ describe('Page Service tests', function () {
 
     httpMock.expectGET('/api/page/index').respond(200, expectedHtml);
 
-    service.getPage('index')
+    pageService.getPage('index')
       .then(function (data) {
         actualHtml = data;
       }, function (error) {
@@ -39,7 +39,7 @@ describe('Page Service tests', function () {
 
     httpMock.expectGET('/api/page/index').respond(404);
 
-    service.getPage('index')
+    pageService.getPage('index')
       .then(function (data) {
         actualHtml = data;
       }, function (error) {
@@ -60,7 +60,7 @@ describe('Page Service tests', function () {
 
     httpMock.expectGET('/api/pages').respond(200, expected);
 
-    service.getPages()
+    pageService.getPages()
       .then(function (data) {
         actual = data;
       }, function (error) {

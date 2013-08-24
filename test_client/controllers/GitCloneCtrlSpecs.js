@@ -15,7 +15,7 @@ describe('Git Controller Tests', function () {
 
       $location = $injector.get('$location');
 
-      gitService = $injector.get('gitService');
+      gitService = $injector.get('GitService');
       var deferred = $q.defer();
       deferred.resolve();
       spyOn(gitService, 'clone').andReturn(deferred.promise);

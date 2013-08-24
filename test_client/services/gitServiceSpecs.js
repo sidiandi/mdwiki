@@ -2,16 +2,16 @@
 
 describe('Git Service specs', function () {
   var httpMock;
-  var service;
+  var gitService;
 
   beforeEach(function () {
     module('mdwiki');
     module('mdwiki.services');
   });
 
-  beforeEach(inject(function ($injector, gitService) {
+  beforeEach(inject(function ($injector) {
     httpMock = $injector.get('$httpBackend');
-    service = gitService;
+    gitService = $injector.get('GitService');
   }));
 
   it('should call the clone function with the given repository url', function () {
@@ -19,7 +19,7 @@ describe('Git Service specs', function () {
 
     httpMock.expectPOST('/api/git/clone', { repositoryUrl: repositoryUrl }).respond(200, '');
 
-    service.clone(repositoryUrl);
+    gitService.clone(repositoryUrl);
 
     httpMock.flush();
   });
@@ -29,7 +29,7 @@ describe('Git Service specs', function () {
 
     httpMock.expectPOST('/api/git/pull').respond(200);
 
-    service.pull(repositoryUrl);
+    gitService.pull(repositoryUrl);
 
     httpMock.flush();
   });

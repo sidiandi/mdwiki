@@ -19,7 +19,7 @@ describe('Git Pull Controller Tests', function () {
       $http = $injector.get('$httpBackend');
       $http.expectGET('./views/content.html').respond(200, '<h1/>');
 
-      gitService = $injector.get('gitService');
+      gitService = $injector.get('GitService');
       var deferred = $q.defer();
       deferred.resolve();
       spyOn(gitService, 'pull').andReturn(deferred.promise);

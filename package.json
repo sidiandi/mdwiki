@@ -46,7 +46,8 @@
     "karma-coffee-preprocessor": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma": "~0.10.1",
-    "karma-growl-reporter": "~0.1.0"
+    "karma-growl-reporter": "~0.1.0",
+    "grunt-karma": "~0.6.1"
   },
   "scripts": {
     "start": "node ./app.js"

@@ -37,14 +37,26 @@ module.exports = function (grunt) {
       }
     },
 
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true,
+      }
+    },
+
     watch: {
       options: {
         livereload: true,
       },
 
-      jsfiles: {
-        files: ['<%= jshint.files %>'],
-        tasks: ['default']
+      mocha: {
+        files: ['app.js', 'api/**/*.js', 'lib/**/*.js', 'test/**/*.js'],
+        tasks: ['jshint', 'mochaTest']
+      },
+
+      karma: {
+        files: ['public/js/**/*.js', '!public/js/lib/**/*.js', 'test_client/**/*Specs.js'],
+        tasks: ['jshint', 'karma:unit']
       },
 
       livereload: {
@@ -58,9 +70,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-karma');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'watch']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma', 'watch']);
 
   // Dev task
   grunt.registerTask('dev', ['jshint', 'mochaTest', 'watch']);

@@ -2,7 +2,7 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('pageService', ['$http', '$q', function ($http, $q) {
+services.factory('PageService', ['$http', '$q', function ($http, $q) {
   var getPage = function (page) {
     var deferred = $q.defer();
 

@@ -2,7 +2,7 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('gitService', ['$http', '$q', function ($http, $q) {
+services.factory('GitService', ['$http', '$q', function ($http, $q) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
 

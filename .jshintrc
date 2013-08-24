@@ -28,6 +28,7 @@
     "should": true,
     "angular": true,
     "inject": true,
-    "spyOn": true
+    "spyOn": true,
+    "$": true
   }
 }

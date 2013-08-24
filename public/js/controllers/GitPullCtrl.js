@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', function ($scope, $route, gitService) {
+controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', function ($scope, $route, gitService, pageService) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
@@ -13,6 +13,7 @@ controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', functio
     $scope.hasError = false;
 
     gitService.pull()
+      .then(pageService.getPages)
       .then(function () {
         $scope.message = 'The repository was successful update...';
         $('#pullButton').button('reset');

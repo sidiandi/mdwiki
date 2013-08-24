@@ -3,6 +3,8 @@
 var services = services || angular.module('mdwiki.services', []);
 
 services.factory('PageService', ['$http', '$q', function ($http, $q) {
+  var updatePagesObservers = [];
+
   var getPage = function (page) {
     var deferred = $q.defer();
 
@@ -31,7 +33,10 @@ services.factory('PageService', ['$http', '$q', function ($http, $q) {
       url: '/api/pages'
     })
     .success(function (data, status, headers, config) {
-      deferred.resolve(data);
+      var pages = data || [];
+
+      notifyObservers(pages);
+      deferred.resolve(pages);
     })
     .error(function (data, status, headers, config) {
       var error = new Error();
@@ -43,8 +48,19 @@ services.factory('PageService', ['$http', '$q', function ($http, $q) {
     return deferred.promise;
   };
 
+  var registerObserver = function (callback) {
+    updatePagesObservers.push(callback);
+  };
+
+  var notifyObservers = function (pages) {
+    angular.forEach(updatePagesObservers, function (callback) {
+      callback(pages);
+    });
+  };
+
   return {
     getPage: getPage,
-    getPages: getPages
+    getPages: getPages,
+    registerObserver: registerObserver
   };
 }]);

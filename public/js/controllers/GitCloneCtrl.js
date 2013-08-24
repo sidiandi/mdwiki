@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', function ($scope, $location, gitService) {
+controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', function ($scope, $location, gitService, pageService) {
   $scope.repositoryUrl = '';
   $scope.isBusy = false;
   $scope.message = 'Please enter the git-url of your repository to clone it into the content folder';
@@ -14,6 +14,7 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', fun
     $scope.hasError = false;
 
     gitService.clone($scope.repositoryUrl)
+      .then(pageService.getPages)
       .then(function () {
         $scope.message = 'The repository was successful cloned...';
         $location.path('/');

@@ -8,6 +8,12 @@ controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, 
   pageService.getPages()
     .then(function (pages) {
       $scope.pages = pages;
+
+      pageService.registerObserver(updatePages);
     });
+
+  var updatePages = function (pages) {
+    $scope.pages = pages || [];
+  };
 
 }]);

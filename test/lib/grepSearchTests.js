@@ -5,9 +5,9 @@ var fs = require('fs'),
     util = require('util'),
     sinon = require('sinon'),
     should = require('should'),
-    grepSearcher = require('../lib/grepSearcher'),
     Q = require('q'),
-    errors = require('../lib/errors'),
+    grepSearcher = require('../../lib/grepSearcher'),
+    errors = require('../../lib/errors'),
     child_process = require('child_process');
 
 describe('grep search module tests', function () {

@@ -2,9 +2,9 @@
 
 var fs = require('fs'),
     sinon = require('sinon'),
-    storage = require('../lib/pageStorageFS'),
+    storage = require('../../lib/pageStorageFS'),
     should = require('should'),
-    errors = require('../lib/errors');
+    errors = require('../../lib/errors');
 
 describe('PageStorageTests', function () {
   describe('getPageContent Tests', function () {
@@ -177,6 +177,7 @@ describe('PageStorageTests', function () {
         sandbox.restore();
       });
     });
+
   });
 
 

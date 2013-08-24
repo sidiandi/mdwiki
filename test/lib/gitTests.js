@@ -5,10 +5,10 @@ var fs = require('fs'),
     util = require('util'),
     sinon = require('sinon'),
     should = require('should'),
-    git = require('../lib/git'),
     Q = require('q'),
-    errors = require('../lib/errors'),
-    child_process = require('child_process');
+    child_process = require('child_process'),
+    git = require('../../lib/git'),
+    errors = require('../../lib/errors');
 
 /*function rmdirIfExists(path) {
   var deferred = Q.defer();

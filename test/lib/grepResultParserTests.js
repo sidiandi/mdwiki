@@ -2,8 +2,8 @@
 
 var should = require('should'),
     Q = require('q'),
-    errors = require('../lib/errors'),
-    grepResultParser = require('../lib/grepResultParser.js');
+    errors = require('../../lib/errors'),
+    grepResultParser = require('../../lib/grepResultParser.js');
 
 
 describe('grep result parser module tests', function () {

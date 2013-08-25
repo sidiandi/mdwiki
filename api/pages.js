@@ -9,12 +9,6 @@ var fs = require('fs'),
 module.exports = function (req, res) {
   storage.getPages()
     .then(function (pages) {
-      var excludes = ['index', 'home', 'readme'];
-
-      pages = _.filter(pages, function (page) {
-        return !_.contains(excludes, page.name.toLowerCase());
-      });
-
       var json = JSON.stringify(pages);
 
       res.setHeader('Content-Type', 'application/json');

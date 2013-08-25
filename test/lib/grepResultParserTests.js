@@ -98,5 +98,25 @@ describe('grep result parser module tests', function () {
         });
       });
     });
+
+    describe('When the grep result contains header less than four, then it shoudl be transformed to H4', function () {
+          var grepResult = '';
+
+          it('should return an empty array', function (done) {
+              // ARRANGE
+              grepResult = 'c:/path/to/file/file.md:#this was found \n c:/path/to/file/file2.md:###this was found as well\n';
+
+              // ACT
+              grepResultParser.parse(grepResult).done(function (parseResult) {
+                  // ASSERT
+                  parseResult.length.should.be.eql(2);
+                  parseResult[0].fileName.should.be.eql('file.md');
+                  parseResult[0].fileContext.should.be.eql('<h4>this was found</h4>\n');
+                  parseResult[1].fileName.should.be.eql('file2.md');
+                  parseResult[1].fileContext.should.be.eql('<h4>this was found as well</h4>\n');
+                  done();
+                });
+            });
+        });
   });
 });

@@ -16,4 +16,17 @@ controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, 
     $scope.pages = pages || [];
   };
 
+  $scope.excludeDefaultPage = function (page) {
+    var excludes = ['index', 'home', 'readme'];
+    var excludePage = false;
+
+    angular.forEach(excludes, function (exclude) {
+      if (page.name.toLowerCase() === exclude) {
+        excludePage = true;
+      }
+    });
+
+    return !excludePage;
+  };
+
 }]);

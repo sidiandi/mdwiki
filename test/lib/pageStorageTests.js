@@ -8,7 +8,7 @@ var fs = require('fs'),
 
 describe('PageStorageTests', function () {
   describe('getPageContent Tests', function () {
-    describe('When an existing page was queried', function () {
+    describe('When a existing page was queried', function () {
       var sandbox;
 
       beforeEach(function () {
@@ -39,7 +39,7 @@ describe('PageStorageTests', function () {
       });
     });
 
-    describe('When an non existing page was queried', function () {
+    describe('When a non existing page was queried', function () {
         var sandbox;
 
         beforeEach(function () {
@@ -74,7 +74,7 @@ describe('PageStorageTests', function () {
   });
 
   describe('getPageContentAsHtml tests', function () {
-    describe('When an existing page was queried', function () {
+    describe('When a existing page was queried', function () {
         var sandbox;
 
         beforeEach(function () {
@@ -108,14 +108,14 @@ describe('PageStorageTests', function () {
 
   describe('getPages tests', function () {
 
-    describe('When Pages exists', function () {
+    describe('When pages exists', function () {
       var sandbox;
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
       });
 
-      it('should return all pages', function (done) {
+      it('it should return all pages', function (done) {
         sandbox.stub(fs, 'readdir', function (fileName, callback) {
           callback(null, ['index.md', 'page1.md', 'page2.md']);
         });
@@ -131,7 +131,7 @@ describe('PageStorageTests', function () {
           });
       });
 
-      it('should return only the markdown files of the directory', function (done) {
+      it('it should return only the markdown files of the directory', function (done) {
         sandbox.stub(fs, 'readdir', function (fileName, callback) {
           callback(null, ['index.md', 'page1.md', 'page2.md', 'page3.txt']);
         });
@@ -157,18 +157,52 @@ describe('PageStorageTests', function () {
 
       beforeEach(function () {
           sandbox = sinon.sandbox.create();
+          sandbox.stub(fs, 'exists', function (folderName, callback) {
+            callback(true);
+          });
           sandbox.stub(fs, 'readdir', function (fileName, callback) {
             callback(null, undefined);
           });
         });
 
-      it('should return an empty array', function (done) {
+      it('it should return an empty array', function (done) {
         storage.getPages()
           .then(function (pages) {
             should.exists(pages);
             pages.should.have.length(0);
           })
           .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+
+    describe('When no content folder exists', function () {
+      var sandbox;
+      var readDirStub;
+
+      beforeEach(function () {
+          sandbox = sinon.sandbox.create();
+          sandbox.stub(fs, 'exists', function (folderName, callback) {
+            callback(false);
+          });
+          readDirStub = sandbox.stub(fs, 'readdir', function (fileName, callback) {
+            callback(null, undefined);
+          });
+        });
+
+      it('it should never call the readdir function and return an empty array', function (done) {
+        storage.getPages()
+          .then(function (pages) {
+            should.exists(pages);
+            pages.should.have.length(0);
+          })
+          .done(function () {
+            readDirStub.calledOnce.should.be.false;
             done();
           });
       });

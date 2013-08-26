@@ -6,7 +6,8 @@ var express = require("express"),
     api = require('./api/index'),
     pages = require('./api/pages'),
     git = require('./api/gitroutes'),
-    searchRoutes = require('./api/searchroutes');
+    searchRoutes = require('./api/searchroutes'),
+    staticFileHandler = require('./api/staticcontent');
 
 var app = express();
 
@@ -37,10 +38,13 @@ app.post('/api/git/clone', git.clone);
 app.post('/api/git/pull', git.pull);
 app.post('/api/search', searchRoutes.search);
 
-// redirect all others to the index (HTML5 history)
-app.get(['/git/clone', '/page/*'], function (req, res) {
+app.get('/static/*', staticFileHandler);
+
+
+app.get(['/git/clone'], function (req, res) {
   res.sendfile('./public/index.html');
 });
+
 
 var port = app.get('port');
 

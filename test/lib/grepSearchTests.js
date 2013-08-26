@@ -29,9 +29,13 @@ describe('grep search module tests', function () {
             callback(true);
           });
           var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
+            should.exists(options);
+            options.should.have.property('cwd');
+            options.cwd.should.equal(folderToSearch);
+
             callback(null, 'Text with Java');
           });
-          var expected = util.format('grep -i "%s" %s/*.*', textToSearch, folderToSearch);
+          var expected = util.format('grep -i "%s" *.*', textToSearch);
 
           // ACT
           grepSearcher.searchForText(folderToSearch, textToSearch)

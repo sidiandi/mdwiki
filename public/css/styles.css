@@ -20,5 +20,9 @@ form {
 }
 
 input.ng-invalid.ng-dirty {
-    background-color:red;
+    border-color:red;
+}
+
+a.pagesMenu {
+  cursor: pointer;
 }

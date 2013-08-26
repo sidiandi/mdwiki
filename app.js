@@ -18,8 +18,8 @@ app.configure(function () {
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(app.router);
 });
 
 // development only
@@ -41,7 +41,8 @@ app.post('/api/search', searchRoutes.search);
 app.get('/static/*', staticFileHandler);
 
 
-app.get(['/git/clone'], function (req, res) {
+app.get(['/git/clone', '*'], function (req, res) {
+  logger.info('Request for url: %s', req.url);
   res.sendfile('./public/index.html');
 });
 

@@ -116,6 +116,9 @@ describe('PageStorageTests', function () {
       });
 
       it('it should return all pages', function (done) {
+        sandbox.stub(fs, 'exists', function (folderName, callback) {
+          callback(true);
+        });
         sandbox.stub(fs, 'readdir', function (fileName, callback) {
           callback(null, ['index.md', 'page1.md', 'page2.md']);
         });
@@ -132,6 +135,9 @@ describe('PageStorageTests', function () {
       });
 
       it('it should return only the markdown files of the directory', function (done) {
+        sandbox.stub(fs, 'exists', function (folderName, callback) {
+          callback(true);
+        });
         sandbox.stub(fs, 'readdir', function (fileName, callback) {
           callback(null, ['index.md', 'page1.md', 'page2.md', 'page3.txt']);
         });

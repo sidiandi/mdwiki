@@ -48,7 +48,7 @@ describe('grep result parser module tests', function () {
 
       it('should return an empty array', function (done) {
         // ARRANGE
-        grepResult = '/path/to/file/file.md:this was found\n';
+        grepResult = 'file.md:this was found\n';
 
         // ACT
         grepResultParser.parse(grepResult).done(function (parseResult) {
@@ -66,7 +66,7 @@ describe('grep result parser module tests', function () {
 
       it('should return an empty array', function (done) {
         // ARRANGE
-        grepResult = 'X:/path/to/file/file.md:this was found\n';
+        grepResult = 'file.md:this was found\n';
 
         // ACT
         grepResultParser.parse(grepResult).done(function (parseResult) {
@@ -84,7 +84,7 @@ describe('grep result parser module tests', function () {
 
       it('should return an empty array', function (done) {
         // ARRANGE
-        grepResult = 'c:/path/to/file/file.md:this was found \n c:/path/to/file/file2.md:this was found as well\n';
+        grepResult = 'file.md:this was found \n file2.md:this was found as well\n';
 
         // ACT
         grepResultParser.parse(grepResult).done(function (parseResult) {
@@ -104,7 +104,7 @@ describe('grep result parser module tests', function () {
 
           it('should return an empty array', function (done) {
               // ARRANGE
-              grepResult = 'c:/path/to/file/file.md:#this was found \n c:/path/to/file/file2.md:###this was found as well\n';
+              grepResult = 'file.md:#this was found \n file2.md:###this was found as well\n';
 
               // ACT
               grepResultParser.parse(grepResult).done(function (parseResult) {

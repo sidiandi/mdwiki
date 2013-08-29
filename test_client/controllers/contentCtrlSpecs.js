@@ -104,4 +104,34 @@ describe('Content Controller Tests', function () {
     });
   });
 
+  describe('When html contains some anchors to static files', function () {
+    var $scope, $controller, pageService;
+
+    beforeEach(inject(function ($injector, $rootScope, $q) {
+      $scope = $rootScope.$new();
+      $controller = $injector.get('$controller');
+
+      pageService = $injector.get('PageService');
+      var deferred = $q.defer();
+      deferred.resolve('<a href="/static/staticfile.pdf">Test</a>');
+      spyOn(pageService, 'getPage').andReturn(deferred.promise);
+    }));
+
+    it('should add a target attribut to the anchors', function () {
+      var controller = $controller('ContentCtrl', {
+        $scope: $scope,
+        $routeParams: { page: 'index'},
+        $location: {},
+        pageService: pageService
+      });
+
+      // This is important to resolve the promises => it must called after the function
+      // that is using the promise, in this case the constructor function of the controller
+      $scope.$apply();
+
+      expect($scope.content).toEqual('<a href="/static/staticfile.pdf" target="_blank">Test</a>');
+    });
+
+  });
+
 });

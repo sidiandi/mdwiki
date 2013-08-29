@@ -11,7 +11,7 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 
   pageService.getPage(page)
     .then(function (page) {
-      $scope.content = page;
+      $scope.content = addTargetToStaticLinks(page);
     }, function (error) {
       if (page === 'index' && error.code === 404) {
         $location.path('/git/clone');
@@ -19,4 +19,11 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
         $scope.content = 'Content not found!';
       }
     });
+
+  var addTargetToStaticLinks = function (html) {
+    var dom = $('<div>' + html + '</div>');
+    dom.find('a[href^="/static/"]').attr('target', '_blank');
+    return dom.html();
+  };
+
 }]);

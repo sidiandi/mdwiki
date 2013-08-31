@@ -1,13 +1,8 @@
 @import 'bootstrap.css';
 @import 'font-awesome.min.css';
 
-
 body {
   padding-top: 50px;
-}
-
-.ng-view {
-
 }
 
 .dropdown-menu {
@@ -19,10 +14,20 @@ form {
   margin-top: 20px;
 }
 
-input.ng-invalid.ng-dirty {
+.ng-invalid.ng-dirty {
     border-color:red;
 }
 
 a.pagesMenu {
   cursor: pointer;
+}
+
+a.navbar-brand {
+  display: inline;
+}
+
+img.logo {
+  height: 55px;
+  margin-left: 10px;
+  margin-right: 10px;
 }

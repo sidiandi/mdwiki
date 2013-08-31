@@ -43,7 +43,7 @@
       </div>
       <div class="pull-right" ng-controller="GitPullCtrl">
         <button id="pullButton" type="button" title="Pull latest changes"
-                class="btn btn-default navbar-btn" ng-click="pull()"
+                class="btn btn-default navbar-btn" ng-show="hasContent" ng-click="pull()"
                 data-loading-text="Pulling...">
           <i class="icon-cloud-download icon-large"></i>
         </button>

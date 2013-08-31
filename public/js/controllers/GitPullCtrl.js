@@ -6,10 +6,16 @@ controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageSe
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
+  $scope.hasContent = false;
+
+  var checkHasContent = function (pages) {
+    $scope.hasContent = pages && pages.length > 0;
+  };
+  pageService.registerObserver(checkHasContent);
 
   $scope.pull = function () {
     $scope.isBusy = true;
-    $scope.message = 'Please wait while pull the latest changes in your repository...';
+    $scope.message = 'Please wait while we pulling the latest changes in your repository...';
     $scope.hasError = false;
 
     gitService.pull()
@@ -25,5 +31,6 @@ controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageSe
       .finally(function () {
         $scope.isBusy = false;
       });
+
   };
 }]);

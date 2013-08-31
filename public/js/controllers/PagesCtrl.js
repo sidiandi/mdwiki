@@ -5,6 +5,10 @@ var controllers = controllers || angular.module('mdwiki.controllers', []);
 controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, pageService) {
   $scope.pages = [];
 
+  var updatePages = function (pages) {
+    $scope.pages = pages || [];
+  };
+
   pageService.getPages()
     .then(function (pages) {
       $scope.pages = pages;
@@ -12,9 +16,6 @@ controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, 
       pageService.registerObserver(updatePages);
     });
 
-  var updatePages = function (pages) {
-    $scope.pages = pages || [];
-  };
 
   $scope.excludeDefaultPage = function (page) {
     var excludes = ['index', 'home', 'readme'];

@@ -3,6 +3,7 @@
 var mdwiki = angular.module('mdwiki', [
   'ngRoute',
   'ngSanitize',
+  'ngAnimate',
   'mdwiki.controllers',
   'mdwiki.filters',
   'mdwiki.services',

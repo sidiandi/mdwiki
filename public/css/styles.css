@@ -31,3 +31,31 @@ img.logo {
   margin-left: 10px;
   margin-right: 10px;
 }
+
+
+
+div.content-view.ng-enter,
+div.content-view.ng-leave {
+  -webkit-transition: opacity 1s cubic-bezier(0.895, 0.030, 0.685, 0.220);
+  -moz-transition: opacity 1s cubic-bezier(0.950, 0.050, 0.795, 0.035);
+  -ms-transition: opacity 1s cubic-bezier(0.950, 0.050, 0.795, 0.035);
+  -o-transition: opacity 1s cubic-bezier(0.950, 0.050, 0.795, 0.035);
+  transition: opacity 1s cubic-bezier(0.950, 0.050, 0.795, 0.035); /* easeInExpo */
+}
+
+div.content-view.ng-enter {
+  opacity: 1;
+}
+
+div.content-view.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+div.content-view.ng-leave {
+  opacity: 1;
+}
+div.content-view.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+

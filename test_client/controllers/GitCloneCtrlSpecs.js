@@ -8,7 +8,7 @@ describe('Git Controller Tests', function () {
   });
 
   describe('When the user enters a valid git url', function () {
-    var $scope, $location, gitCtrl, gitService, pageService;
+    var $scope, $location, gitCtrl, gitService, pageService, gitCloneDeferred, pagesDeferred;
 
     beforeEach(inject(function ($injector, $controller, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -18,16 +18,14 @@ describe('Git Controller Tests', function () {
       spyOn($location, 'path');
 
       gitService = $injector.get('GitService');
-      var deferred = $q.defer();
-      deferred.resolve();
-      spyOn(gitService, 'clone').andReturn(deferred.promise);
+      gitCloneDeferred = $q.defer();
+      spyOn(gitService, 'clone').andReturn(gitCloneDeferred.promise);
 
       var $http = $injector.get('$httpBackend');
       $http.expectGET('./views/content.html').respond(200, '<h1/>');
 
       pageService = $injector.get('PageService');
-      var pagesDeferred = $q.defer();
-      pagesDeferred.resolve([]);
+      pagesDeferred = $q.defer();
       spyOn(pageService, 'getPages').andReturn(pagesDeferred.promise);
 
       gitCtrl = $controller('GitCloneCtrl', {
@@ -40,7 +38,10 @@ describe('Git Controller Tests', function () {
     it('should call the clone method and getpages when clone was successful', function () {
       $scope.clone();
 
-      $scope.$apply();
+      $scope.$apply(function () {
+        gitCloneDeferred.resolve();
+        pagesDeferred.resolve([]);
+      });
 
       expect($location.path).toHaveBeenCalledWith('/');
       expect(gitService.clone).toHaveBeenCalled();

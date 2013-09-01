@@ -8,15 +8,14 @@ describe('Content Controller Tests', function () {
   });
 
   describe('When the page exists', function () {
-    var $scope, $controller, pageService;
+    var $scope, $controller, deferred, pageService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
       $controller = $injector.get('$controller');
 
       pageService = $injector.get('PageService');
-      var deferred = $q.defer();
-      deferred.resolve('<h1>Test</h1>');
+      deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
     }));
 
@@ -30,7 +29,9 @@ describe('Content Controller Tests', function () {
 
       // This is important to resolve the promises => it must called after the function
       // that is using the promise, in this case the constructor function of the controller
-      $scope.$apply();
+      $scope.$apply(function () {
+        deferred.resolve('<h1>Test</h1>');
+      });
 
       expect($scope.content).toEqual('<h1>Test</h1>');
     });

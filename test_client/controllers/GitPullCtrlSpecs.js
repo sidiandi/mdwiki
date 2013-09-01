@@ -8,7 +8,7 @@ describe('Git Pull Controller Tests', function () {
   });
 
   describe('When the user has clicked on the pull button', function () {
-    var $scope, $route, $http, gitCtrl, gitService, pageService;
+    var $scope, $route, $http, gitCtrl, gitService, pageService, deferred;
 
     beforeEach(inject(function ($injector, $controller, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -20,8 +20,7 @@ describe('Git Pull Controller Tests', function () {
       $http.expectGET('./views/content.html').respond(200, '<h1/>');
 
       gitService = $injector.get('GitService');
-      var deferred = $q.defer();
-      deferred.resolve();
+      deferred = $q.defer();
       spyOn(gitService, 'pull').andReturn(deferred.promise);
 
       pageService = $injector.get('PageService');
@@ -39,7 +38,9 @@ describe('Git Pull Controller Tests', function () {
     it('it should pull the latest content changes', function () {
       $scope.pull();
 
-      $scope.$apply();
+      $scope.$apply(function () {
+        deferred.resolve();
+      });
 
       expect(gitService.pull).toHaveBeenCalled();
       expect(pageService.getPages).toHaveBeenCalled();

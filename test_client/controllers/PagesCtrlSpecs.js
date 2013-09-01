@@ -8,15 +8,14 @@ describe('Pages Controller Tests', function () {
   });
 
   describe('When page exists', function () {
-    var $scope, pageCtrl, pageService;
+    var $scope, pageCtrl, pageService, deferred;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
       var $controller = $injector.get('$controller');
 
       pageService = $injector.get('PageService');
-      var deferred = $q.defer();
-      deferred.resolve([ {name: 'index'}, {name: 'page1'}]);
+      deferred = $q.defer();
       spyOn(pageService, 'getPages').andReturn(deferred.promise);
 
       pageCtrl = $controller('PagesCtrl', {
@@ -27,7 +26,9 @@ describe('Pages Controller Tests', function () {
 
     it('it should call the service the fetch all pages and set it into the content', function () {
 
-      $scope.$apply();
+      $scope.$apply(function () {
+        deferred.resolve([ {name: 'index'}, {name: 'page1'}]);
+      });
 
       expect($scope.pages).not.toBeUndefined;
       expect($scope.pages.length).toEqual(2);

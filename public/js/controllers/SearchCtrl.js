@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $location, $route, searchService) {
+controllers.controller('SearchCtrl', ['$scope', '$routeParams', '$http', '$location', '$route', 'SearchService', function ($scope, $routeParams, $http, $location, $route, searchService) {
     $scope.textToSearch = '';
     $scope.searchResult = searchService.searchResult;
 
@@ -27,5 +27,4 @@ controllers.controller('SearchCtrl', function ($scope, $routeParams, $http, $loc
                 $scope.message = 'There is an error occured while searching for the text: ' + data.toString();
               });
       };
-  });
-
+  }]);

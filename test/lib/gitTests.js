@@ -24,9 +24,7 @@ describe('git module tests', function () {
 
       it('should clone the specified repository into the content folder', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(false);
-        });
+        sandbox.stub(fs, 'existsSync').returns(false);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });
@@ -56,9 +54,7 @@ describe('git module tests', function () {
 
       it('should return an ContentFolderExistsError', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(true);
-        });
+        sandbox.stub(fs, 'existsSync').returns(true);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });

@@ -10,23 +10,6 @@ var fs = require('fs'),
     git = require('../../lib/git'),
     errors = require('../../lib/errors');
 
-/*function rmdirIfExists(path) {
-  var deferred = Q.defer();
-
-  if (fs.existsSync(path) === false) {
-    deferred.resolve();
-  }
-
-  exec('rm -rf ' + path, function (err, out) {
-    if (err) {
-      deferred.reject(err);
-    }
-    deferred.resolve();
-  });
-
-  return deferred.promise;
-}*/
-
 describe('git module tests', function () {
   this.timeout(5000);
 
@@ -112,9 +95,7 @@ describe('git module tests', function () {
 
       it('should pull the latest changes from the remote repository', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(true);
-        });
+        sandbox.stub(fs, 'existsSync').returns(true);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });
@@ -144,9 +125,7 @@ describe('git module tests', function () {
 
       it('should return an ContentFolderNotExistsError', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(false);
-        });
+        sandbox.stub(fs, 'existsSync').returns(false);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });
@@ -164,6 +143,39 @@ describe('git module tests', function () {
           stub.callCount.should.be.eql(0);
           done();
         });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+
+    describe('When exec throws an error it should be handled correctly', function () {
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+      });
+
+      it('should return an ContentFolderNotExistsError', function (done) {
+        // ARRANGE
+        sandbox.stub(fs, 'existsSync').returns(true);
+        var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
+          callback(new Error('something was wrong'));
+        });
+        var lastError;
+
+        // ACT
+        git.pull(__dirname)
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function () {
+            // ASSERT
+            should.exists(lastError);
+            lastError.message.should.be.equal('something was wrong');
+            done();
+          });
       });
 
       afterEach(function () {

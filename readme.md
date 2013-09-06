@@ -1,4 +1,6 @@
-# Overview
+# Markdown Wiki
+
+[![Build Status](https://travis-ci.org/janbaer/mdwiki.png?branch=develop)](https://travis-ci.org/janbaer/mdwiki)
 
 This repository contains a **node.js** project for a simple **markdown** based wiki.
 
@@ -15,4 +17,4 @@ In the first version you have the create a clone and pull the updates manually o
 
 For the next milestone we are planning to use web hooks to receive all updates automatically.
 
-For more informations about the project see the wiki page of this repository. We will write more technical informations about the project there.
+For more informations about the project see the [wiki](https://github.com/janbaer/mdwiki/wiki) page of this repository. We will write more technical informations about the project there.

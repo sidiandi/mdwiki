@@ -8,27 +8,34 @@ var path = require('path'),
 describe('Tests for the static content handler', function () {
   var sandbox;
 
+  var response = {
+    sendfile: function (filename) {},
+    send: function (code, message) {},
+    end: function () {}
+  };
+
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
   describe('When the static file exists', function () {
     beforeEach(function () {
+
       sandbox.stub(fs, 'exists', function (path, callback) {
         callback(true);
       });
     });
 
     it('should send the file back', function (done) {
+      // ARRANGE
       var expectedFilePath = path.join(__dirname, '../../content/static/pdf', 'test.pdf');
-      var response = {
-        sendfile: function (filename) {}
-      };
+      var spy = sandbox.spy(response, 'sendfile');
 
-      var mock = sinon.mock(response);
-      mock.expects('sendfile').withArgs(expectedFilePath);
-
+      // ACT
       staticFileHandler({url: '/static/pdf/test.pdf'}, response);
+
+      // ASSERT
+      spy.withArgs(expectedFilePath).calledOnce.should.be.true;
 
       done();
     });
@@ -46,17 +53,16 @@ describe('Tests for the static content handler', function () {
     });
 
     it('should send and 404 error', function (done) {
-      var response = {
-        sendfile: function (filename) {},
-        send: function (code, message) {},
-        end: function () {}
-      };
+      // ARRANGE
+      var sendFileSpy = sandbox.spy(response, 'sendfile');
+      var sendSpy = sandbox.spy(response, 'send');
 
-      var mock = sinon.mock(response);
-      mock.expects('sendfile').never();
-      mock.expects('send').withArgs(404, 'file not found');
-
+      // ACT
       staticFileHandler({url: '/static/pdf/test.pdf'}, response);
+
+      // ASSERT
+      sendFileSpy.called.should.be.false;
+      sendSpy.withArgs(404, 'file not found').calledOnce.should.be.true;
 
       done();
     });

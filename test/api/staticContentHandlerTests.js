@@ -29,18 +29,20 @@ describe('Tests for the static content handler', function () {
     it('should send the file back', function (done) {
       // ARRANGE
       var expectedFilePath = path.join(__dirname, '../../content/static/pdf', 'test.pdf');
-      var spy = sandbox.spy(response, 'sendfile');
+
+      sinon.spy(response, 'sendfile');
 
       // ACT
       staticFileHandler({url: '/static/pdf/test.pdf'}, response);
 
       // ASSERT
-      spy.withArgs(expectedFilePath).calledOnce.should.be.true;
+      response.sendfile.withArgs(expectedFilePath).calledOnce.should.be.true;
 
       done();
     });
 
     afterEach(function () {
+      response.sendfile.restore();
       sandbox.restore();
     });
   });
@@ -54,20 +56,22 @@ describe('Tests for the static content handler', function () {
 
     it('should send and 404 error', function (done) {
       // ARRANGE
-      var sendFileSpy = sandbox.spy(response, 'sendfile');
-      var sendSpy = sandbox.spy(response, 'send');
+      sinon.spy(response, 'sendfile');
+      sinon.spy(response, 'send');
 
       // ACT
       staticFileHandler({url: '/static/pdf/test.pdf'}, response);
 
       // ASSERT
-      sendFileSpy.called.should.be.false;
-      sendSpy.withArgs(404, 'file not found').calledOnce.should.be.true;
+      response.sendfile.called.should.be.false;
+      response.send.withArgs(404, 'file not found').calledOnce.should.be.true;
 
       done();
     });
 
     afterEach(function () {
+      response.sendfile.restore();
+      response.send.restore();
       sandbox.restore();
     });
   });

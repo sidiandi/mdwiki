@@ -1,3 +1,5 @@
-<div ng-bind-html="content">
+<div class="content-error alert alert-danger" ng-show="hasError">{{ errorMessage }}</div>
+
+<div ng-bind-html="content" ng-hide="hasError">
 
 </div>

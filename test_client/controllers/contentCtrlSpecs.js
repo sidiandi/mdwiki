@@ -66,7 +66,7 @@ describe('Content Controller Tests', function () {
 
       $scope.$apply();
 
-      expect($scope.content).toBeUndefined();
+      expect($scope.content).toEqual('');
       expect($location.path).toHaveBeenCalledWith('/git/clone');
     });
   });
@@ -100,21 +100,20 @@ describe('Content Controller Tests', function () {
 
       $scope.$apply();
 
-      expect($scope.content).toEqual('Content not found!');
+      expect($scope.errorMessage).toEqual('Content not found!');
       expect($location.path).not.toHaveBeenCalled();
     });
   });
 
   describe('When html contains some anchors to static files', function () {
-    var $scope, $controller, pageService;
+    var $scope, $controller, deferred, pageService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
       $controller = $injector.get('$controller');
 
       pageService = $injector.get('PageService');
-      var deferred = $q.defer();
-      deferred.resolve('<a href="/static/staticfile.pdf">Test</a>');
+      deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
     }));
 
@@ -128,7 +127,9 @@ describe('Content Controller Tests', function () {
 
       // This is important to resolve the promises => it must called after the function
       // that is using the promise, in this case the constructor function of the controller
-      $scope.$apply();
+      $scope.$apply(function () {
+        deferred.resolve('<a href="/static/staticfile.pdf">Test</a>');
+      });
 
       expect($scope.content).toEqual('<a href="/static/staticfile.pdf" target="_blank">Test</a>');
     });

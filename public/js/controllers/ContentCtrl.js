@@ -4,6 +4,9 @@ var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'PageService', function ($scope, $routeParams, $location, pageService) {
   var page = 'index';
+  $scope.content = '';
+  $scope.errorMessage = '';
+  $scope.hasError = false;
 
   if ($routeParams.page) {
     page = $routeParams.page;
@@ -16,7 +19,8 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
       if (page === 'index' && error.code === 404) {
         $location.path('/git/clone');
       } else {
-        $scope.content = 'Content not found!';
+        $scope.errorMessage = 'Content not found!';
+        $scope.hasError = true;
       }
     });
 

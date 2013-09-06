@@ -10,6 +10,7 @@ module.exports = function (req, res) {
 
   fs.exists(fileName, function (exists) {
     if (!exists) {
+      logger.warn('static file %$ doesnt exists', fileName);
       res.send(404, 'file not found');
       res.end();
     }

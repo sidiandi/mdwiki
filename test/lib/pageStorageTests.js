@@ -8,10 +8,11 @@ var fs = require('fs'),
     errors = require('../../lib/errors');
 
 describe('PageStorageTests', function () {
+  var contentDir = path.join(__dirname, '../../content');
+
   describe('getPageContent Tests', function () {
     describe('When a existing page was queried', function () {
       var sandbox;
-      var contentDir = path.join(__dirname, '../../content');
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
@@ -21,7 +22,7 @@ describe('PageStorageTests', function () {
         });
       });
 
-      it('it should return the content as markdown', function (done) {
+      it('should return the content as markdown', function (done) {
         storage.getPageContent('index')
           .then(function (markdown) {
             should.exists(markdown);
@@ -39,14 +40,14 @@ describe('PageStorageTests', function () {
       });
     });
 
-    describe.only('When index page does not exists but home exists', function () {
+    describe('When index page does not exists but home exists', function () {
       var sandbox;
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
         var stub = sandbox.stub(fs, 'existsSync');
-        stub.withArgs('index.md').returns(false);
-        stub.withArgs('home.md').returns(true);
+        stub.withArgs(path.join(contentDir, 'index.md')).returns(false);
+        stub.withArgs(path.join(contentDir, 'home.md')).returns(true);
 
         sandbox.stub(fs, 'readFile', function (fileName, callback) {
           callback(null, '#Home');
@@ -76,12 +77,10 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'exists', function (path, callback) {
-            callback(false);
-          });
+          sandbox.stub(fs, 'existsSync').returns(false);
         });
 
-        it('it should throw an FileNotFoundError', function (done) {
+        it('should throw an FileNotFoundError', function (done) {
           var lastError;
 
           storage.getPageContent('non_existing_page')
@@ -111,15 +110,13 @@ describe('PageStorageTests', function () {
 
         beforeEach(function () {
           sandbox = sinon.sandbox.create();
-          sandbox.stub(fs, 'exists', function (path, callback) {
-            callback(true);
-          });
+          sandbox.stub(fs, 'existsSync').returns(true);
           sandbox.stub(fs, 'readFile', function (fileName, callback) {
             callback(null, '#Test');
           });
         });
 
-        it('it should return the content as html', function (done) {
+        it('should return the content as html', function (done) {
           storage.getPageContentAsHtml('index')
             .then(function (html) {
               should.exists(html);
@@ -147,7 +144,7 @@ describe('PageStorageTests', function () {
         sandbox = sinon.sandbox.create();
       });
 
-      it('it should return all pages', function (done) {
+      it('should return all pages', function (done) {
         sandbox.stub(fs, 'exists', function (folderName, callback) {
           callback(true);
         });
@@ -166,7 +163,7 @@ describe('PageStorageTests', function () {
           });
       });
 
-      it('it should return only the markdown files of the directory', function (done) {
+      it('should return only the markdown files of the directory', function (done) {
         sandbox.stub(fs, 'exists', function (folderName, callback) {
           callback(true);
         });
@@ -203,7 +200,7 @@ describe('PageStorageTests', function () {
           });
         });
 
-      it('it should return an empty array', function (done) {
+      it('should return an empty array', function (done) {
         storage.getPages()
           .then(function (pages) {
             should.exists(pages);
@@ -233,7 +230,7 @@ describe('PageStorageTests', function () {
           });
         });
 
-      it('it should never call the readdir function and return an empty array', function (done) {
+      it('should never call the readdir function and return an empty array', function (done) {
         storage.getPages()
           .then(function (pages) {
             should.exists(pages);

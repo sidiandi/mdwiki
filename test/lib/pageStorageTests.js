@@ -1,6 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
+    path = require('path'),
     sinon = require('sinon'),
     storage = require('../../lib/pageStorageFS'),
     should = require('should'),
@@ -10,12 +11,11 @@ describe('PageStorageTests', function () {
   describe('getPageContent Tests', function () {
     describe('When a existing page was queried', function () {
       var sandbox;
+      var contentDir = path.join(__dirname, '../../content');
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
-        sandbox.stub(fs, 'exists', function (path, callback) {
-          callback(true);
-        });
+        sandbox.stub(fs, 'existsSync').withArgs(path.join(contentDir, 'index.md')).returns(true);
         sandbox.stub(fs, 'readFile', function (fileName, callback) {
           callback(null, '#Test');
         });
@@ -27,6 +27,38 @@ describe('PageStorageTests', function () {
             should.exists(markdown);
             markdown.should.not.be.empty;
             markdown.should.be.eql('#Test');
+          })
+          .done(function () {
+            done();
+          });
+      });
+
+      afterEach(function (done) {
+        sandbox.restore();
+        done();
+      });
+    });
+
+    describe.only('When index page does not exists but home exists', function () {
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+        var stub = sandbox.stub(fs, 'existsSync');
+        stub.withArgs('index.md').returns(false);
+        stub.withArgs('home.md').returns(true);
+
+        sandbox.stub(fs, 'readFile', function (fileName, callback) {
+          callback(null, '#Home');
+        });
+      });
+
+      it('should return the content of home in this case', function (done) {
+        storage.getPageContent('index')
+          .then(function (markdown) {
+            should.exists(markdown);
+            markdown.should.not.be.empty;
+            markdown.should.be.eql('#Home');
           })
           .done(function () {
             done();

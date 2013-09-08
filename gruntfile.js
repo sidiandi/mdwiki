@@ -78,6 +78,9 @@ module.exports = function (grunt) {
   // Dev task
   grunt.registerTask('dev', ['jshint', 'mochaTest', 'watch']);
 
+  // Test task
+  grunt.registerTask('test', ['jshint', 'mochaTest', 'karma']);
+
   // Travis-CI task
   grunt.registerTask('travis', ['default']);
 };

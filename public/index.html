@@ -21,7 +21,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <img src="images/wiki.png" class="logo" alt="Wiki" title="Markdown Wiki M1">
+      <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M1" bs-tooltip >
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,9 +39,11 @@
           </li>
       </ul>
       <div class="nav navbar-nav navbar-right" ng-controller="GitPullCtrl">
-        <button id="pullButton" type="button" title="Pull latest changes" class="btn btn-default navbar-btn"
+        <button id="pullButton" type="button" title="Pull latest changes"
+                class="btn btn-default navbar-btn"
                 ng-show="hasContent" ng-click="pull()"
-                data-loading-text="Pulling...">
+                bs-tooltip bs-SwitchText
+                data-loading-text="Pulling..." >
           <i class="icon-cloud-download icon-large"></i>
         </button>
       </div>
@@ -83,12 +85,5 @@
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
 
-  <script type="text/javascript">
-    var $pullButton = $('#pullButton');
-    $pullButton.click(function () {
-        $(this).button('loading');
-    }).tooltip( { animation: true, placement: 'bottom', delay: { show: 100, hide: 100 } });
-    $('.logo').tooltip( { animation: true, placement: 'bottom', delay: { show: 100, hide: 100 } })
-  </script>
 </body>
 </html>

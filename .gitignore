@@ -27,3 +27,4 @@ docs/generated
 content/
 
 start.bat
+nssm.exe

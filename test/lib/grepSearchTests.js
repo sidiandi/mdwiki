@@ -1,13 +1,10 @@
 'use strict';
 
 var fs = require('fs'),
-    path = require('path'),
     util = require('util'),
     sinon = require('sinon'),
     should = require('should'),
-    Q = require('q'),
     grepSearcher = require('../../lib/grepSearcher'),
-    errors = require('../../lib/errors'),
     child_process = require('child_process');
 
 describe('grep search module tests', function () {

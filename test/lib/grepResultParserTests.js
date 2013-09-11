@@ -43,42 +43,6 @@ describe('grep result parser module tests', function () {
       });
     });
 
-    describe('When the grep result contains the path of the file the parser should return a valid result object', function () {
-      var grepResult = '';
-
-      it('should return an empty array', function (done) {
-        // ARRANGE
-        grepResult = 'file.md:this was found\n';
-
-        // ACT
-        grepResultParser.parse(grepResult).done(function (parseResult) {
-          // ASSERT
-          parseResult.length.should.be.eql(1);
-          parseResult[0].fileName.should.be.eql('file.md');
-          parseResult[0].fileContext.should.be.eql('<p>this was found</p>\n');
-          done();
-        });
-      });
-    });
-
-    describe('When the grep result contains a windows path of the file the parser should return a valid result object', function () {
-      var grepResult = '';
-
-      it('should return an empty array', function (done) {
-        // ARRANGE
-        grepResult = 'file.md:this was found\n';
-
-        // ACT
-        grepResultParser.parse(grepResult).done(function (parseResult) {
-          // ASSERT
-          parseResult.length.should.be.eql(1);
-          parseResult[0].fileName.should.be.eql('file.md');
-          parseResult[0].fileContext.should.be.eql('<p>this was found</p>\n');
-          done();
-        });
-      });
-    });
-
     describe('When the grep result contains multiple lines, then the parser should return a valid list of parsed objects', function () {
       var grepResult = '';
 
@@ -99,7 +63,7 @@ describe('grep result parser module tests', function () {
       });
     });
 
-    describe('When the grep result contains header less than four, then it shoudl be transformed to H4', function () {
+    describe('When the grep result contains header less than four, then it should be transformed to H4', function () {
           var grepResult = '';
 
           it('should return an empty array', function (done) {

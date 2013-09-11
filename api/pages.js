@@ -3,7 +3,6 @@
 var fs = require('fs'),
   path = require('path'),
   q = require('q'),
-  _ = require('underscore'),
   storage = require('../lib/pageStorageFS');
 
 module.exports = function (req, res) {

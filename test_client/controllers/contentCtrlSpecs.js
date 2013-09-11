@@ -117,7 +117,7 @@ describe('Content Controller Tests', function () {
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
     }));
 
-    it('should add a target attribut to the anchors', function () {
+    it('should add a target attribute to the anchors', function () {
       var controller = $controller('ContentCtrl', {
         $scope: $scope,
         $routeParams: { page: 'index'},
@@ -137,15 +137,14 @@ describe('Content Controller Tests', function () {
   });
 
   describe('When we host a github wiki it should remove the wiki at the begin of the link', function () {
-    var $scope, $controller, pageService;
+    var $scope, $controller, deferred, pageService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
       $controller = $injector.get('$controller');
 
       pageService = $injector.get('PageService');
-      var deferred = $q.defer();
-      deferred.resolve('<a href="wiki/page1">Page1</a>');
+      deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
     }));
 
@@ -157,9 +156,9 @@ describe('Content Controller Tests', function () {
         pageService: pageService
       });
 
-      // This is important to resolve the promises => it must called after the function
-      // that is using the promise, in this case the constructor function of the controller
-      $scope.$apply();
+      $scope.$apply(function () {
+        deferred.resolve('<a href="wiki/page1">Page1</a>');
+      });
 
       expect($scope.content).toEqual('<a href="/page1">Page1</a>');
     });

@@ -11,7 +11,7 @@ var search = function (req, res) {
 
   grepSearcher.searchForText(rootPath, req.body.textToSearch)
     .then(function (data) {
-      console.log(data);
+      logger.info(data);
       res.statusCode = 200;
       var parsedResult = grepResultParser.parse(data[0]);
       parsedResult.then(function (resultObjects) {

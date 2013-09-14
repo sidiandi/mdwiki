@@ -3,7 +3,7 @@
 var path = require('path'),
     sinon = require('sinon'),
     fs = require('fs'),
-    staticFileHandler = require('../../api/staticcontent');
+    staticFileRequestHandler = require('../../api/staticfilerequesthandler');
 
 describe('Tests for the static content handler', function () {
   var sandbox;
@@ -33,7 +33,7 @@ describe('Tests for the static content handler', function () {
       sinon.spy(response, 'sendfile');
 
       // ACT
-      staticFileHandler({url: '/static/pdf/test.pdf'}, response);
+      staticFileRequestHandler({url: '/static/pdf/test.pdf'}, response);
 
       // ASSERT
       response.sendfile.withArgs(expectedFilePath).calledOnce.should.be.true;
@@ -60,7 +60,7 @@ describe('Tests for the static content handler', function () {
       sinon.spy(response, 'send');
 
       // ACT
-      staticFileHandler({url: '/static/pdf/test.pdf'}, response);
+      staticFileRequestHandler({url: '/static/pdf/test.pdf'}, response);
 
       // ASSERT
       response.sendfile.called.should.be.false;

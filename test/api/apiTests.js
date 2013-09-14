@@ -8,10 +8,9 @@ var request = require('supertest'),
     git = require('../../lib/git'),
     errors = require('../../lib/errors');
 
-var pageRoute = require('../../api/index'),
-    pagesRoute = require('../../api/pages'),
-    cloneRoute = require('../../api/gitroutes').clone,
-    pullRoute = require('../../api/gitroutes').pull;
+var pageRequestHandler = require('../../api/pagerequesthandler'),
+    pagesRequestHandler = require('../../api/pagesrequesthandler'),
+    gitRequestHandler = require('../../api/gitrequesthandler');
 
 describe('API tests', function () {
   'use strict';
@@ -23,10 +22,10 @@ describe('API tests', function () {
     app = express();
     app.use(express.bodyParser());
 
-    app.get('/api/pages', pagesRoute);
-    app.get('/api/page/:page?', pageRoute);
-    app.post('/api/git/clone', cloneRoute);
-    app.post('/api/git/pull', pullRoute);
+    app.get('/api/pages', pagesRequestHandler);
+    app.get('/api/page/:page?', pageRequestHandler);
+    app.post('/api/git/clone', gitRequestHandler.clone);
+    app.post('/api/git/pull', gitRequestHandler.pull);
 
     sandbox = sinon.sandbox.create();
   });

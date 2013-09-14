@@ -3,12 +3,12 @@
 var express = require("express"),
     path = require('path'),
     logger = require('./lib/logger'),
-    api = require('./api/index'),
     util = require('util'),
-    pages = require('./api/pages'),
-    git = require('./api/gitroutes'),
-    searchRoutes = require('./api/searchroutes'),
-    staticFileHandler = require('./api/staticcontent');
+    pageRequestHandler = require('./api/pagerequesthandler'),
+    pagesRequestHandler = require('./api/pagesrequesthandler'),
+    gitRequestHandler = require('./api/gitrequesthandler'),
+    searchRequestHandler = require('./api/searchrequesthandler'),
+    staticFileRequestHandler = require('./api/staticfilerequesthandler');
 
 var app = express();
 
@@ -56,14 +56,14 @@ if (!isProductionMode) {
 }
 
 // JSON API
-app.get('/api/pages', pages);
-app.get('/api/page/:page?', api);
+app.get('/api/pages', pagesRequestHandler);
+app.get('/api/page/:page?', pageRequestHandler);
 
-app.post('/api/git/clone', git.clone);
-app.post('/api/git/pull', git.pull);
-app.post('/api/search', searchRoutes.search);
+app.post('/api/git/clone', gitRequestHandler.clone);
+app.post('/api/git/pull', gitRequestHandler.pull);
+app.post('/api/search', searchRequestHandler.search);
 
-app.get('/static/*', staticFileHandler);
+app.get('/static/*', staticFileRequestHandler);
 
 
 app.get(['/git/clone', '*'], function (req, res) {

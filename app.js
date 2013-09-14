@@ -23,7 +23,7 @@ app.configure(function () {
   app.use('/font', express.static(path.join(__dirname, 'public/font')));
   app.use('/views', express.static(path.join(__dirname, 'public/views')));
   app.use('/images', express.static(path.join(__dirname, 'public/images')));
-
+  //app.use('/static', express.static(path.join(__dirname, 'content/static'))); // This can also handle the static file requests from the content folder
 
   app.use(express.logger('dev'));
   app.use(app.router);
@@ -58,6 +58,7 @@ if (!isProductionMode) {
 // JSON API
 app.get('/api/pages', pages);
 app.get('/api/page/:page?', api);
+
 app.post('/api/git/clone', git.clone);
 app.post('/api/git/pull', git.pull);
 app.post('/api/search', searchRoutes.search);

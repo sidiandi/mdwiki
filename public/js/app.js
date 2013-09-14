@@ -8,7 +8,7 @@ var mdwiki = angular.module('mdwiki', [
   'mdwiki.filters',
   'mdwiki.services',
   'mdwiki.directives'
-]).config(function ($routeProvider, $locationProvider) {
+]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/git/clone', {
       templateUrl: './views/gitclone.html',
@@ -30,4 +30,4 @@ var mdwiki = angular.module('mdwiki', [
     });
 
   $locationProvider.html5Mode(true);
-});
+}]);

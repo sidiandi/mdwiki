@@ -96,6 +96,41 @@ module.exports = function (grunt) {
       }
     },
 
+    nodemon: {
+      dev: {
+        options: {
+          file: './app.js',
+          args: [],
+          nodeArgs: ['--debug'],
+          watchedExtensions: ['js'],
+          watchedFolders: ['api', 'lib'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000'
+          },
+          cwd: __dirname
+        }
+      },
+      prod: {
+        options: {
+          file: './app.js',
+          args: [],
+          nodeArgs: ['--debug'],
+          ignoredFiles: ['README.md', 'node_modules/**'],
+          watchedExtensions: ['js'],
+          watchedFolders: ['api', 'lib'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000',
+            NODE_ENV: 'production'
+          },
+          cwd: __dirname
+        }
+      },
+    },
+
     watch: {
       options: {
         livereload: true,
@@ -120,6 +155,15 @@ module.exports = function (grunt) {
         files: ['public/**/*.html'],
         tasks: [],
       }
+    },
+
+    concurrent: {
+      target: {
+        tasks: ['nodemon:dev', 'watch'],
+        options: {
+          logConcurrentOutput: true
+        }
+      }
     }
 
   });
@@ -131,9 +175,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-concurrent');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma', 'watch']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma']);

@@ -12,6 +12,8 @@ var express = require("express"),
 
 var app = express();
 
+var isProductionMode = app.get('env') === 'production';
+
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
   app.set('ipAddress', process.env.HOST || '127.0.0.1');
@@ -20,7 +22,13 @@ app.configure(function () {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
+  if (isProductionMode) {
+    app.use(express.errorHandler());
+  } else {
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  }
   app.use('/font', express.static(path.join(__dirname, 'public/font')));
+
   app.use('/views', express.static(path.join(__dirname, 'public/views')));
   app.use('/images', express.static(path.join(__dirname, 'public/images')));
   //app.use('/static', express.static(path.join(__dirname, 'content/static'))); // This can also handle the static file requests from the content folder
@@ -29,7 +37,6 @@ app.configure(function () {
   app.use(app.router);
 });
 
-var isProductionMode = app.get('env') === 'production';
 
 app.get('/js/scripts.js', function (req, res) {
   if (isProductionMode) {
@@ -50,10 +57,6 @@ app.get('/css/styles.css', function (req, res) {
   }
 });
 
-// development only
-if (!isProductionMode) {
-  app.use(express.errorHandler());
-}
 
 // JSON API
 app.get('/api/pages', pagesRequestHandler);

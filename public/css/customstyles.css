@@ -2,10 +2,6 @@ body {
   padding-top: 50px;
 }
 
-.dropdown-menu {
-  max-height: 800px;
-  overflow:scroll;
-}
 
 form {
   margin-top: 20px;
@@ -15,23 +11,57 @@ form {
     border-color:red;
 }
 
-a.pagesMenu {
+.pagesMenu {
   cursor: pointer;
 }
 
-a.navbar-brand {
+.navbar-brand {
   display: inline;
 }
 
 .logo {
   height: 55px;
-  margin-left: 10px;
   margin-right: 10px;
+  margin-top: -7px;
 }
 
 .content-error {
   margin-top: 20px;
 }
+
+@media (min-width: 768px) {
+  body > .navbar {
+    max-height: 50px;
+  }
+
+  li.active a, .dropdown-toggle.pagesMenu {
+    padding-top: 12;
+  }
+
+  .navbar-nav form {
+    padding-top: 3px;
+  }
+
+  .dropdown-menu {
+    max-height: 600px;
+    overflow: scroll;
+  }
+}
+
+@media (max-width: 767px) {
+  form[name='searchForm'] .btn {
+    display: none;
+  }
+
+  form[name='searchForm'] input {
+    margin-left: 10px;
+  }
+
+  #pullbutton {
+    margin-left: 10px;
+  }
+}
+
 
 .content-view.ng-enter, .content-view.ng-leave {
   -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;

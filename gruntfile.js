@@ -92,11 +92,15 @@ module.exports = function (grunt) {
     },
 
     karma: {
-      unit: {
+      dev: {
         configFile: 'karma.conf.js',
         singleRun: true,
+        browsers: ['ChromeCanary'],
+      },
+      unit: {
+        configFile: 'karma.conf.js',
         browsers: ['PhantomJS'],
-        background: true
+        singleRun: true
       }
     },
 
@@ -154,7 +158,7 @@ module.exports = function (grunt) {
 
     concurrent: {
       target: {
-        tasks: ['nodemon:dev', 'watch'],
+        tasks: ['karma:unit', 'nodemon:dev', 'watch'],
         options: {
           logConcurrentOutput: true
         }
@@ -164,12 +168,12 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'concurrent']);
 
   // Test task
-  grunt.registerTask('test', ['jshint', 'mochaTest', 'karma']);
+  grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
 
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma', 'concat', 'cssmin', 'uglify']);
+  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
 
 };

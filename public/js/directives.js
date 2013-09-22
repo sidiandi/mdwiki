@@ -20,7 +20,7 @@ directives.directive('bsTooltip', function () {
 directives.directive('bsSwitchtext', function () {
   return {
     restrict: 'A',
-    link: function postlink(scope, element, attrs) {
+    link: function (scope, element, attrs) {
       scope.$watch('isBusy', function (newValue, oldValue) {
         if (newValue === true) {
           element.button('loading');

@@ -163,6 +163,20 @@ module.exports = function (grunt) {
           logConcurrentOutput: true
         }
       }
+    },
+
+    exec: {
+      mkGenDocsDir: {
+        command: 'mkdir -p docs/generated'
+      },
+      coverage: {
+        command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
+      }
+    },
+    clean: {
+      tests: {
+        src: ["docs"]
+      }
     }
 
   });
@@ -175,5 +189,8 @@ module.exports = function (grunt) {
 
   // deploy task
   grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
+
+  // Coverage tasks
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
 
 };

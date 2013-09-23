@@ -94,7 +94,7 @@ module.exports = function (grunt) {
     karma: {
       dev: {
         configFile: 'karma.conf.js',
-        singleRun: true,
+        singleRun: false,
         browsers: ['ChromeCanary'],
       },
       unit: {

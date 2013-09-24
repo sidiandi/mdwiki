@@ -56,7 +56,6 @@ module.exports = function (grunt) {
         src: [
           'public/js/lib/jquery.js',
           'public/js/lib/bootstrap.js',
-          //'public/js/lib/underscore.js',
           'public/js/lib/angular/angular.js',
           'public/js/lib/angular/angular-route.js',
           'public/js/lib/angular/angular-sanitize.js',

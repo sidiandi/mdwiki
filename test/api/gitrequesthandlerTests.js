@@ -85,6 +85,28 @@ describe('gitrequesthandler tests', function () {
     });
   });
 
+  describe('When pull was called withour the repository url param', function () {
+    beforeEach(function () {
+    });
+
+    it('should not execute the clone function and return an http error code 400', function (done) {
+      var stub = sandbox.stub(git, 'clone').returns(Q.resolve());
+
+      request(app)
+        .post('/api/git/clone')
+        .send({ })
+        .expect(400)
+        .end(function (err, res) {
+          stub.calledOnce.should.be.false;
+          done();
+        });
+    });
+
+    afterEach(function () {
+      sandbox.restore();
+    });
+  });
+
 });
 
 

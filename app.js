@@ -21,6 +21,7 @@ app.configure(function () {
   app.use(express.favicon());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.logger());
 
   if (isProductionMode) {
     app.use(express.errorHandler());
@@ -28,12 +29,9 @@ app.configure(function () {
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   }
   app.use('/font', express.static(path.join(__dirname, 'public/font')));
-
   app.use('/views', express.static(path.join(__dirname, 'public/views')));
   app.use('/images', express.static(path.join(__dirname, 'public/images')));
-  //app.use('/static', express.static(path.join(__dirname, 'content/static'))); // This can also handle the static file requests from the content folder
 
-  app.use(express.logger('dev'));
   app.use(app.router);
 });
 

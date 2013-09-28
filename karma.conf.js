@@ -24,6 +24,14 @@ module.exports = function (config) {
       'test_client/**/*Specs.js'
     ],
 
+    preprocessors: {
+      '*public/js/controllers/*.js': ['coverage'],
+      'public/js/services/*.js': ['coverage'],
+      'public/js/app.js': ['coverage'],
+      'public/js/filters.js': ['coverage'],
+      'public/js/directives.js': ['coverage'],
+    },
+
     // list of files to exclude
     exclude: [
 
@@ -31,7 +39,13 @@ module.exports = function (config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'growl'],
+    reporters: ['progress', 'growl', 'coverage'],
+
+    // optionally, configure the reporter
+    coverageReporter: {
+      type : 'html',
+      dir : 'docs/generated'
+    },
 
     // web server port
     port: 9876,

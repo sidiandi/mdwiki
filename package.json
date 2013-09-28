@@ -57,7 +57,9 @@
     "matchdep": "~0.1.2",
     "blanket": "~1.1.5",
     "grunt-exec": "~0.4.2",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-contrib-clean": "~0.5.0",
+    "istanbul": "~0.1.44",
+    "karma-coverage": "~0.1.0"
   },
   "scripts": {
     "start": "node ./app.js",

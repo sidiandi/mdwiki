@@ -57,7 +57,8 @@
     "matchdep": "~0.1.2",
     "blanket": "~1.1.5",
     "grunt-exec": "~0.4.2",
-    "grunt-contrib-clean": "~0.5.0"
+    "grunt-contrib-clean": "~0.5.0",
+    "karma-spec-reporter": "0.0.5"
   },
   "scripts": {
     "start": "node ./app.js",

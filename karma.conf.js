@@ -18,18 +18,20 @@ module.exports = function (config) {
       'public/js/lib/underscore.js',
       'public/js/lib/angular/angular.js',
       'public/js/lib/angular/angular-*.js',
-      'node_modules/sinon/lib/sinon.js',
       'test_client/lib/angular/angular-mocks.js',
-      'public/js/**/*.js',
+      'public/js/controllers/*.js',
+      'public/js/services/*.js',
+      'public/js/directives.js',
+      'public/js/filters.js',
+      'public/js/app.js',
       'test_client/**/*Specs.js'
     ],
 
     preprocessors: {
-      '*public/js/controllers/*.js': ['coverage'],
+      'public/js/controllers/*.js': ['coverage'],
       'public/js/services/*.js': ['coverage'],
-      'public/js/app.js': ['coverage'],
-      'public/js/filters.js': ['coverage'],
       'public/js/directives.js': ['coverage'],
+      'public/js/app.js': ['coverage'],
     },
 
     // list of files to exclude

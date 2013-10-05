@@ -42,8 +42,7 @@ module.exports = function (grunt) {
       scripts: {
         options: {
           // the banner is inserted at the top of the output
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-          //sourceMap: 'public/js/scripts.min.map.js'
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
         },
         files: {
           'public/js/scripts.min.js': ['public/js/scripts.js'],
@@ -62,7 +61,6 @@ module.exports = function (grunt) {
           'public/js/lib/angular/angular-animate.js',
           'public/js/app.js',
           'public/js/directives.js',
-          'public/js/filters.js',
           'public/js/services/*.js',
           'public/js/controllers/*.js',
         ],

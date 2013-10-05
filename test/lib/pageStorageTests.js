@@ -246,10 +246,5 @@ describe('PageStorageTests', function () {
         sandbox.restore();
       });
     });
-
   });
-
-
-
-
 });

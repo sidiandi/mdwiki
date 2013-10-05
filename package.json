@@ -59,16 +59,11 @@
     "grunt-exec": "~0.4.2",
     "grunt-contrib-clean": "~0.5.0",
     "istanbul": "~0.1.44",
-    "karma-coverage": "~0.1.0"
+    "karma-coverage": "~0.1.0",
+		"karma-spec-reporter": "0.0.5"
   },
   "scripts": {
     "start": "node ./app.js",
-    "blanket": {
-      "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",
-      "onlyCwd": true,
-      "data-cover-flags": {
-        "branchTracking": true
-      }
-    }
+    "test": "grunt test"
   }
 }

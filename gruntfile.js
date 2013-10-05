@@ -166,8 +166,11 @@ module.exports = function (grunt) {
       mkGenDocsDir: {
         command: 'mkdir -p docs/generated'
       },
-      coverage: {
+      coverageMocha: {
         command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
+      },
+      coverageKarma: {
+        command: 'karma start karma-coverage.conf.js'
       }
     },
     clean: {
@@ -188,6 +191,6 @@ module.exports = function (grunt) {
   grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
 
   // Coverage tasks
-  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma']);
 
 };

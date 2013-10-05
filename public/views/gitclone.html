@@ -10,7 +10,8 @@
 
     <div class="form-group">
       <label></label>
-      <input type="text" class="form-control" id="repositoryUrl" ng-model="repositoryUrl"  required>
+      <input type="text" class="form-control" id="repositoryUrl" required
+             ng-model="repositoryUrl" ng-disabled='isBusy'>
     </div>
 
     <button ng-click='clone()' class="btn btn-default" ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Clone</button>

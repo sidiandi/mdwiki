@@ -3,16 +3,11 @@
 var fs = require('fs'),
   path = require('path'),
   q = require('q'),
-  _ = require('underscore'),
   storage = require('../lib/pageStorageFS');
 
 module.exports = function (req, res) {
   storage.getPages()
     .then(function (pages) {
-      pages = _.filter(pages, function (page) {
-        return page.name !== 'index';
-      });
-
       var json = JSON.stringify(pages);
 
       res.setHeader('Content-Type', 'application/json');

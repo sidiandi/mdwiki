@@ -5,31 +5,12 @@ var fs = require('fs'),
     util = require('util'),
     sinon = require('sinon'),
     should = require('should'),
-    git = require('../lib/git'),
     Q = require('q'),
-    errors = require('../lib/errors'),
-    child_process = require('child_process');
-
-/*function rmdirIfExists(path) {
-  var deferred = Q.defer();
-
-  if (fs.existsSync(path) === false) {
-    deferred.resolve();
-  }
-
-  exec('rm -rf ' + path, function (err, out) {
-    if (err) {
-      deferred.reject(err);
-    }
-    deferred.resolve();
-  });
-
-  return deferred.promise;
-}*/
+    child_process = require('child_process'),
+    git = require('../../lib/git'),
+    errors = require('../../lib/errors');
 
 describe('git module tests', function () {
-  this.timeout(5000);
-
   describe('clone tests', function () {
     describe('When the clone method was called and the content folder does not exists', function () {
       var sandbox,
@@ -41,9 +22,7 @@ describe('git module tests', function () {
 
       it('should clone the specified repository into the content folder', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(false);
-        });
+        sandbox.stub(fs, 'existsSync').returns(false);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });
@@ -53,7 +32,6 @@ describe('git module tests', function () {
         git.clone(__dirname, 'content', gitRepositoryUrl)
           .done(function () {
             // ASSERT
-            stub.calledOnce.should.be.true;
             stub.calledWithMatch(expected).should.be.true;
             done();
           });
@@ -65,36 +43,43 @@ describe('git module tests', function () {
     });
 
     describe('When content folder already exists', function () {
-      var sandbox;
+      var sandbox, execStub;
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
-      });
 
-      it('should return an ContentFolderExistsError', function (done) {
-        // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(true);
-        });
-        var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
+        sandbox.stub(fs, 'existsSync').returns(true);
+        execStub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
           callback(null, 'ok');
         });
 
+      });
+
+      it('should return an ContentFolderExistsError', function (done) {
         var lastError;
 
-        // ACT
         git.clone(__dirname, 'content', 'git...')
           .catch(function (error) {
             lastError = error;
           })
           .done(function () {
-            should.exists(lastError);
             lastError.should.be.an.instanceof(errors.ContentFolderExistsError);
-            stub.callCount.should.be.eql(0);
             done();
           });
-
       });
+
+      it('should not execute the git command', function (done) {
+        git.clone(__dirname, 'content', 'git...')
+        .catch(function (error) {
+          // Nothing todo here => But we have to catch it, otherwise the test will fail when we have not catched the exception
+        })
+        .done(function () {
+          execStub.callCount.should.be.eql(0);
+          done();
+        });
+      });
+
+
 
       afterEach(function () {
         sandbox.restore();
@@ -104,27 +89,20 @@ describe('git module tests', function () {
 
   describe('pull tests', function () {
     describe('When pull was called and content was cloned before', function () {
-      var sandbox;
+      var sandbox, execStub;
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
+        sandbox.stub(fs, 'existsSync').returns(true);
+        execStub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
+          callback(null, 'ok');
+        });
       });
 
       it('should pull the latest changes from the remote repository', function (done) {
-        // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(true);
-        });
-        var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
-          callback(null, 'ok');
-        });
-
-        // ACT
         git.pull(__dirname)
           .done(function () {
-            // ASSERT
-            stub.calledOnce.should.be.true;
-            stub.calledWithMatch('git pull origin master').should.be.true;
+            execStub.calledWithMatch('git pull origin master').should.be.true;
             done();
           });
 
@@ -136,6 +114,48 @@ describe('git module tests', function () {
     });
 
     describe('When pull was called and content was never cloned before', function () {
+      var sandbox, execStub;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+        sandbox.stub(fs, 'existsSync').returns(false);
+        execStub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
+          callback(null, 'ok');
+        });
+      });
+
+      it('should return an ContentFolderNotExistsError', function (done) {
+        var lastError;
+
+        git.pull(__dirname)
+        .catch(function (error) {
+          lastError = error;
+        })
+        .done(function () {
+          lastError.should.be.an.instanceof(errors.ContentFolderNotExistsError);
+          done();
+        });
+      });
+
+      it('should not execute the git command', function (done) {
+        var lastError;
+
+        git.pull(__dirname)
+        .catch(function (error) {
+          // Nothing todo here => But we have to catch it, otherwise the test will fail when we have not catched the exception
+        })
+        .done(function () {
+          execStub.callCount.should.be.eql(0);
+          done();
+        });
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+    });
+
+    describe('When exec throws an error it should be handled correctly', function () {
       var sandbox;
 
       beforeEach(function () {
@@ -144,26 +164,22 @@ describe('git module tests', function () {
 
       it('should return an ContentFolderNotExistsError', function (done) {
         // ARRANGE
-        sandbox.stub(fs, 'exists', function (folder, callback) {
-          callback(false);
-        });
+        sandbox.stub(fs, 'existsSync').returns(true);
         var stub = sandbox.stub(child_process, 'exec', function (command, options, callback) {
-          callback(null, 'ok');
+          callback(new Error('something was wrong'));
         });
         var lastError;
 
         // ACT
         git.pull(__dirname)
-        .catch(function (error) {
-          lastError = error;
-        })
-        .done(function () {
-          // ASSERT
-          should.exists(lastError);
-          lastError.should.be.an.instanceof(errors.ContentFolderNotExistsError);
-          stub.callCount.should.be.eql(0);
-          done();
-        });
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function () {
+            // ASSERT
+            lastError.message.should.be.equal('something was wrong');
+            done();
+          });
       });
 
       afterEach(function () {

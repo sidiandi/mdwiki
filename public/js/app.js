@@ -3,11 +3,12 @@
 var mdwiki = angular.module('mdwiki', [
   'ngRoute',
   'ngSanitize',
+  'ngAnimate',
   'mdwiki.controllers',
   'mdwiki.filters',
   'mdwiki.services',
   'mdwiki.directives'
-]).config(function ($routeProvider, $locationProvider) {
+]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/git/clone', {
       templateUrl: './views/gitclone.html',
@@ -17,6 +18,10 @@ var mdwiki = angular.module('mdwiki', [
       templateUrl: './views/content.html',
       controller: 'ContentCtrl'
     })
+    .when('/search', {
+      templateUrl: './views/searchResult.html',
+      controller: 'SearchCtrl'
+    })
     .when('/:page', {
       templateUrl: './views/content.html',
       controller: 'ContentCtrl'
@@ -25,4 +30,4 @@ var mdwiki = angular.module('mdwiki', [
     });
 
   $locationProvider.html5Mode(true);
-});
+}]);

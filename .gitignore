@@ -21,8 +21,12 @@ version.jade
 
 .tern-port
 
+.nodemonignore
+
 test/tempbeans.json
 docs/generated
 
 content/
 
+start.bat
+nssm.exe

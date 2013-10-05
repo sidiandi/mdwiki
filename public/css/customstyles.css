@@ -1,0 +1,95 @@
+body {
+  padding-top: 50px;
+}
+
+
+form {
+  margin-top: 20px;
+}
+
+.ng-invalid.ng-dirty {
+    border-color:red;
+}
+
+.pagesMenu {
+  cursor: pointer;
+}
+
+.navbar-brand {
+  display: inline;
+}
+
+.logo {
+  height: 55px;
+  margin-right: 10px;
+  margin-top: -7px;
+}
+
+.content-error {
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  body > .navbar {
+    max-height: 50px;
+  }
+
+  li.active a, .dropdown-toggle.pagesMenu {
+    padding-top: 12;
+  }
+
+  .navbar-nav form {
+    padding-top: 3px;
+  }
+
+  .dropdown-menu {
+    max-height: 600px;
+    overflow: scroll;
+  }
+}
+
+@media (max-width: 767px) {
+  form[name='searchForm'] .btn {
+    display: none;
+  }
+
+  form[name='searchForm'] input {
+    margin-left: 10px;
+  }
+
+  #pullbutton {
+    margin-left: 10px;
+  }
+}
+
+
+.content-view.ng-enter, .content-view.ng-leave {
+  -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
+  -moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
+  -o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
+  transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
+
+  position:relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.content-view.ng-enter {
+  left:100%;
+}
+.content-view.ng-enter.ng-enter-active {
+  left: 0;
+}
+
+.content-view.ng-leave {
+
+}
+
+.content-view.ng-leave.ng-leave-active {
+  left:-100%;
+}
+
+
+

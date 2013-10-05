@@ -1,0 +1,7 @@
+<h3>Search result:</h3>
+<ul>
+    <li ng-repeat="result in searchResult">
+        <h4><a href="/{{result.fileNameWithoutExtension}}">{{result.fileNameWithoutExtension}}</a></h4>
+        <div ng-bind-html="result.fileContext"></div>
+    </li>
+</ul>

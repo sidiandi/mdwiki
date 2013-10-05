@@ -1,6 +1,9 @@
 module.exports = function (grunt) {
   'use strict';
 
+  // Load Grunt tasks declared in the package.json file
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -9,19 +12,67 @@ module.exports = function (grunt) {
         '.jshintrc',
         'gruntfile.js',
         'app.js',
-        'public/js/**/*.js',
         'api/**/*.js',
         'lib/**/*.js',
         'test/**/*.js',
+        'public/js/app.js',
+        'public/js/directives.js',
+        'public/js/filters.js',
+        'public/js/services/*.js',
+        'public/js/controllers/*.js',
         'test_client/**/*.js',
-        '!node_modules/**/*.js',
-        '!node_modules/**/*.json',
-        '!public/**/*.json',
-        '!public/js/lib/**/*.js',
         '!test_client/lib/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
+      }
+    },
+
+    cssmin: {
+      minify: {
+        expand: true,
+        cwd: 'public/css/',
+        src: ['styles.css'],
+        dest: 'public/css/',
+        ext: '.min.css'
+      }
+    },
+
+    uglify: {
+      scripts: {
+        options: {
+          // the banner is inserted at the top of the output
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        },
+        files: {
+          'public/js/scripts.min.js': ['public/js/scripts.js'],
+        }
+      }
+    },
+
+    concat: {
+      js: {
+        src: [
+          'public/js/lib/jquery.js',
+          'public/js/lib/bootstrap.js',
+          'public/js/lib/angular/angular.js',
+          'public/js/lib/angular/angular-route.js',
+          'public/js/lib/angular/angular-sanitize.js',
+          'public/js/lib/angular/angular-animate.js',
+          'public/js/app.js',
+          'public/js/directives.js',
+          'public/js/services/*.js',
+          'public/js/controllers/*.js',
+        ],
+        dest: 'public/js/scripts.js'
+      },
+      css: {
+        src: [
+          'public/css/bootstrap.css',
+          'public/css/font-awesome.css',
+          'public/css/customstyles.css'
+        ],
+        dest: 'public/css/styles.css'
       }
     },
 
@@ -37,34 +88,109 @@ module.exports = function (grunt) {
       }
     },
 
+    karma: {
+      dev: {
+        configFile: 'karma.conf.js',
+        singleRun: false,
+        browsers: ['ChromeCanary'],
+      },
+      unit: {
+        configFile: 'karma.conf.js',
+        browsers: ['PhantomJS'],
+        singleRun: true
+      }
+    },
+
+    nodemon: {
+      dev: {
+        options: {
+          file: './app.js',
+          args: [],
+          nodeArgs: ['--debug'],
+          watchedExtensions: ['js'],
+          watchedFolders: ['api', 'lib'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000'
+          },
+          cwd: __dirname
+        }
+      },
+      prod: {
+        options: {
+          file: './app.js',
+          args: [],
+          nodeArgs: [],
+          ignoredFiles: ['README.md', 'node_modules/**'],
+          watchedExtensions: ['js'],
+          watchedFolders: ['api', 'lib'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000',
+            NODE_ENV: 'production'
+          },
+          cwd: __dirname
+        }
+      },
+    },
+
     watch: {
-      options: {
-        livereload: true,
+      mocha: {
+        files: ['app.js', 'api/**/*.js', 'lib/**/*.js', 'test/**/*.js'],
+        tasks: ['jshint', 'mochaTest']
       },
 
-      jsfiles: {
-        files: ['<%= jshint.files %>'],
-        tasks: ['default']
+      karma: {
+        files: ['public/js/**/*.js', '!public/js/scripts.js', '!public/js/scripts.min.js', '!public/js/lib/**/*.js', 'test_client/**/*Specs.js'],
+        tasks: ['jshint', 'karma:unit', 'concat:js', 'uglify']
       },
 
-      livereload: {
-        files: ['public/**/*.html'],
-        tasks: [],
+      styles: {
+        files: ['public/css/customstyles.css'],
+        tasks: ['concat:css', 'cssmin']
+      }
+    },
+
+    concurrent: {
+      target: {
+        tasks: ['karma:unit', 'nodemon:dev', 'watch'],
+        options: {
+          logConcurrentOutput: true
+        }
+      }
+    },
+
+    exec: {
+      mkGenDocsDir: {
+        command: 'mkdir -p docs/generated'
+      },
+      coverageMocha: {
+        command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
+      },
+      coverageKarma: {
+        command: 'karma start karma-coverage.conf.js'
+      }
+    },
+    clean: {
+      tests: {
+        src: ["docs"]
       }
     }
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-mocha-test');
-
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'watch']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'concurrent']);
 
-  // Dev task
-  grunt.registerTask('dev', ['jshint', 'mochaTest', 'watch']);
+  // Test task
+  grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
 
-  // Travis-CI task
-  grunt.registerTask('travis', ['default']);
+  // deploy task
+  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
+
+  // Coverage tasks
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma']);
+
 };

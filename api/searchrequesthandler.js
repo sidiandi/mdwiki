@@ -10,10 +10,10 @@ var search = function (req, res) {
   var rootPath = path.join(__dirname, '../content');
 
   grepSearcher.searchForText(rootPath, req.body.textToSearch)
-    .then(function (data) {
-      logger.info(data);
+    .then(function (searchResult) {
+      logger.info(searchResult);
       res.statusCode = 200;
-      var parsedResult = grepResultParser.parse(data[0]);
+      var parsedResult = grepResultParser.parse(searchResult);
       parsedResult.then(function (resultObjects) {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           var stringifiedResult = JSON.stringify(resultObjects);

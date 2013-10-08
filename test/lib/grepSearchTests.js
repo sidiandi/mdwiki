@@ -30,7 +30,7 @@ describe('grep search module tests', function () {
             options.should.have.property('cwd');
             options.cwd.should.equal(folderToSearch);
 
-            callback(null, 'Text with Java');
+            callback(null, ['Text with Java']);
           });
           var expected = util.format('grep -i "%s" *.*', textToSearch);
 

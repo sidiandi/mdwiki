@@ -85,7 +85,7 @@ describe('gitrequesthandler tests', function () {
     });
   });
 
-  describe('When pull was called withour the repository url param', function () {
+  describe('When pull was called without the repository url param', function () {
     beforeEach(function () {
     });
 

@@ -16,10 +16,10 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
     gitService.clone($scope.repositoryUrl)
       .then(pageService.getPages)
       .then(function () {
-        $scope.message = 'The repository was successful cloned...';
+        $scope.message = 'The repository was successfully cloned!';
         $location.path('/');
       }, function (error) {
-        $scope.message = 'There is an error occured while cloning the repository: ' + error.message;
+        $scope.message = 'An error occurred while cloning the repository: ' + error.message;
         $scope.isBusy = false;
         $scope.hasError = true;
       })

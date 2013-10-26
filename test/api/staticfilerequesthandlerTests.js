@@ -2,6 +2,7 @@
 
 var path = require('path'),
     sinon = require('sinon'),
+    should = require('should'),
     fs = require('fs'),
     staticFileRequestHandler = require('../../api/staticfilerequesthandler');
 

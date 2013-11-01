@@ -16,7 +16,6 @@ var isProductionMode = app.get('env') === 'production';
 
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
-  app.set('ipAddress', process.env.HOST || '127.0.0.1');
   app.use(express.compress());
   app.use(express.favicon());
   app.use(express.bodyParser());
@@ -76,7 +75,16 @@ app.get(['/git/clone', '*'], function (req, res) {
 var port = app.get('port');
 var ipAddress = app.get('ipAddress');
 
-app.listen(port, ipAddress);
-
 logger.info('Starting server in %s mode', app.get('env'));
-logger.info('Listening on port %s over ip %s', port, ipAddress);
+
+if (process.env.HOST !== undefined) {
+  var hostname = process.env.HOST;
+  app.listen(port, hostname, function () {
+    logger.info('Listening on port %s over hostname %s', port, hostname);
+  });
+} else {
+  app.listen(port, function () {
+    logger.info('Listening on port %s ', port);
+  });
+}
+

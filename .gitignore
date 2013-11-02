@@ -15,6 +15,7 @@ config/*.json*
 !config/beans.json
 !config/testbeans.json
 *.log
+*.swp
 public/test/
 version.jade
 .sass-cache

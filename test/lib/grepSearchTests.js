@@ -42,7 +42,6 @@ describe('grep search module tests', function () {
               // ASSERT
               stub.calledOnce.should.be.true;
               stub.calledWithMatch(expected).should.be.true;
-              console.log('Data......:' + data);
               data.should.be.eql('Text with Java');
               done();
             });

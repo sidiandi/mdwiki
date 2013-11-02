@@ -6,10 +6,7 @@ var path = require('path'),
     logger = require('../lib/logger');
 
 var search = function (req, res) {
-
-  var rootPath = path.join(__dirname, '../content');
-
-  grepSearcher.searchForText(rootPath, req.body.textToSearch)
+  grepSearcher.searchForText(req.body.textToSearch)
     .then(function (searchResult) {
       logger.info(searchResult);
       res.statusCode = 200;

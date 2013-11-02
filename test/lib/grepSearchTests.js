@@ -34,12 +34,15 @@ describe('grep search module tests', function () {
           });
           var expected = util.format('grep -i "%s" *.*', textToSearch);
 
+          grepSearcher.setFolderToSearch(folderToSearch);
+
           // ACT
-          grepSearcher.searchForText(folderToSearch, textToSearch)
+          grepSearcher.searchForText(textToSearch)
             .done(function (data) {
               // ASSERT
               stub.calledOnce.should.be.true;
               stub.calledWithMatch(expected).should.be.true;
+              console.log('Data......:' + data);
               data.should.be.eql('Text with Java');
               done();
             });

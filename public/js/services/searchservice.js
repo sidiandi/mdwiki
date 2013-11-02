@@ -2,19 +2,24 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', ['$http', '$q', function ($http, $q) {
+services.factory('SearchService', ['$http', '$q', 'SettingsService', function ($http, $q, settingsService) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
     var search = function (textToSearch) {
+        var settings = settingsService.get();
         var deferred = $q.defer();
+
         $http({
             method: 'POST',
             url: '/api/search',
             headers: {
                 'Content-Type': 'application/json'
               },
-              data: { textToSearch: textToSearch }
+              data: {
+                textToSearch: textToSearch,
+                settings: settings
+              }
             })
             .success(function (searchResult, status, headers, config) {
                 deferred.resolve(searchResult);

@@ -8,7 +8,9 @@ describe('Git Controller Tests', function () {
   });
 
   describe('When the user enters a valid git url', function () {
-    var $scope, $location, gitCtrl, gitService, pageService, gitCloneDeferred, pagesDeferred;
+    var $scope, $location, gitCtrl,
+        gitService, pageService, settingsService,
+        gitCloneDeferred, pagesDeferred;
 
     beforeEach(inject(function ($injector, $controller, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -18,6 +20,7 @@ describe('Git Controller Tests', function () {
       spyOn($location, 'path');
 
       gitService = $injector.get('GitService');
+
       gitCloneDeferred = $q.defer();
       spyOn(gitService, 'clone').andReturn(gitCloneDeferred.promise);
 
@@ -28,25 +31,52 @@ describe('Git Controller Tests', function () {
       pagesDeferred = $q.defer();
       spyOn(pageService, 'getPages').andReturn(pagesDeferred.promise);
 
+      settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'put');
+
       gitCtrl = $controller('GitCloneCtrl', {
         $scope: $scope,
         $location: $location,
-        gitService: gitService
+        gitService: gitService,
+        settingsService: settingsService
       });
     }));
 
-    it('should call the clone method and getpages when clone was successful', function () {
-      $scope.clone();
+    describe('And the users chooses git as provider', function () {
+      it('should call the clone method, getpages, saves the settings when successful', function () {
+        $scope.provider = 'Git';
+        $scope.repositoryUrl = 'https://github.com/mdwiki/mdwiki.wiki.git';
+        $scope.clone();
 
-      $scope.$apply(function () {
-        gitCloneDeferred.resolve();
-        pagesDeferred.resolve([]);
+        $scope.$apply(function () {
+          gitCloneDeferred.resolve();
+          pagesDeferred.resolve([]);
+        });
+
+        expect($location.path).toHaveBeenCalledWith('/');
+        expect(gitService.clone).toHaveBeenCalled();
+        expect(pageService.getPages).toHaveBeenCalled();
+        expect(settingsService.put).toHaveBeenCalled();
       });
-
-      expect($location.path).toHaveBeenCalledWith('/');
-      expect(gitService.clone).toHaveBeenCalled();
-      expect(pageService.getPages).toHaveBeenCalled();
     });
+
+    describe('And the users chooses github as provider', function () {
+      it('should call just getpages and saves the settings when successful', function () {
+        $scope.provider = 'Github';
+        $scope.repositoryUrl = 'https://github.com/mdwiki/mdwiki.wiki.git';
+        $scope.connect();
+
+        $scope.$apply(function () {
+          pagesDeferred.resolve([]);
+        });
+
+        expect($location.path).toHaveBeenCalledWith('/');
+        expect(pageService.getPages).toHaveBeenCalled();
+        expect(settingsService.put).toHaveBeenCalled();
+      });
+    });
+
   });
+
 
 });

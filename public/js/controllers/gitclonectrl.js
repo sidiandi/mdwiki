@@ -2,10 +2,11 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', function ($scope, $location, gitService, pageService) {
+controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
+  $scope.provider = 'Git';
   $scope.repositoryUrl = '';
   $scope.isBusy = false;
-  $scope.message = 'Please enter the git-url of your repository to clone it into the content folder';
+  $scope.message = 'Please enter the url of your git-repository to clone it into the content folder';
   $scope.hasError = false;
 
   $scope.clone = function () {
@@ -13,13 +14,33 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
     $scope.message = 'Please wait while cloning your repository...';
     $scope.hasError = false;
 
+    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+
     gitService.clone($scope.repositoryUrl)
-      .then(pageService.getPages)
+              .then($scope.connect('The repository was successfully cloned!',
+                                   'An error occurred while cloning the repository: '));
+
+  };
+
+  $scope.connect = function (successMessage, errorMessage) {
+    if (successMessage === undefined) {
+      successMessage = 'The git-repository was successfully connected!';
+    }
+    if (errorMessage === undefined) {
+      errorMessage = 'An error occurred while connection to the git-repository: ';
+    }
+
+    $scope.message = 'Please wait while connecting your repository...';
+
+    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+
+    pageService.getPages(settings)
       .then(function () {
-        $scope.message = 'The repository was successfully cloned!';
+        settingsService.put(settings);
+        $scope.message = successMessage;
         $location.path('/');
       }, function (error) {
-        $scope.message = 'An error occurred while cloning the repository: ' + error.message;
+        $scope.message = errorMessage + error.message;
         $scope.isBusy = false;
         $scope.hasError = true;
       })
@@ -27,4 +48,5 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
         $scope.isBusy = false;
       });
   };
+
 }]);

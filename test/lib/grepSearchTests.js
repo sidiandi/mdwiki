@@ -34,10 +34,8 @@ describe('grep search module tests', function () {
           });
           var expected = util.format('grep -i "%s" *.*', textToSearch);
 
-          grepSearcher.setFolderToSearch(folderToSearch);
-
           // ACT
-          grepSearcher.searchForText(textToSearch)
+          grepSearcher.searchForText(textToSearch, folderToSearch)
             .done(function (data) {
               // ASSERT
               stub.calledOnce.should.be.true;

@@ -11,10 +11,11 @@ describe('SettingsService tests', function () {
   });
 
   beforeEach(inject(function ($injector) {
-    $cacheFactory = $injector.get('$cacheFactory');
+    $cacheFactory = $injector.get('$angularCacheFactory');
     settingsService = $injector.get('SettingsService');
 
     cache = $cacheFactory.get('mdwiki');
+
     expect(cache).not.toBeUndefined();
   }));
 
@@ -54,7 +55,6 @@ describe('SettingsService tests', function () {
 
     });
   });
-
 
 });
 

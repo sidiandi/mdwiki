@@ -2,8 +2,8 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SettingsService', ['$cacheFactory', function ($cacheFactory) {
-  var cache = $cacheFactory('mdwiki');
+services.factory('SettingsService', ['$angularCacheFactory', function ($angularCacheFactory) {
+  var cache = $angularCacheFactory('mdwiki', { storageMode: 'localStorage' });
 
   var get = function () {
     var settings = cache.get('settings');

@@ -73,12 +73,11 @@ describe('grep result parser module tests', function () {
               // ACT
               grepResultParser.parse(grepResult).done(function (parseResult) {
                   // ASSERT
-                  console.log('ParseResult.....:' + parseResult);
                   parseResult.length.should.be.eql(2);
                   parseResult[0].fileName.should.be.eql('file.md');
-                  parseResult[0].fileContext.should.be.eql('<h4>this was found</h4>\n');
+                  parseResult[0].fileContext.should.be.eql('<h4 id="this-was-found">this was found</h4>\n');
                   parseResult[1].fileName.should.be.eql('file2.md');
-                  parseResult[1].fileContext.should.be.eql('<h4>this was found as well</h4>\n');
+                  parseResult[1].fileContext.should.be.eql('<h4 id="this-was-found-as-well">this was found as well</h4>\n');
                   done();
                 });
             });

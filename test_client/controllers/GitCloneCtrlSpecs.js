@@ -62,7 +62,7 @@ describe('Git Controller Tests', function () {
 
     describe('And the users chooses github as provider', function () {
       it('should call just getpages and saves the settings when successful', function () {
-        $scope.provider = 'Github';
+        $scope.provider = 'GitHub';
         $scope.repositoryUrl = 'https://github.com/mdwiki/mdwiki.wiki.git';
         $scope.connect();
 

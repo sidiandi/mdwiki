@@ -32237,9 +32237,10 @@ services.factory('PageService', ['$http', '$q', 'SettingsService', function ($ht
     return deferred.promise;
   };
 
-  var getPages = function () {
+  var getPages = function (settings) {
     var deferred = $q.defer();
-    var settings = settingsService.get();
+
+    settings = settings || settingsService.get();
 
     $http({
       method: 'GET',
@@ -32393,7 +32394,7 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
-  $scope.provider = 'Github';
+  $scope.provider = 'GitHub';
   $scope.repositoryUrl = '';
   $scope.isBusy = false;
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';

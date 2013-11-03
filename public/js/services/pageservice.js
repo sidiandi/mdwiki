@@ -28,9 +28,10 @@ services.factory('PageService', ['$http', '$q', 'SettingsService', function ($ht
     return deferred.promise;
   };
 
-  var getPages = function () {
+  var getPages = function (settings) {
     var deferred = $q.defer();
-    var settings = settingsService.get();
+
+    settings = settings || settingsService.get();
 
     $http({
       method: 'GET',

@@ -31,14 +31,14 @@ describe('SettingsService tests', function () {
 
     it('should return the saved object', function () {
       spyOn(cache, 'get').andReturn({
-        provider: 'Github',
+        provider: 'GitHub',
         url: 'https://github.com/mdwiki/mdwiki.wiki.git'
       });
 
       var settings = settingsService.get();
 
       expect(settings).not.toBeUndefined();
-      expect(settings.provider).toBe('Github');
+      expect(settings.provider).toBe('GitHub');
     });
   });
 
@@ -47,7 +47,7 @@ describe('SettingsService tests', function () {
       spyOn(cache, 'put');
 
       var settings = {
-        provider: 'Github'
+        provider: 'GitHub'
       };
       settingsService.put(settings);
 

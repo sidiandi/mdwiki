@@ -1,21 +1,41 @@
 <form name="cloneRepositoryForm">
   <fieldset>
     <div>
-      <legend>Content repository clonen</legend>
+      <legend>Connect to a git repository</legend>
     </div>
-
 
     <div class="alert alert-info" ng-hide="hasError">{{ message }}</div>
     <div class="alert alert-danger" ng-show="hasError">{{ message }}</div>
 
     <div class="form-group">
-      <label></label>
+      <label>Choose provider</label>
+      <div class="radio">
+        <label title="Choose this provider to clone a git repository on your node server." bs-tooltip>
+          <input type="radio" name="provider" ng-model="provider" value="Git"
+          bs-tooltip>Git
+        </label>
+      </div>
+      <div class="radio">
+        <label title="Choose this provider to connect directly to a github repository" bs-tooltip>
+          <input type="radio" name="provider" ng-model="provider" value="Github"
+          checked >GitHub
+        </label>
+      </div>
+
+      <label>Url of your git repository</label>
       <input type="text" class="form-control" id="repositoryUrl" required
              ng-model="repositoryUrl" ng-disabled='isBusy'>
     </div>
 
-    <button ng-click='clone()' class="btn btn-default" ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Clone</button>
-    <img src="images/progress.gif" alt="Cloning" title="Cloning" ng-show="isBusy">
+    <button ng-click='clone()' class="btn btn-default"
+            ng-show="provider === 'Git'"
+            ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Clone</button>
+    <button ng-click='connect()' class="btn btn-default"
+            ng-show="provider === 'Github'"
+            ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Connect</button>
+
+    <img src="images/progress.gif" alt="Cloning" title="Cloning"
+        ng-show="isBusy">
 
   </fieldset>
 </form>

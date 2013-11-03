@@ -30835,7 +30835,6 @@ var mdwiki = angular.module('mdwiki', [
   'ngSanitize',
   'ngAnimate',
   'mdwiki.controllers',
-  'mdwiki.filters',
   'mdwiki.services',
   'mdwiki.directives'
 ]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
@@ -30898,18 +30897,6 @@ directives.directive('bsSwitchtext', function () {
 
 'use strict';
 
-/* Filters */
-
-var filters = angular.module('mdwiki.filters', []);
-
-filters.filter('interpolate', function (version) {
-    return function (text) {
-      return String(text).replace(/\%VERSION\%/mg, version);
-    };
-  });
-
-'use strict';
-
 var services = services || angular.module('mdwiki.services', []);
 
 services.factory('GitService', ['$http', '$q', function ($http, $q) {
@@ -30964,15 +30951,18 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('PageService', ['$http', '$q', function ($http, $q) {
+services.factory('PageService', ['$http', '$q', 'SettingsService', function ($http, $q, settingsService) {
   var updatePagesObservers = [];
 
   var getPage = function (page) {
     var deferred = $q.defer();
+    var settings = settingsService.get();
 
     $http({
       method: 'GET',
-      url: '/api/page/' + page
+      url: '/api/page/' + page,
+      headers: { 'Content-Type': 'application/json' },
+      data: { settings: settings }
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -30989,10 +30979,13 @@ services.factory('PageService', ['$http', '$q', function ($http, $q) {
 
   var getPages = function () {
     var deferred = $q.defer();
+    var settings = settingsService.get();
 
     $http({
       method: 'GET',
-      url: '/api/pages'
+      url: '/api/pages',
+      headers: { 'Content-Type': 'application/json' },
+      data: { settings: settings }
     })
     .success(function (data, status, headers, config) {
       var pages = data || [];
@@ -31031,11 +31024,68 @@ services.factory('PageService', ['$http', '$q', function ($http, $q) {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', function () {
-  var searchServiceInstance = {};
-  searchServiceInstance.searchResult = '';
-  return searchServiceInstance;
-});
+services.factory('SearchService', ['$http', '$q', 'SettingsService', function ($http, $q, settingsService) {
+    var searchServiceInstance = {};
+    searchServiceInstance.searchResult = '';
+
+    var search = function (textToSearch) {
+        var settings = settingsService.get();
+        var deferred = $q.defer();
+
+        $http({
+            method: 'POST',
+            url: '/api/search',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+              data: {
+                textToSearch: textToSearch,
+                settings: settings
+              }
+            })
+            .success(function (searchResult, status, headers, config) {
+                deferred.resolve(searchResult);
+              })
+            .error(function (searchedText, status, headers, config) {
+                deferred.reject(searchedText);
+              });
+      };
+
+    return {
+        search: search,
+        searchServiceInstance: searchServiceInstance
+      };
+
+  }]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
+services.factory('SettingsService', ['$cacheFactory', function ($cacheFactory) {
+  var cache = $cacheFactory('mdwiki');
+
+  var get = function () {
+    var settings = cache.get('settings');
+    if (settings === undefined) {
+      settings = {
+        provider: 'Git',
+        url: ''
+      };
+    }
+
+    return settings;
+  };
+
+  var put = function (settings) {
+    cache.put('settings', settings);
+  };
+
+  return {
+    get: get,
+    put: put
+  };
+}]);
 
 'use strict';
 
@@ -31082,10 +31132,11 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', function ($scope, $location, gitService, pageService) {
+controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
+  $scope.provider = 'Github';
   $scope.repositoryUrl = '';
   $scope.isBusy = false;
-  $scope.message = 'Please enter the git-url of your repository to clone it into the content folder';
+  $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
   $scope.hasError = false;
 
   $scope.clone = function () {
@@ -31093,13 +31144,33 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
     $scope.message = 'Please wait while cloning your repository...';
     $scope.hasError = false;
 
+    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+
     gitService.clone($scope.repositoryUrl)
-      .then(pageService.getPages)
+              .then($scope.connect('The repository was successfully cloned!',
+                                   'An error occurred while cloning the repository: '));
+
+  };
+
+  $scope.connect = function (successMessage, errorMessage) {
+    if (successMessage === undefined) {
+      successMessage = 'The git-repository was successfully connected!';
+    }
+    if (errorMessage === undefined) {
+      errorMessage = 'An error occurred while connection to the git-repository: ';
+    }
+
+    $scope.message = 'Please wait while connecting your repository...';
+
+    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+
+    pageService.getPages(settings)
       .then(function () {
-        $scope.message = 'The repository was successful cloned...';
+        settingsService.put(settings);
+        $scope.message = successMessage;
         $location.path('/');
       }, function (error) {
-        $scope.message = 'There is an error occured while cloning the repository: ' + error.message;
+        $scope.message = errorMessage + error.message;
         $scope.isBusy = false;
         $scope.hasError = true;
       })
@@ -31107,6 +31178,7 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
         $scope.isBusy = false;
       });
   };
+
 }]);
 
 'use strict';
@@ -31183,29 +31255,20 @@ controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, 
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('SearchCtrl', ['$scope', '$routeParams', '$http', '$location', '$route', 'SearchService', function ($scope, $routeParams, $http, $location, $route, searchService) {
+controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchService', function ($scope, $location, $route, searchService) {
     $scope.textToSearch = '';
     $scope.searchResult = searchService.searchResult;
+    $scope.message = '';
 
     $scope.search = function () {
-        console.log('searching ' + $scope.textToSearch);
-        $http({
-            method: 'POST',
-            url: '/api/search',
-            headers: {
-                'Content-Type': 'application/json'
-              },
-              data: { textToSearch: $scope.textToSearch }
-            })
-            .success(function (data, status, headers, config) {
-              $scope.message = 'Search successfully finished';
-              searchService.searchResult = data;
-              $location.path('/search');
-              $route.reload();
-            })
-            .error(function (data, status, headers, config) {
-                data = data || '';
-                $scope.message = 'There is an error occured while searching for the text: ' + data.toString();
+        searchService.search($scope.textToSearch)
+            .then(function (data) {
+                $scope.message = 'Search successfully finished';
+                searchService.searchResult = data;
+                $location.path('/search');
+              }, function (error) {
+                var searchedText = error || '';
+                $scope.message = 'An error occurred while searching for the text: ' + searchedText.toString();
               });
       };
   }]);

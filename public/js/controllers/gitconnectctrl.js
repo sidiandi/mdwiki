@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
+controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
   $scope.provider = 'GitHub';
   $scope.repositoryUrl = '';
   $scope.isBusy = false;

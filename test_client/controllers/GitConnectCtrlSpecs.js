@@ -34,7 +34,7 @@ describe('Git Controller Tests', function () {
       settingsService = $injector.get('SettingsService');
       spyOn(settingsService, 'put');
 
-      gitCtrl = $controller('GitCloneCtrl', {
+      gitCtrl = $controller('GitConnectCtrl', {
         $scope: $scope,
         $location: $location,
         gitService: gitService,

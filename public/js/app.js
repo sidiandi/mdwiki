@@ -10,9 +10,9 @@ var mdwiki = angular.module('mdwiki', [
   'mdwiki.directives'
 ]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider, $angularCacheProvider) {
   $routeProvider
-    .when('/git/clone', {
-      templateUrl: './views/gitclone.html',
-      controller: 'GitCloneCtrl'
+    .when('/git/connect', {
+      templateUrl: './views/gitconnect.html',
+      controller: 'GitConnectCtrl'
     })
     .when('/', {
       templateUrl: './views/content.html',

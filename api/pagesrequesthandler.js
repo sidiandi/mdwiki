@@ -1,9 +1,8 @@
 'use strict';
 
 var fs = require('fs'),
-  path = require('path'),
-  q = require('q'),
-  storage = require('../lib/pageStorageFS');
+    q = require('q'),
+    storage = require('../lib/pageStorageFS');
 
 module.exports = function (req, res) {
   storage.getPages()

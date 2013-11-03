@@ -14,20 +14,19 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
     $scope.message = 'Please wait while cloning your repository...';
     $scope.hasError = false;
 
-    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
-
     gitService.clone($scope.repositoryUrl)
-              .then($scope.connect('The repository was successfully cloned!',
-                                   'An error occurred while cloning the repository: '));
-
+      .then(function () {
+        $scope.connect('The repository was successfully cloned!');
+      }, function (error) {
+        $scope.message = 'An error occurred while cloning the repository: ' + error.message;
+        $scope.isBusy = false;
+        $scope.hasError = true;
+      });
   };
 
-  $scope.connect = function (successMessage, errorMessage) {
+  $scope.connect = function (successMessage) {
     if (successMessage === undefined) {
       successMessage = 'The git-repository was successfully connected!';
-    }
-    if (errorMessage === undefined) {
-      errorMessage = 'An error occurred while connection to the git-repository: ';
     }
 
     $scope.message = 'Please wait while connecting your repository...';
@@ -40,7 +39,7 @@ controllers.controller('GitCloneCtrl', ['$scope', '$location', 'GitService', 'Pa
         $scope.message = successMessage;
         $location.path('/');
       }, function (error) {
-        $scope.message = errorMessage + error.message;
+        $scope.message = 'An error occurred while connection to the git-repository: ' + error.message;
         $scope.isBusy = false;
         $scope.hasError = true;
       })

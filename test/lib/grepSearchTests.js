@@ -36,11 +36,11 @@ describe('grep search module tests', function () {
 
           // ACT
           grepSearcher.searchForText(textToSearch, folderToSearch)
-            .done(function (data) {
+            .done(function (searchResult) {
               // ASSERT
               stub.calledOnce.should.be.true;
               stub.calledWithMatch(expected).should.be.true;
-              data.should.be.eql('Text with Java');
+              searchResult.should.be.eql('Text with Java');
               done();
             });
         });

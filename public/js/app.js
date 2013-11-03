@@ -5,7 +5,6 @@ var mdwiki = angular.module('mdwiki', [
   'ngSanitize',
   'ngAnimate',
   'mdwiki.controllers',
-  'mdwiki.filters',
   'mdwiki.services',
   'mdwiki.directives'
 ]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {

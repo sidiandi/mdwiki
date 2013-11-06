@@ -1,6 +1,7 @@
 # Markdown Wiki
 
 [![Build Status](https://travis-ci.org/mdwiki/mdwiki.png?branch=develop)](https://travis-ci.org/mdwiki/mdwiki)
+[![Dependency status](https://david-dm.org/mdwiki/mdwiki.png)](https://david-dm.org/mdwiki/mdwiki)
 
 This repository contains a **node.js** project for a simple **markdown** based wiki.
 

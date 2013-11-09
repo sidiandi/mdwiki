@@ -1,10 +1,12 @@
 'use strict';
 
-var textSearcher = require('../lib/textSearcher'),
-    logger = require('../lib/logger');
+var logger = require('../lib/logger'),
+    xHeaderHandler = require('./xheaderhandler.js');
 
 var search = function (req, res) {
-  textSearcher.search(req.body.textToSearch)
+  var provider = xHeaderHandler.getProviderFromRequest(req);
+
+  provider.search(req.body.textToSearch)
     .then(function (searchResult) {
       console.log('textToSearch:' + req.body.textToSearch);
       console.log('searchResult.....:' + searchResult);

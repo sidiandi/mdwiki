@@ -6,6 +6,7 @@ var request = require('supertest'),
     sinon = require('sinon'),
     fs = require('fs'),
     Q = require('q'),
+    contentProvider = require('../../lib/gitContentProvider'),
     storage = require('../../lib/pageStorageFS'),
     errors = require('../../lib/errors'),
     pageRequestHandler = require('../../api/pagerequesthandler');
@@ -38,6 +39,7 @@ describe('pagerequesthandler tests', function () {
 
     it('should return the index page', function (done) {
       request(app).get('/api/page')
+            .set('X-MDWiki-Provider', 'git')
             .expect('Content-Type', "text/html; charset=utf-8")
             .expect(200, '<h1>Test</h1>')
             .end(function (err, res) {
@@ -63,6 +65,7 @@ describe('pagerequesthandler tests', function () {
 
     it('should return the index page', function (done) {
       request(app).get('/api/page/index')
+            .set('X-MDWiki-Provider', 'git')
             .expect('Content-Type', "text/html; charset=utf-8")
             .expect(200, '<h1>Test</h1>')
             .end(function (err, res) {
@@ -77,6 +80,7 @@ describe('pagerequesthandler tests', function () {
   describe('When an non existing page is given', function () {
     it('should return an 404 http code', function (done) {
       request(app).get('/api/page/nonexistingPage')
+            .set('X-MDWiki-Provider', 'git')
             .expect('Content-Type', "text/plain")
             .expect(404)
             .end(function (err, res) {

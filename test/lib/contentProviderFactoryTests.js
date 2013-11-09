@@ -20,6 +20,12 @@ describe('provider factory tests', function () {
     });
   });
 
+  describe('When the name of the provider was not camelcase', function () {
+    it('should return the expected provider', function () {
+      should.exists(factory.create('git'));
+    });
+  });
+
   describe('When a unknown provider was given ', function () {
     it('should throw an UnknownProviderError', function () {
       /*jshint -W068 */

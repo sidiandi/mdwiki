@@ -39,6 +39,7 @@ describe('pagesrequesthandler tests', function () {
 
     it('should return a list of the pages', function (done) {
       request(app).get('/api/pages')
+        .set('X-MDWiki-Provider', 'git')
         .expect('Content-Type', "application/json")
         .expect(200)
         .end(function (err, res) {

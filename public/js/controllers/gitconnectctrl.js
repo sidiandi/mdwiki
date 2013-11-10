@@ -25,9 +25,7 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
   };
 
   $scope.connect = function (successMessage) {
-    if (successMessage === undefined) {
-      successMessage = 'The git-repository was successfully connected!';
-    }
+    successMessage = successMessage || 'The git-repository was successfully connected!';
 
     $scope.message = 'Please wait while connecting your repository...';
 

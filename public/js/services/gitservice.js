@@ -2,16 +2,14 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('GitService', ['$http', '$q', function ($http, $q) {
+services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
 
     $http({
       method: 'POST',
       url: '/api/git/clone',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: httpHeaderBuilder.build('application/json'),
       data: { repositoryUrl: repositoryUrl }
     })
     .success(function (data, status, headers, config) {
@@ -30,9 +28,7 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
     $http({
       method: 'POST',
       url: '/api/git/pull',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: httpHeaderBuilder.build('application/json')
     })
     .success(function (data, status, headers, config) {
       deferred.resolve();

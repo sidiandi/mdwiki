@@ -59,6 +59,7 @@ module.exports = function (grunt) {
           'public/js/lib/angular/angular-route.js',
           'public/js/lib/angular/angular-sanitize.js',
           'public/js/lib/angular/angular-animate.js',
+          'public/js/lib/angular/angular-cache-2.0.0.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -182,7 +183,7 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'concat', 'cssmin', 'uglify', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);

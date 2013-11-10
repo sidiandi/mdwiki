@@ -18,6 +18,7 @@ module.exports = function (config) {
       'public/js/lib/underscore.js',
       'public/js/lib/angular/angular.js',
       'public/js/lib/angular/angular-*.js',
+      'public/js/lib/angular/angular-cache-2.0.0.js',
       'test_client/lib/angular/angular-mocks.js',
       'public/js/controllers/*.js',
       'public/js/services/*.js',

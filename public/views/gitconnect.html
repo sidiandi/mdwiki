@@ -11,19 +11,19 @@
       <label>Choose provider</label>
       <div class="radio">
         <label title="Choose this provider to clone a git repository on your node server." bs-tooltip>
-          <input type="radio" name="provider" ng-model="provider" value="Git"
+          <input type="radio" name="provider" ng-model="provider" value="git"
           bs-tooltip>Git
         </label>
       </div>
       <div class="radio">
         <label title="Choose this provider to connect directly to a github repository" bs-tooltip>
-          <input type="radio" name="provider" ng-model="provider" value="GitHub"
+          <input type="radio" name="provider" ng-model="provider" value="github"
           checked >GitHub
         </label>
       </div>
 
       <label>Url of your git repository</label>
-      <input type="text" class="form-control" id="repositoryUrl" required
+      <input type="text" class="form-control" id="repositoryUrl" placeholder="{{ repositoryUrlPlaceHolderText }}" required
              ng-model="repositoryUrl" ng-disabled='isBusy'>
     </div>
 

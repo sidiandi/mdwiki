@@ -3,10 +3,11 @@
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
-  $scope.provider = 'GitHub';
+  $scope.provider = 'github';
   $scope.repositoryUrl = '';
   $scope.isBusy = false;
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
+  $scope.repositoryUrlPlaceHolderText = '';
   $scope.hasError = false;
 
   $scope.clone = function () {
@@ -45,5 +46,16 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
         $scope.isBusy = false;
       });
   };
+
+  $scope.$watch('provider', function () {
+    switch ($scope.provider) {
+    case 'git':
+      $scope.repositoryUrlPlaceHolderText = 'Enter here the git-url of the repository';
+      break;
+    case 'github':
+      $scope.repositoryUrlPlaceHolderText = 'Enter here the name of the git user and repository in format user/repository';
+      break;
+    }
+  });
 
 }]);

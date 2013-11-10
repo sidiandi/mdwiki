@@ -32159,16 +32159,14 @@ directives.directive('bsSwitchtext', function () {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('GitService', ['$http', '$q', function ($http, $q) {
+services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
 
     $http({
       method: 'POST',
       url: '/api/git/clone',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: httpHeaderBuilder.build('application/json'),
       data: { repositoryUrl: repositoryUrl }
     })
     .success(function (data, status, headers, config) {
@@ -32187,9 +32185,7 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
     $http({
       method: 'POST',
       url: '/api/git/pull',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: httpHeaderBuilder.build('application/json')
     })
     .success(function (data, status, headers, config) {
       deferred.resolve();
@@ -32211,18 +32207,37 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('PageService', ['$http', '$q', 'SettingsService', function ($http, $q, settingsService) {
+services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (settingsService) {
+  var build = function (contentType, settings) {
+    contentType = contentType || 'application/json';
+    settings = settings || settingsService.get();
+
+    return {
+      'Content-Type': 'application/json',
+      'X-MDWiki-Provider': settings.provider,
+      'X-MDWiki-Url': settings.url
+    };
+  };
+
+  return {
+    build: build
+  };
+}]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
+services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
   var updatePagesObservers = [];
 
   var getPage = function (page) {
     var deferred = $q.defer();
-    var settings = settingsService.get();
 
     $http({
       method: 'GET',
       url: '/api/page/' + page,
-      headers: { 'Content-Type': 'application/json' },
-      data: { settings: settings }
+      headers: httpHeaderBuilder.build('application/json'),
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -32240,13 +32255,10 @@ services.factory('PageService', ['$http', '$q', 'SettingsService', function ($ht
   var getPages = function (settings) {
     var deferred = $q.defer();
 
-    settings = settings || settingsService.get();
-
     $http({
       method: 'GET',
       url: '/api/pages',
-      headers: { 'Content-Type': 'application/json' },
-      data: { settings: settings }
+      headers: httpHeaderBuilder.build('application/json', settings)
     })
     .success(function (data, status, headers, config) {
       var pages = data || [];
@@ -32285,37 +32297,31 @@ services.factory('PageService', ['$http', '$q', 'SettingsService', function ($ht
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', ['$http', '$q', 'SettingsService', function ($http, $q, settingsService) {
+services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
     var search = function (textToSearch) {
-        var settings = settingsService.get();
-        var deferred = $q.defer();
+      var deferred = $q.defer();
 
-        $http({
-            method: 'POST',
-            url: '/api/search',
-            headers: {
-                'Content-Type': 'application/json'
-              },
-              data: {
-                textToSearch: textToSearch,
-                settings: settings
-              }
-            })
-            .success(function (searchResult, status, headers, config) {
-                deferred.resolve(searchResult);
-              })
-            .error(function (searchedText, status, headers, config) {
-                deferred.reject(searchedText);
-              });
-      };
+      $http({
+        method: 'POST',
+        url: '/api/search',
+        headers: httpHeaderBuilder.build('application/json'),
+        data: { textToSearch: textToSearch }
+      })
+      .success(function (searchResult, status, headers, config) {
+        deferred.resolve(searchResult);
+      })
+      .error(function (searchedText, status, headers, config) {
+        deferred.reject(searchedText);
+      });
+    };
 
     return {
-        search: search,
-        searchServiceInstance: searchServiceInstance
-      };
+      search: search,
+      searchServiceInstance: searchServiceInstance
+    };
 
   }]);
 
@@ -32330,7 +32336,7 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     var settings = cache.get('settings');
     if (settings === undefined) {
       settings = {
-        provider: 'Git',
+        provider: 'git',
         url: ''
       };
     }
@@ -32416,9 +32422,7 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
   };
 
   $scope.connect = function (successMessage) {
-    if (successMessage === undefined) {
-      successMessage = 'The git-repository was successfully connected!';
-    }
+    successMessage = successMessage || 'The git-repository was successfully connected!';
 
     $scope.message = 'Please wait while connecting your repository...';
 

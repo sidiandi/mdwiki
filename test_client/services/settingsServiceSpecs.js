@@ -16,7 +16,7 @@ describe('SettingsService tests', function () {
 
     cache = $cacheFactory.get('mdwiki');
 
-    expect(cache).not.toBeUndefined();
+    expect(cache).toBeDefined();
   }));
 
   describe('get tests', function () {
@@ -26,19 +26,19 @@ describe('SettingsService tests', function () {
       var settings = settingsService.get();
 
       expect(settings).not.toBeUndefined();
-      expect(settings.provider).toBe('Git');
+      expect(settings.provider).toBe('git');
     });
 
     it('should return the saved object', function () {
       spyOn(cache, 'get').andReturn({
-        provider: 'GitHub',
-        url: 'https://github.com/mdwiki/mdwiki.wiki.git'
+        provider: 'github',
+        url: 'mdwiki/mdwiki.wiki.git'
       });
 
       var settings = settingsService.get();
 
-      expect(settings).not.toBeUndefined();
-      expect(settings.provider).toBe('GitHub');
+      expect(settings).toBeDefined();
+      expect(settings.provider).toBe('github');
     });
   });
 
@@ -47,7 +47,7 @@ describe('SettingsService tests', function () {
       spyOn(cache, 'put');
 
       var settings = {
-        provider: 'GitHub'
+        provider: 'github'
       };
       settingsService.put(settings);
 

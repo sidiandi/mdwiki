@@ -17,10 +17,7 @@ describe('Git Service specs', function () {
     it('should call the search function with the given text to search', function () {
         var textToSearch = 'javascript';
 
-        var data = {
-          textToSearch: textToSearch,
-          settings: { provider: 'Git', url: ''}
-        };
+        var data = { textToSearch: textToSearch };
 
         httpMock.expectPOST('/api/search', data).respond(200, '');
 

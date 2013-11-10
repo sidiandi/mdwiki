@@ -9,7 +9,7 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     var settings = cache.get('settings');
     if (settings === undefined) {
       settings = {
-        provider: 'Git',
+        provider: 'git',
         url: ''
       };
     }

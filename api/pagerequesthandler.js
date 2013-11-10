@@ -2,7 +2,7 @@
 
 var q = require('q'),
     errors = require('../lib/errors'),
-    xHeaderHandler = require('./xheaderhandler.js');
+    xHeaderHandler = require('./xheaderrequesthandler.js');
 
 module.exports = function (req, res) {
   var pageName = 'index';

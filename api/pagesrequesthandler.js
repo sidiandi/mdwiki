@@ -2,7 +2,7 @@
 
 var fs = require('fs'),
     q = require('q'),
-    xHeaderHandler = require('./xheaderhandler.js');
+    xHeaderHandler = require('./xheaderrequesthandler.js');
 
 module.exports = function (req, res) {
   var provider = xHeaderHandler.getProviderFromRequest(req);

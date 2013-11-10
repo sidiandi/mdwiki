@@ -1,7 +1,7 @@
 'use strict';
 
 var logger = require('../lib/logger'),
-    xHeaderHandler = require('./xheaderhandler.js');
+    xHeaderHandler = require('./xheaderrequesthandler.js');
 
 var search = function (req, res) {
   var provider = xHeaderHandler.getProviderFromRequest(req);

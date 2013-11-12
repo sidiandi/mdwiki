@@ -16,7 +16,7 @@ describe('xheaderhandler Tests', function () {
   describe('When no provider was set', function () {
     it('should return the default provider git', function () {
       request.get.withArgs('X-MDWiki-Provider').returns(undefined);
-      xHeaderHandler.getProviderFromRequest(request).name().should.equal('git');
+      xHeaderHandler.getProviderFromRequest(request).getName().should.equal('git');
     });
 
     afterEach(function () {
@@ -27,7 +27,7 @@ describe('xheaderhandler Tests', function () {
   describe('When git provider was set', function () {
     it('should return the default provider git', function () {
       request.get.withArgs('X-MDWiki-Provider').returns('git');
-      xHeaderHandler.getProviderFromRequest(request).name().should.equal('git');
+      xHeaderHandler.getProviderFromRequest(request).getName().should.equal('git');
     });
 
     afterEach(function () {
@@ -38,7 +38,7 @@ describe('xheaderhandler Tests', function () {
   describe('When github provider was set', function () {
     it('should return the default provider git', function () {
       request.get.withArgs('X-MDWiki-Provider').returns('github');
-      xHeaderHandler.getProviderFromRequest(request).name().should.equal('github');
+      xHeaderHandler.getProviderFromRequest(request).getName().should.equal('github');
     });
 
     afterEach(function () {

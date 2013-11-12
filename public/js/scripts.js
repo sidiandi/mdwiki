@@ -32336,6 +32336,8 @@ services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', functi
       .error(function (searchedText, status, headers, config) {
         deferred.reject(searchedText);
       });
+
+      return deferred.promise;
     };
 
     return {

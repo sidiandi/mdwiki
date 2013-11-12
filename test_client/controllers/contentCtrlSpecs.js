@@ -67,7 +67,7 @@ describe('Content Controller Tests', function () {
       $scope.$apply();
 
       expect($scope.content).toEqual('');
-      expect($location.path).toHaveBeenCalledWith('/git/clone');
+      expect($location.path).toHaveBeenCalledWith('/git/connect');
     });
   });
 

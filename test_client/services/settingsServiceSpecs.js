@@ -32,7 +32,8 @@ describe('SettingsService tests', function () {
     it('should return the saved object', function () {
       spyOn(cache, 'get').andReturn({
         provider: 'github',
-        url: 'mdwiki/mdwiki.wiki.git'
+        githubUser: 'janbaer',
+        githubRepository: 'wiki'
       });
 
       var settings = settingsService.get();
@@ -52,7 +53,6 @@ describe('SettingsService tests', function () {
       settingsService.put(settings);
 
       expect(cache.put).toHaveBeenCalledWith('settings', settings);
-
     });
   });
 

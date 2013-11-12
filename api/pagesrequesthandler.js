@@ -2,10 +2,10 @@
 
 var fs = require('fs'),
     q = require('q'),
-    xHeaderHandler = require('./xheaderrequesthandler.js');
+    paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
-  var provider = xHeaderHandler.getProviderFromRequest(req);
+  var provider = paramHandler.createProviderFromRequest(req);
 
   provider.getPages()
     .then(function (pages) {

@@ -2,7 +2,7 @@
 
 var q = require('q'),
     errors = require('../lib/errors'),
-    xHeaderHandler = require('./xheaderrequesthandler.js');
+    paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
   var pageName = 'index';
@@ -11,7 +11,7 @@ module.exports = function (req, res) {
     pageName = req.params.page;
   }
 
-  var provider = xHeaderHandler.getProviderFromRequest(req);
+  var provider = paramHandler.createProviderFromRequest(req);
 
   provider.getPageContentAsHtml(pageName)
     .then(function (html) {

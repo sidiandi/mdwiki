@@ -1,10 +1,10 @@
 'use strict';
 
 var logger = require('../lib/logger'),
-    xHeaderHandler = require('./xheaderrequesthandler.js');
+    paramHandler = require('../lib/requestParamHandler.js');
 
 var search = function (req, res) {
-  var provider = xHeaderHandler.getProviderFromRequest(req);
+  var provider = paramHandler.createProviderFromRequest(req);
 
   provider.search(req.body.textToSearch)
     .then(function (searchResult) {

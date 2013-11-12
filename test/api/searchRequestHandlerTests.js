@@ -32,7 +32,6 @@ describe('searchrequesthandler tests', function () {
       var stub = sandbox.stub(textSearcher, 'search').returns(Q.resolve('Result'));
 
       request(app).post('/api/search')
-        .set('X-MDWiki-Provider', 'git')
         .send({ textToSearch: 'searchingThisText'})
         .end(function (err, res) {
           stub.calledOnce.should.be.true;

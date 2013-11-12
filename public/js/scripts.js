@@ -32393,7 +32393,7 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
       $scope.content = prepareLinks(page);
     }, function (error) {
       if (page === 'index' && error.code === 404) {
-        $location.path('/git/clone');
+        $location.path('/git/connect');
       } else {
         $scope.errorMessage = 'Content not found!';
         $scope.hasError = true;

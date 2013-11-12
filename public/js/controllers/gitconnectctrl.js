@@ -30,7 +30,10 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
 
     $scope.message = 'Please wait while connecting your repository...';
 
-    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+    var githubUser = $scope.repositoryUrl.split('/')[0];
+    var githubRepository = $scope.repositoryUrl.split('/')[1];
+
+    var settings = { provider: $scope.provider, githubUser: githubUser, githubRepository: githubRepository };
 
     pageService.getPages(settings)
       .then(function () {

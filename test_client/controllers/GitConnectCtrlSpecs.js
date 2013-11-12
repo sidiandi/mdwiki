@@ -62,8 +62,8 @@ describe('Git Controller Tests', function () {
 
     describe('And the users chooses github as provider', function () {
       it('should call just getpages and saves the settings when successful', function () {
-        $scope.provider = 'GitHub';
-        $scope.repositoryUrl = 'https://github.com/mdwiki/mdwiki.wiki.git';
+        $scope.provider = 'github';
+        $scope.repositoryUrl = 'janbaer/wiki';
         $scope.connect();
 
         $scope.$apply(function () {
@@ -72,7 +72,7 @@ describe('Git Controller Tests', function () {
 
         expect($location.path).toHaveBeenCalledWith('/');
         expect(pageService.getPages).toHaveBeenCalled();
-        expect(settingsService.put).toHaveBeenCalled();
+        expect(settingsService.put).toHaveBeenCalledWith({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki' });
       });
     });
 

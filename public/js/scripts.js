@@ -32159,14 +32159,34 @@ directives.directive('bsSwitchtext', function () {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('ApiUrlBuilderService', [ 'SettingsService', function (settingsService) {
+  var build = function (urlBefore, urlAfter, settings) {
+    settings = settings || settingsService.get();
+
+    if (settings.provider === 'github') {
+      return urlBefore + settings.githubUser + '/' + settings.githubRepository + '/' + urlAfter;
+    }
+
+    return urlBefore + urlAfter;
+  };
+
+  return {
+    build: build
+  };
+}]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
+services.factory('GitService', ['$http', '$q', function ($http, $q) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
 
     $http({
       method: 'POST',
       url: '/api/git/clone',
-      headers: httpHeaderBuilder.build('application/json'),
+      headers: { 'Content-Type' : 'application/json' },
       data: { repositoryUrl: repositoryUrl }
     })
     .success(function (data, status, headers, config) {
@@ -32185,7 +32205,7 @@ services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', funct
     $http({
       method: 'POST',
       url: '/api/git/pull',
-      headers: httpHeaderBuilder.build('application/json')
+      headers: { 'Content-Type' : 'application/json' }
     })
     .success(function (data, status, headers, config) {
       deferred.resolve();
@@ -32228,7 +32248,7 @@ services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (sett
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
   var updatePagesObservers = [];
 
   var getPage = function (page) {
@@ -32236,8 +32256,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/page/' + page,
-      headers: httpHeaderBuilder.build('application/json'),
+      url: urlBuilder.build('/api/', 'page/' + page),
+      headers: { 'Content-Type': 'application/json' },
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -32257,8 +32277,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/pages',
-      headers: httpHeaderBuilder.build('application/json', settings)
+      url: urlBuilder.build('/api/', 'pages', settings),
+      headers: { 'Content-Type': 'application/json' }
     })
     .success(function (data, status, headers, config) {
       var pages = data || [];
@@ -32297,7 +32317,7 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
@@ -32306,8 +32326,8 @@ services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', fu
 
       $http({
         method: 'POST',
-        url: '/api/search',
-        headers: httpHeaderBuilder.build('application/json'),
+        url: urlBuilder.build('/api/', 'search'),
+        headers: { 'Content-Type': 'application/json' },
         data: { textToSearch: textToSearch }
       })
       .success(function (searchResult, status, headers, config) {
@@ -32427,7 +32447,10 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
 
     $scope.message = 'Please wait while connecting your repository...';
 
-    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+    var githubUser = $scope.repositoryUrl.split('/')[0];
+    var githubRepository = $scope.repositoryUrl.split('/')[1];
+
+    var settings = { provider: $scope.provider, githubUser: githubUser, githubRepository: githubRepository };
 
     pageService.getPages(settings)
       .then(function () {

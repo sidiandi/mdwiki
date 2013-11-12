@@ -2,7 +2,7 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
   var updatePagesObservers = [];
 
   var getPage = function (page) {
@@ -10,8 +10,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/page/' + page,
-      headers: httpHeaderBuilder.build('application/json'),
+      url: urlBuilder.build('/api/', 'page/' + page),
+      headers: { 'Content-Type': 'application/json' },
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -31,8 +31,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/pages',
-      headers: httpHeaderBuilder.build('application/json', settings)
+      url: urlBuilder.build('/api/', 'pages', settings),
+      headers: { 'Content-Type': 'application/json' }
     })
     .success(function (data, status, headers, config) {
       var pages = data || [];

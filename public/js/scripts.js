@@ -32422,8 +32422,10 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
-  $scope.provider = 'github';
-  $scope.repositoryUrl = '';
+  var settings = settingsService.get() || { provider: 'github', url: '' };
+  $scope.provider = settings.provider;
+  $scope.repositoryUrl = settings.url;
+
   $scope.isBusy = false;
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
   $scope.repositoryUrlPlaceHolderText = '';
@@ -32449,10 +32451,12 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
 
     $scope.message = 'Please wait while connecting your repository...';
 
-    var githubUser = $scope.repositoryUrl.split('/')[0];
-    var githubRepository = $scope.repositoryUrl.split('/')[1];
+    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
 
-    var settings = { provider: $scope.provider, githubUser: githubUser, githubRepository: githubRepository };
+    if ($scope.provider === 'github') {
+      settings.githubUser = $scope.repositoryUrl.split('/')[0];
+      settings.githubRepository = $scope.repositoryUrl.split('/')[1];
+    }
 
     pageService.getPages(settings)
       .then(function () {

@@ -72,7 +72,7 @@ describe('Git Controller Tests', function () {
 
         expect($location.path).toHaveBeenCalledWith('/');
         expect(pageService.getPages).toHaveBeenCalled();
-        expect(settingsService.put).toHaveBeenCalledWith({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki' });
+        expect(settingsService.put).toHaveBeenCalledWith({ provider: 'github', url: 'janbaer/wiki', githubUser: 'janbaer', githubRepository: 'wiki' });
       });
     });
 

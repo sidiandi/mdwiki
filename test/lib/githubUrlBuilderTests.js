@@ -7,7 +7,7 @@ describe('github UrlBuilder Tests', function () {
 
   describe('When a url for a static file is given', function () {
     it('Should return the raw url for the github request', function () {
-      var expectedUrl = 'https://github.com/janbaer/wiki-content/raw/master/static/pdf/PowerShell_ISE_v3.pdf';
+      var expectedUrl = 'https://rawgithub.com/janbaer/wiki-content/master/static/pdf/PowerShell_ISE_v3.pdf';
       var givenUrl = '/static/janbaer/wiki-content/pdf/PowerShell_ISE_v3.pdf';
 
       var actual = urlBuilder.buildStaticFileUrl(GITHUB_USER, GITHUB_REPOSITORY, givenUrl);

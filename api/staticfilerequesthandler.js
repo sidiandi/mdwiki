@@ -2,21 +2,12 @@
 
 var fs = require('fs'),
     path = require('path'),
-    logger = require('../lib/logger');
+    logger = require('../lib/logger'),
+    paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
   logger.info('static url: %s', req.url);
-  var fileName = path.join(__dirname, '../content/', req.url);
 
-  fs.exists(fileName, function (exists) {
-    if (!exists) {
-      logger.warn('static file \'%s\' does not exists', fileName);
-      res.send(404, 'file not found');
-      res.end();
-    }
-    else {
-      res.sendfile(fileName);
-    }
-  });
-
+  var provider = paramHandler.createProviderFromRequest(req);
+  provider.fetchStaticFile(req, res);
 };

@@ -34,7 +34,7 @@ describe('Tests for the static content handler', function () {
       sinon.spy(response, 'sendfile');
 
       // ACT
-      staticFileRequestHandler({url: '/static/pdf/test.pdf'}, response);
+      staticFileRequestHandler({ url: '/static/pdf/test.pdf', params: [] }, response);
 
       // ASSERT
       response.sendfile.withArgs(expectedFilePath).calledOnce.should.be.true;
@@ -61,7 +61,7 @@ describe('Tests for the static content handler', function () {
       sinon.spy(response, 'send');
 
       // ACT
-      staticFileRequestHandler({url: '/static/pdf/test.pdf'}, response);
+      staticFileRequestHandler({ url: '/static/pdf/test.pdf', params: [] }, response);
 
       // ASSERT
       response.sendfile.called.should.be.false;

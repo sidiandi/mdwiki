@@ -172,6 +172,12 @@ module.exports = function (grunt) {
       },
       coverageKarma: {
         command: 'karma start karma-coverage.conf.js'
+      },
+      analysisClient: {
+        command: 'plato -r -d docs/generated/analysis/client -l .jshintrc -t "MDWiki Client" -x .json public/js/app.js public/js/directives.js public/js/services/*.js public/js/controllers/*.js'
+      },
+      analysisServer: {
+        command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       }
     },
     clean: {
@@ -192,6 +198,6 @@ module.exports = function (grunt) {
   grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
 
   // Coverage tasks
-  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma']);
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);
 
 };

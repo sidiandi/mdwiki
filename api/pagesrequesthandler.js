@@ -2,10 +2,12 @@
 
 var fs = require('fs'),
     q = require('q'),
-    storage = require('../lib/pageStorageFS');
+    paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
-  storage.getPages()
+  var provider = paramHandler.createProviderFromRequest(req);
+
+  provider.getPages()
     .then(function (pages) {
       var json = JSON.stringify(pages);
 

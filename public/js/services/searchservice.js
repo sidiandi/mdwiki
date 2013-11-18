@@ -2,7 +2,7 @@
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
@@ -11,8 +11,8 @@ services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', fu
 
       $http({
         method: 'POST',
-        url: '/api/search',
-        headers: httpHeaderBuilder.build('application/json'),
+        url: urlBuilder.build('/api/', 'search'),
+        headers: { 'Content-Type': 'application/json' },
         data: { textToSearch: textToSearch }
       })
       .success(function (searchResult, status, headers, config) {
@@ -21,6 +21,8 @@ services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', fu
       .error(function (searchedText, status, headers, config) {
         deferred.reject(searchedText);
       });
+
+      return deferred.promise;
     };
 
     return {

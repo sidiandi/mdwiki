@@ -1,8 +1,8 @@
 'use strict';
 
 var q = require('q'),
-  storage = require('../lib/pageStorageFS'),
-  errors = require('../lib/errors');
+    errors = require('../lib/errors'),
+    paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
   var pageName = 'index';
@@ -11,7 +11,9 @@ module.exports = function (req, res) {
     pageName = req.params.page;
   }
 
-  storage.getPageContentAsHtml(pageName)
+  var provider = paramHandler.createProviderFromRequest(req);
+
+  provider.getPageContentAsHtml(pageName)
     .then(function (html) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       // the Buffer solves the problem with the automatic UTF-8 conversion

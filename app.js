@@ -58,11 +58,15 @@ app.get('/css/styles.css', function (req, res) {
 // JSON API
 app.get('/api/pages', pagesRequestHandler);
 app.get('/api/page/:page?', pageRequestHandler);
+app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
+app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler);
+app.post('/api/search', searchRequestHandler.search);
+app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
 
 app.post('/api/git/clone', gitRequestHandler.clone);
 app.post('/api/git/pull', gitRequestHandler.pull);
-app.post('/api/search', searchRequestHandler.search);
 
+app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 app.get('/static/*', staticFileRequestHandler);
 
 

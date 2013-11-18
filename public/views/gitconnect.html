@@ -28,10 +28,10 @@
     </div>
 
     <button ng-click='clone()' class="btn btn-default"
-            ng-show="provider === 'Git'"
+            ng-show="provider === 'git'"
             ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Clone</button>
     <button ng-click='connect()' class="btn btn-default"
-            ng-show="provider === 'Github'"
+            ng-show="provider === 'github'"
             ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Connect</button>
 
     <img src="images/progress.gif" alt="Cloning" title="Cloning"

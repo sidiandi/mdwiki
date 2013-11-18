@@ -31,8 +31,7 @@ describe('searchrequesthandler tests', function () {
     it('should return the search result and return 200', function (done) {
       var stub = sandbox.stub(textSearcher, 'search').returns(Q.resolve('Result'));
 
-      request(app)
-        .post('/api/search')
+      request(app).post('/api/search')
         .send({ textToSearch: 'searchingThisText'})
         .end(function (err, res) {
           stub.calledOnce.should.be.true;

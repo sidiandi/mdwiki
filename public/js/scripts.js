@@ -32159,14 +32159,34 @@ directives.directive('bsSwitchtext', function () {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('ApiUrlBuilderService', [ 'SettingsService', function (settingsService) {
+  var build = function (urlBefore, urlAfter, settings) {
+    settings = settings || settingsService.get();
+
+    if (settings.provider === 'github') {
+      return urlBefore + settings.githubUser + '/' + settings.githubRepository + '/' + urlAfter;
+    }
+
+    return urlBefore + urlAfter;
+  };
+
+  return {
+    build: build
+  };
+}]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
+services.factory('GitService', ['$http', '$q', function ($http, $q) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
 
     $http({
       method: 'POST',
       url: '/api/git/clone',
-      headers: httpHeaderBuilder.build('application/json'),
+      headers: { 'Content-Type' : 'application/json' },
       data: { repositoryUrl: repositoryUrl }
     })
     .success(function (data, status, headers, config) {
@@ -32185,7 +32205,7 @@ services.factory('GitService', ['$http', '$q', 'HttpHeaderBuilderService', funct
     $http({
       method: 'POST',
       url: '/api/git/pull',
-      headers: httpHeaderBuilder.build('application/json')
+      headers: { 'Content-Type' : 'application/json' }
     })
     .success(function (data, status, headers, config) {
       deferred.resolve();
@@ -32228,7 +32248,7 @@ services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (sett
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
   var updatePagesObservers = [];
 
   var getPage = function (page) {
@@ -32236,8 +32256,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/page/' + page,
-      headers: httpHeaderBuilder.build('application/json'),
+      url: urlBuilder.build('/api/', 'page/' + page),
+      headers: { 'Content-Type': 'application/json' },
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -32257,8 +32277,8 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
     $http({
       method: 'GET',
-      url: '/api/pages',
-      headers: httpHeaderBuilder.build('application/json', settings)
+      url: urlBuilder.build('/api/', 'pages', settings),
+      headers: { 'Content-Type': 'application/json' }
     })
     .success(function (data, status, headers, config) {
       var pages = data || [];
@@ -32297,7 +32317,7 @@ services.factory('PageService', ['$http', '$q', 'HttpHeaderBuilderService', func
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', function ($http, $q, httpHeaderBuilder) {
+services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
@@ -32306,8 +32326,8 @@ services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', fu
 
       $http({
         method: 'POST',
-        url: '/api/search',
-        headers: httpHeaderBuilder.build('application/json'),
+        url: urlBuilder.build('/api/', 'search'),
+        headers: { 'Content-Type': 'application/json' },
         data: { textToSearch: textToSearch }
       })
       .success(function (searchResult, status, headers, config) {
@@ -32316,6 +32336,8 @@ services.factory('SearchService', ['$http', '$q', 'HttpHeaderBuilderService', fu
       .error(function (searchedText, status, headers, config) {
         deferred.reject(searchedText);
       });
+
+      return deferred.promise;
     };
 
     return {
@@ -32358,11 +32380,13 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'PageService', function ($scope, $routeParams, $location, pageService) {
+controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'PageService', 'SettingsService', function ($scope, $routeParams, $location, pageService, settingsService) {
   var page = 'index';
   $scope.content = '';
   $scope.errorMessage = '';
   $scope.hasError = false;
+
+  var settings = settingsService.get();
 
   if ($routeParams.page) {
     page = $routeParams.page;
@@ -32370,25 +32394,35 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 
   pageService.getPage(page)
     .then(function (page) {
-      $scope.content = prepareLinks(page);
+      $scope.content = prepareLinks(page, settings);
     }, function (error) {
       if (page === 'index' && error.code === 404) {
-        $location.path('/git/clone');
+        $location.path('/git/connect');
       } else {
         $scope.errorMessage = 'Content not found!';
         $scope.hasError = true;
       }
     });
 
-  var prepareLinks = function (html) {
+  var prepareLinks = function (html, settings) {
     var $dom = $('<div>' + html + '</div>');
 
-    $dom.find('a[href^="/static/"]').attr('target', '_blank');
 
     $dom.find('a[href^="wiki/"]').each(function () {
       var $link = $(this);
       $link.attr('href', $link.attr('href').substring(4));
     });
+
+    if (settings.provider === 'github') {
+      $dom.find('a[href^="/static/"]').each(function () {
+        var $link = $(this);
+        var newLink = '/static/'.concat(settings.githubUser, '/', settings.githubRepository, '/', $link.attr('href').substring('/static/'.length));
+        $link.attr('href', newLink);
+        $link.attr('target', '_blank');
+      });
+    } else {
+      $dom.find('a[href^="/static/"]').attr('target', '_blank');
+    }
 
     return $dom.html();
   };
@@ -32400,8 +32434,10 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
-  $scope.provider = 'github';
-  $scope.repositoryUrl = '';
+  var settings = settingsService.get() || { provider: 'github', url: '' };
+  $scope.provider = settings.provider;
+  $scope.repositoryUrl = settings.url;
+
   $scope.isBusy = false;
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
   $scope.repositoryUrlPlaceHolderText = '';
@@ -32428,6 +32464,11 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
     $scope.message = 'Please wait while connecting your repository...';
 
     var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+
+    if ($scope.provider === 'github') {
+      settings.githubUser = $scope.repositoryUrl.split('/')[0];
+      settings.githubRepository = $scope.repositoryUrl.split('/')[1];
+    }
 
     pageService.getPages(settings)
       .then(function () {
@@ -32461,15 +32502,18 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', function ($scope, $route, gitService, pageService) {
+controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($scope, $route, gitService, pageService, settingsService) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
   $scope.hasContent = false;
+  $scope.provider = 'git';
 
   var checkHasContent = function (pages) {
     $scope.hasContent = pages && pages.length > 0;
+    $scope.provider = settingsService.get().provider;
   };
+
   pageService.registerObserver(checkHasContent);
 
   $scope.pull = function () {

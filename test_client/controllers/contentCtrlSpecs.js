@@ -8,7 +8,7 @@ describe('Content Controller Tests', function () {
   });
 
   describe('When the page exists', function () {
-    var $scope, $controller, deferred, pageService;
+    var $scope, $controller, deferred, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -17,6 +17,9 @@ describe('Content Controller Tests', function () {
       pageService = $injector.get('PageService');
       deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
+
+      settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
     }));
 
     it('should set the html in the content of the scope', function () {
@@ -24,7 +27,8 @@ describe('Content Controller Tests', function () {
         $scope: $scope,
         $routeParams: { page: 'index'},
         $location: {},
-        pageService: pageService
+        pageService: pageService,
+        settingsService: settingsService
       });
 
       // This is important to resolve the promises => it must called after the function
@@ -38,7 +42,7 @@ describe('Content Controller Tests', function () {
   });
 
   describe('When Page not exists and the page name is index', function () {
-    var $scope, $controller, $location, pageService;
+    var $scope, $controller, $location, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -52,6 +56,9 @@ describe('Content Controller Tests', function () {
       error.code = 404;
       deferred.reject(error);
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
+
+      settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
 
       spyOn($location, 'path');
     }));
@@ -61,18 +68,19 @@ describe('Content Controller Tests', function () {
         $scope: $scope,
         $routeParams: { page: 'index'},
         $location: $location,
-        pageService: pageService
+        pageService: pageService,
+        settingsService: settingsService
       });
 
       $scope.$apply();
 
       expect($scope.content).toEqual('');
-      expect($location.path).toHaveBeenCalledWith('/git/clone');
+      expect($location.path).toHaveBeenCalledWith('/git/connect');
     });
   });
 
   describe('When Page not exists and the page name is not index', function () {
-    var $scope, $controller, $location, pageService;
+    var $scope, $controller, $location, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -87,6 +95,9 @@ describe('Content Controller Tests', function () {
       deferred.reject(error);
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
 
+      settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
+
       spyOn($location, 'path');
     }));
 
@@ -95,7 +106,8 @@ describe('Content Controller Tests', function () {
         $scope: $scope,
         $routeParams: { page: 'page1'},
         $location: $location,
-        pageService: pageService
+        pageService: pageService,
+        settingsService: settingsService
       });
 
       $scope.$apply();
@@ -106,7 +118,7 @@ describe('Content Controller Tests', function () {
   });
 
   describe('When html contains some anchors to static files', function () {
-    var $scope, $controller, deferred, pageService;
+    var $scope, $controller, deferred, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -115,14 +127,19 @@ describe('Content Controller Tests', function () {
       pageService = $injector.get('PageService');
       deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
+
+      settingsService = $injector.get('SettingsService');
     }));
 
     it('should add a target attribute to the anchors', function () {
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
+
       var controller = $controller('ContentCtrl', {
         $scope: $scope,
         $routeParams: { page: 'index'},
         $location: {},
-        pageService: pageService
+        pageService: pageService,
+        settingsService: settingsService
       });
 
       // This is important to resolve the promises => it must called after the function
@@ -134,10 +151,34 @@ describe('Content Controller Tests', function () {
       expect($scope.content).toEqual('<a href="/static/staticfile.pdf" target="_blank">Test</a>');
     });
 
+    describe('and the current provider is github', function () {
+      it('Should add the github username and repository to the url', function () {
+        spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki' });
+
+        var controller = $controller('ContentCtrl', {
+          $scope: $scope,
+          $routeParams: { page: 'index'},
+          $location: {},
+          pageService: pageService,
+          settingsService: settingsService,
+        });
+
+        $scope.$apply(function () {
+          deferred.resolve('<a href="/static/staticfile.pdf">Test</a>');
+        });
+
+        expect($scope.content).toEqual('<a href="/static/janbaer/wiki/staticfile.pdf" target="_blank">Test</a>');
+      });
+    });
+
+    afterEach(function () {
+      settingsService.get.reset();
+    });
+
   });
 
   describe('When we host a github wiki it should remove the wiki at the begin of the link', function () {
-    var $scope, $controller, deferred, pageService;
+    var $scope, $controller, deferred, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
       $scope = $rootScope.$new();
@@ -146,6 +187,9 @@ describe('Content Controller Tests', function () {
       pageService = $injector.get('PageService');
       deferred = $q.defer();
       spyOn(pageService, 'getPage').andReturn(deferred.promise);
+
+      settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
     }));
 
     it('should add a target attribut to the anchors', function () {
@@ -153,7 +197,8 @@ describe('Content Controller Tests', function () {
         $scope: $scope,
         $routeParams: { page: 'index'},
         $location: {},
-        pageService: pageService
+        pageService: pageService,
+        settingsService: settingsService
       });
 
       $scope.$apply(function () {
@@ -162,7 +207,7 @@ describe('Content Controller Tests', function () {
 
       expect($scope.content).toEqual('<a href="/page1">Page1</a>');
     });
-
   });
+
 
 });

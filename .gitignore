@@ -24,10 +24,11 @@ version.jade
 
 .nodemonignore
 
-test/tempbeans.json
-docs/generated
+public/js/scripts.min.js
+public/css/styles.min.css
 
 content/
+docs/
 
 start.bat
 nssm.exe

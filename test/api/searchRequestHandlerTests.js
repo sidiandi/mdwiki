@@ -17,7 +17,7 @@ describe('searchrequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.bodyParser());
+    app.use(express.json());
 
     app.post('/api/search', searchRequestHandler.search);
 

@@ -17,7 +17,7 @@ describe('gitrequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.bodyParser());
+    app.use(express.json());
 
     app.post('/api/git/clone', gitRequestHandler.clone);
     app.post('/api/git/pull', gitRequestHandler.pull);

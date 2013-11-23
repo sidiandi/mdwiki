@@ -18,7 +18,8 @@ app.configure(function () {
   app.set('port', process.env.PORT || 3000);
   app.use(express.compress());
   app.use(express.favicon());
-  app.use(express.bodyParser());
+  app.use(express.json());
+  app.use(express.urlencoded());
   app.use(express.methodOverride());
   app.use(express.logger());
 
@@ -70,8 +71,10 @@ app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 app.get('/static/*', staticFileRequestHandler);
 
 
-app.get(['/git/clone', '*'], function (req, res) {
-  logger.info('Request for url: %s', req.url);
+app.get('/git/clone', function (req, res) {
+  res.sendfile('./public/index.html');
+});
+app.get('*', function (req, res) {
   res.sendfile('./public/index.html');
 });
 

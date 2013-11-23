@@ -185,17 +185,19 @@ module.exports = function (grunt) {
         src: ["docs"]
       }
     }
-
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'concat', 'cssmin', 'uglify', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'concat', 'minify', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
 
+  // Minify tasks
+  grunt.registerTask('minify', ['cssmin', 'uglify']);
+
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
+  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify', 'uglify']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

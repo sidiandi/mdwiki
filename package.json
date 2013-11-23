@@ -28,10 +28,12 @@
     "winston": "~0.7.2",
     "node-markdown": "~0.1.1",
     "marked": "~0.2.9",
-    "request": "~2.27.0"
+    "request": "~2.27.0",
+    "grunt": "~0.4",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.4"
   },
   "devDependencies": {
-    "grunt": "~0.4",
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-mocha-test": "~0.7.0",
@@ -50,8 +52,6 @@
     "karma": "~0.10.1",
     "karma-growl-reporter": "~0.1.0",
     "grunt-karma": "~0.6.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-cssmin": "~0.7.0",
     "grunt-nodemon": "~0.1.1",
     "grunt-concurrent": "~0.4.2",
@@ -66,6 +66,7 @@
   "scripts": {
     "start": "node ./app.js",
     "test": "grunt test",
+    "postinstall": "grunt --gruntfile grunt-minify.js",
     "blanket": {
       "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",
       "onlyCwd": true,

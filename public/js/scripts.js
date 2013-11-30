@@ -32296,6 +32296,27 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
+  var findStartPage = function (pages) {
+    var pagesToFind = ['index', 'home', 'readme'];
+
+    for (var i = 0; i < pagesToFind.length ; i++) {
+      var startPage = findPage(pages, pagesToFind[i]);
+      if (startPage !== undefined && startPage.length > 0) {
+        return startPage;
+      }
+    }
+    return '';
+  };
+
+  var findPage = function (pages, pageName) {
+    for (var i = 0; i < pages.length; i++) {
+      if (pageName === pages[i].name.toLowerCase()) {
+        return pages[i].name;
+      }
+    }
+    return '';
+  };
+
   var registerObserver = function (callback) {
     updatePagesObservers.push(callback);
   };
@@ -32307,6 +32328,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   };
 
   return {
+    findStartPage: findStartPage,
     getPage: getPage,
     getPages: getPages,
     registerObserver: registerObserver
@@ -32359,7 +32381,8 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     if (settings === undefined) {
       settings = {
         provider: 'git',
-        url: ''
+        url: '',
+        startPage: 'index'
       };
     }
 
@@ -32381,22 +32404,19 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'PageService', 'SettingsService', function ($scope, $routeParams, $location, pageService, settingsService) {
-  var page = 'index';
   $scope.content = '';
   $scope.errorMessage = '';
   $scope.hasError = false;
 
   var settings = settingsService.get();
+  var startPage = settings.startPage || 'index';
+  var pageName = $routeParams.page || startPage;
 
-  if ($routeParams.page) {
-    page = $routeParams.page;
-  }
-
-  pageService.getPage(page)
+  pageService.getPage(pageName)
     .then(function (page) {
       $scope.content = prepareLinks(page, settings);
     }, function (error) {
-      if (page === 'index' && error.code === 404) {
+      if (pageName === startPage && error.code === 404) {
         $location.path('/git/connect');
       } else {
         $scope.errorMessage = 'Content not found!';
@@ -32471,10 +32491,18 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
     }
 
     pageService.getPages(settings)
-      .then(function () {
-        settingsService.put(settings);
-        $scope.message = successMessage;
-        $location.path('/');
+      .then(function (pages) {
+        var startPage = pageService.findStartPage(pages);
+        if (startPage !== undefined && startPage.length > 0) {
+          settings.startPage = startPage;
+          settingsService.put(settings);
+          $scope.message = successMessage;
+          $location.path('/');
+        } else {
+          $scope.message = 'No startpage was found!';
+          $scope.isBusy = false;
+          $scope.hasError = true;
+        }
       }, function (error) {
         $scope.message = 'An error occurred while connection to the git-repository: ' + error.message;
         $scope.isBusy = false;

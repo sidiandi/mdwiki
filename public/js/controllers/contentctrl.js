@@ -3,22 +3,19 @@
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'PageService', 'SettingsService', function ($scope, $routeParams, $location, pageService, settingsService) {
-  var page = 'index';
   $scope.content = '';
   $scope.errorMessage = '';
   $scope.hasError = false;
 
   var settings = settingsService.get();
+  var startPage = settings.startPage || 'index';
+  var pageName = $routeParams.page || startPage;
 
-  if ($routeParams.page) {
-    page = $routeParams.page;
-  }
-
-  pageService.getPage(page)
+  pageService.getPage(pageName)
     .then(function (page) {
       $scope.content = prepareLinks(page, settings);
     }, function (error) {
-      if (page === 'index' && error.code === 404) {
+      if (pageName === startPage && error.code === 404) {
         $location.path('/git/connect');
       } else {
         $scope.errorMessage = 'Content not found!';

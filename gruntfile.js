@@ -197,7 +197,7 @@ module.exports = function (grunt) {
   grunt.registerTask('minify', ['cssmin', 'uglify']);
 
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify', 'uglify']);
+  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

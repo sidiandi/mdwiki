@@ -29,6 +29,7 @@ describe('Git Controller Tests', function () {
 
       pageService = $injector.get('PageService');
       pagesDeferred = $q.defer();
+      pagesDeferred.resolve([{name: 'index'}]);
       spyOn(pageService, 'getPages').andReturn(pagesDeferred.promise);
 
       settingsService = $injector.get('SettingsService');
@@ -72,7 +73,7 @@ describe('Git Controller Tests', function () {
 
         expect($location.path).toHaveBeenCalledWith('/');
         expect(pageService.getPages).toHaveBeenCalled();
-        expect(settingsService.put).toHaveBeenCalledWith({ provider: 'github', url: 'janbaer/wiki', githubUser: 'janbaer', githubRepository: 'wiki' });
+        expect(settingsService.put).toHaveBeenCalledWith({ provider: 'github', url: 'janbaer/wiki', githubUser: 'janbaer', githubRepository: 'wiki', startPage: 'index' });
       });
     });
 

@@ -40,10 +40,18 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
     }
 
     pageService.getPages(settings)
-      .then(function () {
-        settingsService.put(settings);
-        $scope.message = successMessage;
-        $location.path('/');
+      .then(function (pages) {
+        var startPage = pageService.findStartPage(pages);
+        if (startPage !== undefined && startPage.length > 0) {
+          settings.startPage = startPage;
+          settingsService.put(settings);
+          $scope.message = successMessage;
+          $location.path('/');
+        } else {
+          $scope.message = 'No startpage was found!';
+          $scope.isBusy = false;
+          $scope.hasError = true;
+        }
       }, function (error) {
         $scope.message = 'An error occurred while connection to the git-repository: ' + error.message;
         $scope.isBusy = false;

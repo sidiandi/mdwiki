@@ -50,6 +50,27 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
+  var findStartPage = function (pages) {
+    var pagesToFind = ['index', 'home', 'readme'];
+
+    for (var i = 0; i < pagesToFind.length ; i++) {
+      var startPage = findPage(pages, pagesToFind[i]);
+      if (startPage !== undefined && startPage.length > 0) {
+        return startPage;
+      }
+    }
+    return '';
+  };
+
+  var findPage = function (pages, pageName) {
+    for (var i = 0; i < pages.length; i++) {
+      if (pageName === pages[i].name.toLowerCase()) {
+        return pages[i].name;
+      }
+    }
+    return '';
+  };
+
   var registerObserver = function (callback) {
     updatePagesObservers.push(callback);
   };
@@ -61,6 +82,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   };
 
   return {
+    findStartPage: findStartPage,
     getPage: getPage,
     getPages: getPages,
     registerObserver: registerObserver

@@ -8,7 +8,8 @@ var express = require("express"),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
     gitRequestHandler = require('./api/gitrequesthandler'),
     searchRequestHandler = require('./api/searchrequesthandler'),
-    staticFileRequestHandler = require('./api/staticfilerequesthandler');
+    staticFileRequestHandler = require('./api/staticfilerequesthandler'),
+    serverConfigRequestHandler = require('./api/serverconfigrequesthandler');
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.get('/css/styles.css', function (req, res) {
 
 
 // JSON API
+app.get('/api/serverconfig', serverConfigRequestHandler);
 app.get('/api/pages', pagesRequestHandler);
 app.get('/api/page/:page?', pageRequestHandler);
 app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
@@ -66,6 +68,7 @@ app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.searc
 
 app.post('/api/git/clone', gitRequestHandler.clone);
 app.post('/api/git/pull', gitRequestHandler.pull);
+
 
 app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 app.get('/static/*', staticFileRequestHandler);

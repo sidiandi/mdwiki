@@ -10,7 +10,8 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     if (settings === undefined) {
       settings = {
         provider: 'git',
-        url: ''
+        url: '',
+        startPage: 'index'
       };
     }
 

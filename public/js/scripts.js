@@ -32383,7 +32383,7 @@ services.factory('ServerConfigService', ['$http', '$q', function ($http, $q) {
       headers: {'Content-Type': 'application/json'},
     })
     .success(function (data, status, headers, config) {
-      deferred.resolve(JSON.parse(data.toString()));
+      deferred.resolve(data);
     })
     .error(function (data, status, headers, config) {
       var error = new Error();
@@ -32484,7 +32484,7 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
+controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($scope, $location, gitService, pageService, settingsService, serverConfigService) {
   var settings = settingsService.get() || { provider: 'github', url: '' };
   $scope.provider = settings.provider;
   $scope.repositoryUrl = settings.url;
@@ -32493,6 +32493,15 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
   $scope.repositoryUrlPlaceHolderText = '';
   $scope.hasError = false;
+
+  $scope.isGithubSupported = false;
+  $scope.isGitSupported = false;
+
+  serverConfigService.getConfig()
+    .then(function (config) {
+      $scope.isGithubSupported = config.providers.indexOf('github') >= 0;
+      $scope.isGitSupported = config.providers.indexOf('git') >= 0;
+    });
 
   $scope.clone = function () {
     $scope.isBusy = true;

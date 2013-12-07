@@ -9,29 +9,26 @@ var path = require('path'),
 describe('Tests for the static content handler', function () {
   var sandbox;
 
-  var response = {
-    sendfile: function (filename) {},
-    send: function (code, message) {},
-    end: function () {}
-  };
-
   beforeEach(function () {
     sandbox = sinon.sandbox.create();
   });
 
   describe('When the static file exists', function () {
-    beforeEach(function () {
+    var response;
 
+    beforeEach(function () {
       sandbox.stub(fs, 'exists', function (path, callback) {
         callback(true);
+      });
+
+      response = sinon.stub({
+        sendfile: function (filename) {}
       });
     });
 
     it('should send the file back', function (done) {
       // ARRANGE
       var expectedFilePath = path.join(__dirname, '../../content/static/pdf', 'test.pdf');
-
-      sinon.spy(response, 'sendfile');
 
       // ACT
       staticFileRequestHandler({ url: '/static/pdf/test.pdf', params: [] }, response);
@@ -43,22 +40,28 @@ describe('Tests for the static content handler', function () {
     });
 
     afterEach(function () {
-      response.sendfile.restore();
       sandbox.restore();
     });
   });
 
   describe('When the static file not exists', function () {
+    var response;
+
     beforeEach(function () {
       sandbox.stub(fs, 'exists', function (path, callback) {
         callback(false);
       });
+
+      response = sinon.stub({
+        sendfile: function (filename) {},
+        send: function (code, message) {},
+        end: function () {}
+      });
+
     });
 
     it('should send and 404 error', function (done) {
       // ARRANGE
-      sinon.spy(response, 'sendfile');
-      sinon.spy(response, 'send');
 
       // ACT
       staticFileRequestHandler({ url: '/static/pdf/test.pdf', params: [] }, response);

@@ -32373,6 +32373,37 @@ services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', functi
 
 var services = services || angular.module('mdwiki.services', []);
 
+services.factory('ServerConfigService', ['$http', '$q', function ($http, $q) {
+  var getConfig = function (page) {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'GET',
+      url: '/api/serverconfig',
+      headers: {'Content-Type': 'application/json'},
+    })
+    .success(function (data, status, headers, config) {
+      deferred.resolve(data);
+    })
+    .error(function (data, status, headers, config) {
+      var error = new Error();
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.code = status;
+      deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
+  return {
+    getConfig: getConfig
+  };
+}]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
 services.factory('SettingsService', ['$angularCacheFactory', function ($angularCacheFactory) {
   var cache = $angularCacheFactory('mdwiki', { storageMode: 'localStorage' });
 
@@ -32453,7 +32484,7 @@ controllers.controller('ContentCtrl', ['$scope', '$routeParams', '$location', 'P
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', function ($scope, $location, gitService, pageService, settingsService) {
+controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($scope, $location, gitService, pageService, settingsService, serverConfigService) {
   var settings = settingsService.get() || { provider: 'github', url: '' };
   $scope.provider = settings.provider;
   $scope.repositoryUrl = settings.url;
@@ -32462,6 +32493,15 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
   $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
   $scope.repositoryUrlPlaceHolderText = '';
   $scope.hasError = false;
+
+  $scope.isGithubSupported = false;
+  $scope.isGitSupported = false;
+
+  serverConfigService.getConfig()
+    .then(function (config) {
+      $scope.isGithubSupported = config.providers.indexOf('github') >= 0;
+      $scope.isGitSupported = config.providers.indexOf('git') >= 0;
+    });
 
   $scope.clone = function () {
     $scope.isBusy = true;

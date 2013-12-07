@@ -10,10 +10,11 @@ describe('Git Controller Tests', function () {
   describe('When the user enters a valid git url', function () {
     var $scope, $location, gitCtrl,
         gitService, pageService, settingsService,
-        gitCloneDeferred, pagesDeferred;
+        gitCloneDeferred, pagesDeferred, serverConfigDeferred;
 
     beforeEach(inject(function ($injector, $controller, $rootScope, $q) {
       $scope = $rootScope.$new();
+
 
       $location = $injector.get('$location');
 
@@ -25,6 +26,7 @@ describe('Git Controller Tests', function () {
       spyOn(gitService, 'clone').andReturn(gitCloneDeferred.promise);
 
       var $http = $injector.get('$httpBackend');
+      $http.expectGET('/api/serverconfig').respond(200, '{"providers": ["github"]}');
       $http.expectGET('./views/content.html').respond(200, '<h1/>');
 
       pageService = $injector.get('PageService');
@@ -35,11 +37,16 @@ describe('Git Controller Tests', function () {
       settingsService = $injector.get('SettingsService');
       spyOn(settingsService, 'put');
 
+      var serverConfigService = $injector.get('ServerConfigService');
+      serverConfigDeferred = $q.defer();
+      spyOn(serverConfigService, 'getConfig').andReturn(serverConfigDeferred.promise);
+
       gitCtrl = $controller('GitConnectCtrl', {
         $scope: $scope,
         $location: $location,
         gitService: gitService,
-        settingsService: settingsService
+        settingsService: settingsService,
+        serverConfigService: serverConfigService
       });
     }));
 
@@ -77,6 +84,25 @@ describe('Git Controller Tests', function () {
       });
     });
 
+    describe('When the ServiceConfigService returns github as supported provider', function () {
+      it('Should set isGithubIsSupported and isGitSupported to the expected value', function () {
+        $scope.$apply(function () {
+          serverConfigDeferred.resolve({providers: ['github']});
+        });
+        expect($scope.isGithubSupported).toEqual(true);
+        expect($scope.isGitSupported).toEqual(false);
+      });
+    });
+
+    describe('When the ServiceConfigService returns git as supported provider', function () {
+      it('Should set isGitHubSupported and isGitsupported to the expected value', function () {
+        $scope.$apply(function () {
+          serverConfigDeferred.resolve({providers: ['git']});
+        });
+        expect($scope.isGitSupported).toEqual(true);
+        expect($scope.isGithubSupported).toEqual(false);
+      });
+    });
   });
 
 

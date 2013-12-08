@@ -72,6 +72,37 @@ describe('Page Service tests', function () {
     expect(actual.length).toEqual(expected.length);
   });
 
+  describe('FindStartPagesTests', function () {
+    describe('When pages contains a index.md', function () {
+      it('Should return index', function () {
+        var pages = [ { name: 'index'}, {name: 'home'}, {name: 'readme'} ];
+        var startPage = pageService.findStartPage(pages);
+        expect(startPage).toEqual('index');
+      });
+    });
+    describe('When pages contains a home.md but not the index.md', function () {
+      it('Should return home', function () {
+        var pages = [ { name: 'home'}, {name: 'readme'} ];
+        var startPage = pageService.findStartPage(pages);
+        expect(startPage).toEqual('home');
+      });
+    });
+    describe('When pages contains a README.md but not the index.md or home.md', function () {
+      it('Should return readme', function () {
+        var pages = [ { name: 'README'} ];
+        var startPage = pageService.findStartPage(pages);
+        expect(startPage).toEqual('README');
+      });
+    });
+    describe('When contains no start page', function () {
+      it('Should return an empty string', function () {
+        var pages = [{name: 'Page1'}];
+        var startPage = pageService.findStartPage(pages);
+        expect(startPage).toEqual('');
+      });
+    });
+  });
+
 });
 
 

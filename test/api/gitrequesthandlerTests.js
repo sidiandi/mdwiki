@@ -17,7 +17,7 @@ describe('gitrequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.bodyParser());
+    app.use(express.json());
 
     app.post('/api/git/clone', gitRequestHandler.clone);
     app.post('/api/git/pull', gitRequestHandler.pull);
@@ -85,7 +85,7 @@ describe('gitrequesthandler tests', function () {
     });
   });
 
-  describe('When pull was called withour the repository url param', function () {
+  describe('When pull was called without the repository url param', function () {
     beforeEach(function () {
     });
 

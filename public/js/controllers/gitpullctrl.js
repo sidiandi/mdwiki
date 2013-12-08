@@ -2,15 +2,18 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', function ($scope, $route, gitService, pageService) {
+controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($scope, $route, gitService, pageService, settingsService) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
   $scope.hasContent = false;
+  $scope.provider = 'git';
 
   var checkHasContent = function (pages) {
     $scope.hasContent = pages && pages.length > 0;
+    $scope.provider = settingsService.get().provider;
   };
+
   pageService.registerObserver(checkHasContent);
 
   $scope.pull = function () {

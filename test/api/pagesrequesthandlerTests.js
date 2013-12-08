@@ -17,7 +17,7 @@ describe('pagesrequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.bodyParser());
+    app.use(express.json());
 
     app.get('/api/pages', pagesRequestHandler);
 
@@ -39,6 +39,7 @@ describe('pagesrequesthandler tests', function () {
 
     it('should return a list of the pages', function (done) {
       request(app).get('/api/pages')
+        .set('X-MDWiki-Provider', 'git')
         .expect('Content-Type', "application/json")
         .expect(200)
         .end(function (err, res) {

@@ -8,7 +8,8 @@ var express = require("express"),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
     gitRequestHandler = require('./api/gitrequesthandler'),
     searchRequestHandler = require('./api/searchrequesthandler'),
-    staticFileRequestHandler = require('./api/staticfilerequesthandler');
+    staticFileRequestHandler = require('./api/staticfilerequesthandler'),
+    serverConfigRequestHandler = require('./api/serverconfigrequesthandler');
 
 var app = express();
 
@@ -18,7 +19,8 @@ app.configure(function () {
   app.set('port', process.env.PORT || 3000);
   app.use(express.compress());
   app.use(express.favicon());
-  app.use(express.bodyParser());
+  app.use(express.json());
+  app.use(express.urlencoded());
   app.use(express.methodOverride());
   app.use(express.logger());
 
@@ -56,18 +58,26 @@ app.get('/css/styles.css', function (req, res) {
 
 
 // JSON API
+app.get('/api/serverconfig', serverConfigRequestHandler);
 app.get('/api/pages', pagesRequestHandler);
 app.get('/api/page/:page?', pageRequestHandler);
+app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
+app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler);
+app.post('/api/search', searchRequestHandler.search);
+app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
 
 app.post('/api/git/clone', gitRequestHandler.clone);
 app.post('/api/git/pull', gitRequestHandler.pull);
-app.post('/api/search', searchRequestHandler.search);
 
+
+app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 app.get('/static/*', staticFileRequestHandler);
 
 
-app.get(['/git/clone', '*'], function (req, res) {
-  logger.info('Request for url: %s', req.url);
+app.get('/git/clone', function (req, res) {
+  res.sendfile('./public/index.html');
+});
+app.get('*', function (req, res) {
   res.sendfile('./public/index.html');
 });
 

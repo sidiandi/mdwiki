@@ -6,6 +6,7 @@ var request = require('supertest'),
     sinon = require('sinon'),
     fs = require('fs'),
     Q = require('q'),
+    contentProvider = require('../../lib/gitContentProvider'),
     storage = require('../../lib/pageStorageFS'),
     errors = require('../../lib/errors'),
     pageRequestHandler = require('../../api/pagerequesthandler');
@@ -17,7 +18,7 @@ describe('pagerequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.bodyParser());
+    app.use(express.json());
 
     app.get('/api/page/:page?', pageRequestHandler);
 

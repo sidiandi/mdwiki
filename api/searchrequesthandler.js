@@ -1,25 +1,20 @@
 'use strict';
 
-var path = require('path'),
-    grepSearcher = require('../lib/grepSearcher'),
-    grepResultParser = require('../lib/grepResultParser'),
-    logger = require('../lib/logger');
+var logger = require('../lib/logger'),
+    paramHandler = require('../lib/requestParamHandler.js');
 
 var search = function (req, res) {
+  var provider = paramHandler.createProviderFromRequest(req);
 
-  var rootPath = path.join(__dirname, '../content');
-
-  grepSearcher.searchForText(rootPath, req.body.textToSearch)
-    .then(function (data) {
-      logger.info(data);
+  provider.search(req.body.textToSearch)
+    .then(function (searchResult) {
+      console.log('textToSearch:' + req.body.textToSearch);
+      console.log('searchResult.....:' + searchResult);
       res.statusCode = 200;
-      var parsedResult = grepResultParser.parse(data[0]);
-      parsedResult.then(function (resultObjects) {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          var stringifiedResult = JSON.stringify(resultObjects);
-          res.write(stringifiedResult);
-          res.end();
-        });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      var stringifiedResult = JSON.stringify(searchResult);
+      res.write(stringifiedResult);
+      res.end();
     })
     .catch(function (error) {
       logger.error(error);

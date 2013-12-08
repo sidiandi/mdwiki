@@ -1,32 +1,21 @@
 .idea
 /.settings
-/.c9revisions/
 *.sublime*
-*.iml
 /node_modules/
-/norchindex/
-test/norchindex/
 *~
 .DS_Store
-lib/persistence/memberstore/
-lib/persistence/teststore/
 config/*.json*
-!config/example*.json
-!config/beans.json
-!config/testbeans.json
 *.log
-public/test/
-version.jade
-.sass-cache
+*.swp
 
 .tern-port
 
 .nodemonignore
 
-test/tempbeans.json
-docs/generated
-
 content/
+docs/
 
-start.bat
+public/js/scripts.min.js
+public/css/styles.min.css
+
 nssm.exe

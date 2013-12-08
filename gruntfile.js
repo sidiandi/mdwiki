@@ -59,6 +59,7 @@ module.exports = function (grunt) {
           'public/js/lib/angular/angular-route.js',
           'public/js/lib/angular/angular-sanitize.js',
           'public/js/lib/angular/angular-animate.js',
+          'public/js/lib/angular/angular-cache-2.0.0.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -171,6 +172,12 @@ module.exports = function (grunt) {
       },
       coverageKarma: {
         command: 'karma start karma-coverage.conf.js'
+      },
+      analysisClient: {
+        command: 'plato -r -d docs/generated/analysis/client -l .jshintrc -t "MDWiki Client" -x .json public/js/app.js public/js/directives.js public/js/services/*.js public/js/controllers/*.js'
+      },
+      analysisServer: {
+        command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       }
     },
     clean: {
@@ -178,19 +185,21 @@ module.exports = function (grunt) {
         src: ["docs"]
       }
     }
-
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'concat', 'minify', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
 
+  // Minify tasks
+  grunt.registerTask('minify', ['cssmin', 'uglify']);
+
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'cssmin', 'uglify']);
+  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify']);
 
   // Coverage tasks
-  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma']);
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);
 
 };

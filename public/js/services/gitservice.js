@@ -9,9 +9,7 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
     $http({
       method: 'POST',
       url: '/api/git/clone',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type' : 'application/json' },
       data: { repositoryUrl: repositoryUrl }
     })
     .success(function (data, status, headers, config) {
@@ -30,9 +28,7 @@ services.factory('GitService', ['$http', '$q', function ($http, $q) {
     $http({
       method: 'POST',
       url: '/api/git/pull',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type' : 'application/json' }
     })
     .success(function (data, status, headers, config) {
       deferred.resolve();

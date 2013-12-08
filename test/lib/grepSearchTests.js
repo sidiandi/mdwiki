@@ -30,17 +30,17 @@ describe('grep search module tests', function () {
             options.should.have.property('cwd');
             options.cwd.should.equal(folderToSearch);
 
-            callback(null, 'Text with Java');
+            callback(null, ['Text with Java']);
           });
           var expected = util.format('grep -i "%s" *.*', textToSearch);
 
           // ACT
-          grepSearcher.searchForText(folderToSearch, textToSearch)
-            .done(function (data) {
+          grepSearcher.searchForText(textToSearch, folderToSearch)
+            .done(function (searchResult) {
               // ASSERT
               stub.calledOnce.should.be.true;
               stub.calledWithMatch(expected).should.be.true;
-              data.should.be.eql('Text with Java');
+              searchResult.should.be.eql('Text with Java');
               done();
             });
         });

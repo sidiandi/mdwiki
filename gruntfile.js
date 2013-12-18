@@ -181,6 +181,9 @@ module.exports = function (grunt) {
       },
       analysisServer: {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
+      },
+      copyFonts: {
+        command: 'cp -R ./bower/font-awesome/fonts/ ./public/font'
       }
     },
     clean: {
@@ -200,7 +203,7 @@ module.exports = function (grunt) {
   grunt.registerTask('minify', ['cssmin', 'uglify']);
 
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify']);
+  grunt.registerTask('deploy', ['concat', 'minify', 'exec:copyFonts']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

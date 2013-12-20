@@ -20,8 +20,7 @@ module.exports = function (grunt) {
         'public/js/filters.js',
         'public/js/services/*.js',
         'public/js/controllers/*.js',
-        'test_client/**/*.js',
-        '!test_client/lib/**/*.js'
+        'test_client/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -53,13 +52,17 @@ module.exports = function (grunt) {
     concat: {
       js: {
         src: [
-          'public/js/lib/jquery.js',
-          'public/js/lib/bootstrap.js',
-          'public/js/lib/angular/angular.js',
-          'public/js/lib/angular/angular-route.js',
-          'public/js/lib/angular/angular-sanitize.js',
-          'public/js/lib/angular/angular-animate.js',
-          'public/js/lib/angular/angular-cache-2.0.0.js',
+          'bower/jquery/jquery.js',
+          'bower/bootstrap/dist/js/bootstrap.js',
+          'bower/angular/angular.js',
+          'bower/angular-animate/angular-animate.js',
+          'bower/angular-animate/angular-animate.js',
+          'bower/angular-resource/angular-resource.js',
+          'bower/angular-resource/angular-resource.js',
+          'bower/angular-route/angular-route.js',
+          'bower/angular-sanitize/angular-sanitize.js',
+          'bower/angular-touch/angular-touch.js',
+          'bower/angular-cache/dist/angular-cache.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -69,8 +72,8 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'public/css/bootstrap.css',
-          'public/css/font-awesome.css',
+          'bower/bootstrap/dist/css/bootstrap.css',
+          'bower/font-awesome/css/font-awesome.css',
           'public/css/customstyles.css'
         ],
         dest: 'public/css/styles.css'
@@ -178,6 +181,9 @@ module.exports = function (grunt) {
       },
       analysisServer: {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
+      },
+      copyFonts: {
+        command: 'cp -R ./bower/font-awesome/fonts/ ./public/font'
       }
     },
     clean: {
@@ -197,7 +203,7 @@ module.exports = function (grunt) {
   grunt.registerTask('minify', ['cssmin', 'uglify']);
 
   // deploy task
-  grunt.registerTask('deploy', ['jshint', 'mochaTest', 'karma:unit', 'minify']);
+  grunt.registerTask('deploy', ['concat', 'minify', 'exec:copyFonts']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

@@ -67,6 +67,7 @@
   "scripts": {
     "start": "node ./app.js",
     "test": "grunt test",
+    "bower": "bower install && grunt deploy",
     "postinstall": "grunt --gruntfile grunt-minify.js",
     "blanket": {
       "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",

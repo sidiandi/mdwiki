@@ -2,6 +2,7 @@
 /.settings
 *.sublime*
 /node_modules/
+/bower/
 *~
 .DS_Store
 config/*.json*

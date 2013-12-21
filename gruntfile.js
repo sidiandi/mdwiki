@@ -199,6 +199,9 @@ module.exports = function (grunt) {
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
 
+  // Test and Watch task
+  grunt.registerTask('tw', ['jshint', 'mochaTest', 'karma:unit', 'watch']);
+
   // Minify tasks
   grunt.registerTask('minify', ['cssmin', 'uglify']);
 

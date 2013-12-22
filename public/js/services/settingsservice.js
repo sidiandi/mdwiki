@@ -5,14 +5,22 @@ var services = services || angular.module('mdwiki.services', []);
 services.factory('SettingsService', ['$angularCacheFactory', function ($angularCacheFactory) {
   var cache = $angularCacheFactory('mdwiki', { storageMode: 'localStorage' });
 
+  var getDefaultSettings = function () {
+    return {
+      provider: 'git',
+      url: '',
+      startPage: 'index'
+    };
+  };
+
+  var isDefaultSettings = function (settings) {
+    return angular.equals(settings, this.getDefaultSettings());
+  };
+
   var get = function () {
     var settings = cache.get('settings');
     if (settings === undefined) {
-      settings = {
-        provider: 'git',
-        url: '',
-        startPage: 'index'
-      };
+      settings = this.getDefaultSettings();
     }
 
     return settings;
@@ -24,6 +32,8 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
   return {
     get: get,
-    put: put
+    put: put,
+    getDefaultSettings: getDefaultSettings,
+    isDefaultSettings: isDefaultSettings
   };
 }]);

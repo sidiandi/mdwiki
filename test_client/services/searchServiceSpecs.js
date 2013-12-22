@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Git Service specs', function () {
+describe('Git Search specs', function () {
     var httpMock;
     var searchService;
 

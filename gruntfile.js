@@ -72,7 +72,7 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'bower/bootstrap/dist/css/bootstrap.css',
+          'bower/bootswatch/spacelab/bootstrap.css',
           'bower/font-awesome/css/font-awesome.css',
           'public/css/customstyles.css'
         ],
@@ -183,7 +183,7 @@ module.exports = function (grunt) {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       },
       copyFonts: {
-        command: 'cp -R ./bower/font-awesome/fonts/ ./public/font'
+        command: 'cp -R ./bower/font-awesome/font/ ./public/font'
       }
     },
     clean: {

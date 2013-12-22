@@ -34,9 +34,7 @@ form {
     max-height: 50px;
   }
 
-  li.active a, .dropdown-toggle.pagesMenu {
-    padding-top: 12;
-  }
+
 
   .navbar-nav form {
     padding-top: 3px;

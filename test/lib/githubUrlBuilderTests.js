@@ -42,4 +42,13 @@ describe('github UrlBuilder Tests', function () {
       actual.should.be.equal(expectedUrl);
     });
   });
+
+  describe('When the url to update a page is required', function () {
+    it('Should return the expected url', function () {
+      var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md?access_token=12345678';
+      var actual = urlBuilder.buildPageUpdateUrl(GITHUB_USER, GITHUB_REPOSITORY, 'git', '12345678');
+
+      actual.should.be.equal(expectedUrl);
+    });
+  });
 });

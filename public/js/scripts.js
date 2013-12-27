@@ -36648,6 +36648,54 @@ services.factory('ApiUrlBuilderService', [ 'SettingsService', function (settings
 
 var services = services || angular.module('mdwiki.services', []);
 
+services.factory('AuthService', ['$http', '$q', function ($http, $q) {
+  var user = '';
+
+  var isAuthenticated = function () {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'GET',
+      url: '/auth/user',
+      headers: {'Content-Type': 'application/json'},
+    })
+    .success(function (auth, status, headers, config) {
+      deferred.resolve(auth.user);
+    })
+    .error(function (data, status, headers, config) {
+      deferred.reject(data);
+    });
+
+    return deferred.promise;
+  };
+
+  var logout = function () {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/auth/logout',
+    })
+    .success(function (data, status, headers, config) {
+      deferred.resolve(data);
+    })
+    .error(function (data, status, headers, config) {
+      deferred.reject(data);
+    });
+
+    return deferred.promise;
+  };
+
+  return {
+    logout: logout,
+    isAuthenticated: isAuthenticated
+  };
+}]);
+
+'use strict';
+
+var services = services || angular.module('mdwiki.services', []);
+
 services.factory('GitService', ['$http', '$q', function ($http, $q) {
   var clone = function (repositoryUrl) {
     var deferred = $q.defer();
@@ -36907,6 +36955,32 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     getDefaultSettings: getDefaultSettings,
     isDefaultSettings: isDefaultSettings
   };
+}]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
+controllers.controller('AuthCtrl', ['$scope', 'AuthService', function ($scope, authService) {
+  $scope.isAuthenticated = false;
+  $scope.user = null;
+
+  authService.isAuthenticated()
+    .then(function (user) {
+      $scope.user = user || null;
+    });
+
+  $scope.logout = function () {
+    authService.logout()
+      .then(function () {
+        $scope.user = null;
+      });
+  };
+
+  $scope.$watch('user', function (newValue, oldValue) {
+    $scope.isAuthenticated = newValue !== null;
+  });
+
 }]);
 
 'use strict';

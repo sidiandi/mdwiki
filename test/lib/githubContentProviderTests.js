@@ -151,6 +151,7 @@ describe('githubContentProvider Tests', function () {
       beforeEach(function () {
         sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '{ "total_count": 1, "items": [ { "name": "page1.md" } ] }');
       });
+
       it('should parse and return a searchresult', function (done) {
         provider.search('git')
           .then(function (items) {
@@ -162,7 +163,62 @@ describe('githubContentProvider Tests', function () {
     });
   });
 
+  describe('Update page tests', function () {
+    describe('When user is not authenticated', function () {
+      var session;
+
+      beforeEach(function () {
+        session = sinon.stub({ });
+      });
+
+      it('Should return a 401 error', function (done) {
+        var lastError;
+        var page = { name: 'git', content: 'content of git page' };
+
+        provider.updatePage(session, 'this is a update for git page', page)
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function () {
+            should.exists(lastError);
+            lastError.status.should.be.equal(401);
+            lastError.message.should.be.equal('not authenticated');
+            done();
+          });
+      });
+    });
+
+    describe('When user is authenticated', function () {
+      var session;
+      var requestStub;
+
+      beforeEach(function () {
+        session = sinon.stub({ uid: 'janbaer', oauth: '12345678' });
+        requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
+      });
+
+      it('Should send the expected message to github', function (done) {
+        var lastError;
+        var page = { name: 'git', content: 'content of git page' };
+        var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md?access_token=12345678';
+        var expectedMessage = {
+          message: 'this is a update for git page',
+          content: 'content of git page',
+          sha: '68e5127c246b8430ae7c8d8e96c3e385671f588d'
+        };
+
+        provider.updatePage(session, 'this is a update for git page', page)
+          .done(function () {
+            requestStub.calledWithMatch({ url: expectedUrl, body: expectedMessage}).should.be.true;
+            done();
+          });
+      });
+    });
+  });
+
   afterEach(function () {
     sandbox.restore();
   });
 });
+
+

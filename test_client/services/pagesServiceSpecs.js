@@ -14,63 +14,92 @@ describe('Page Service tests', function () {
     pageService = $injector.get('PageService');
   }));
 
-  it('should fetch the requested page over the reset api', function () {
-    var actualHtml,
-        expectedHtml = '<h1>Test</h1>';
+  describe('When the page exists and ths user dont specifies markdown as format', function () {
+    it('should fetch the requested page over the rest api as html', function () {
+      var actualHtml,
+          expectedHtml = '<h1>Test</h1>';
 
-    httpMock.expectGET('/api/page/index').respond(200, expectedHtml);
+      httpMock.expectGET('/api/page/index').respond(200, expectedHtml);
 
-    pageService.getPage('index')
-      .then(function (data) {
-        actualHtml = data;
-      }, function (error) {
+      pageService.getPage('index')
+        .then(function (data) {
+          actualHtml = data;
+        }, function (error) {
 
-    });
-
-    httpMock.flush();
-
-    expect(actualHtml).not.toBeUndefined();
-    expect(actualHtml).toEqual(expectedHtml);
-  });
-
-  it('should return an error when the page doesnt exists', function () {
-    var actualHtml,
-        lastError;
-
-    httpMock.expectGET('/api/page/index').respond(404);
-
-    pageService.getPage('index')
-      .then(function (data) {
-        actualHtml = data;
-      }, function (error) {
-        lastError = error;
       });
 
-    httpMock.flush();
+      httpMock.flush();
 
-    expect(actualHtml).toBeUndefined();
-    expect(lastError).not.toBeUndefined();
-    expect(lastError.code).not.toBeUndefined();
-    expect(lastError.code).toEqual(404);
-  });
-
-  it('should return all existing pages', function () {
-    var expected = [ { name: 'Page1' }, { name: 'Page2' }],
-        actual;
-
-    httpMock.expectGET('/api/pages').respond(200, expected);
-
-    pageService.getPages()
-      .then(function (data) {
-        actual = data;
-      }, function (error) {
-
+      expect(actualHtml).not.toBeUndefined();
+      expect(actualHtml).toEqual(expectedHtml);
     });
-
-    httpMock.flush();
-    expect(actual).not.toBeUndefined();
-    expect(actual.length).toEqual(expected.length);
   });
+
+
+  describe('When the user needs the page content in markdown format', function () {
+    it('should return the requested page as markdown', function () {
+      var actual,
+          expected = '#1Test';
+
+      httpMock.expectGET('/api/page/index?format=markdown').respond(200, expected);
+
+      pageService.getPage('index', 'markdown')
+        .then(function (data) {
+          actual = data;
+        }, function (error) {
+
+      });
+
+      httpMock.flush();
+
+      expect(expected).not.toBeUndefined();
+      expect(expected).toEqual(expected);
+    });
+  });
+
+  describe('When the page not exists', function () {
+    it('should return an error', function () {
+      var actualHtml,
+          lastError;
+
+      httpMock.expectGET('/api/page/index').respond(404);
+
+      pageService.getPage('index')
+        .then(function (data) {
+          actualHtml = data;
+        }, function (error) {
+          lastError = error;
+        });
+
+      httpMock.flush();
+
+      expect(actualHtml).toBeUndefined();
+      expect(lastError).not.toBeUndefined();
+      expect(lastError.code).not.toBeUndefined();
+      expect(lastError.code).toEqual(404);
+    });
+  });
+
+  describe('When user wants to get all page names', function () {
+    it('should return all existing pages', function () {
+      var expected = [ { name: 'Page1' }, { name: 'Page2' }],
+          actual;
+
+      httpMock.expectGET('/api/pages').respond(200, expected);
+
+      pageService.getPages()
+        .then(function (data) {
+          actual = data;
+        }, function (error) {
+
+      });
+
+      httpMock.flush();
+      expect(actual).not.toBeUndefined();
+      expect(actual.length).toEqual(expected.length);
+    });
+  });
+
 
   describe('FindStartPagesTests', function () {
     describe('When pages contains a index.md', function () {

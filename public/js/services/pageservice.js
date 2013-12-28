@@ -5,18 +5,24 @@ var services = services || angular.module('mdwiki.services', []);
 services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
   var updatePagesObservers = [];
 
-  var getPage = function (page) {
-    var deferred = $q.defer();
+  var getPage = function (page, format) {
+    format = format || 'html';
+    var deferred = $q.defer(),
+        requestUrl = urlBuilder.build('/api/', 'page/' + page);
+
+    if (format === 'markdown')
+    {
+      requestUrl += '?format=markdown';
+    }
 
     $http({
       method: 'GET',
-      url: urlBuilder.build('/api/', 'page/' + page),
-      headers: { 'Content-Type': 'application/json' },
+      url: requestUrl
     })
-    .success(function (data, status, headers, config) {
-      deferred.resolve(data);
+    .success(function (pageContent, status, headers, config) {
+      deferred.resolve(pageContent);
     })
-    .error(function (data, status, headers, config) {
+    .error(function (pageContent, status, headers, config) {
       var error = new Error();
       error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
       error.code = status;

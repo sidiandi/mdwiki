@@ -9170,7 +9170,6 @@ body {
   padding-top: 50px;
 }
 
-
 form {
   margin-top: 20px;
 }
@@ -9197,12 +9196,15 @@ form {
   margin-top: 20px;
 }
 
+button > a, button > a:hover {
+  color: white;
+  text-decoration: none;
+}
+
 @media (min-width: 768px) {
   body > .navbar {
     max-height: 50px;
   }
-
-
 
   .navbar-nav form {
     padding-top: 3px;
@@ -9227,7 +9229,6 @@ form {
     margin-left: 10px;
   }
 }
-
 
 .content-view.ng-enter, .content-view.ng-leave {
   -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
@@ -9260,6 +9261,10 @@ form {
 #connectButton > a {
   color: White;
   text-decoration: none;
+}
+
+span.user {
+  margin-left: 5px;
 }
 
 

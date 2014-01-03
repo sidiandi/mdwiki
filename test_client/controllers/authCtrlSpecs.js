@@ -4,7 +4,7 @@ describe('AuthCtrl tests', function () {
   var $scope,
       authService,
       createController,
-      isAuthenticatedDeferred;
+      deferred;
 
   beforeEach(function () {
     module('mdwiki');
@@ -16,8 +16,8 @@ describe('AuthCtrl tests', function () {
 
     authService = $injector.get('AuthService');
 
-    isAuthenticatedDeferred = $q.defer();
-    spyOn(authService, 'isAuthenticated').andReturn(isAuthenticatedDeferred.promise);
+    deferred = $q.defer();
+    spyOn(authService, 'getAuthenticatedUser').andReturn(deferred.promise);
 
     createController = function () {
       return $controller('AuthCtrl', {
@@ -32,7 +32,7 @@ describe('AuthCtrl tests', function () {
       createController();
 
       $scope.$apply(function () {
-        isAuthenticatedDeferred.resolve('janbaer');
+        deferred.resolve('janbaer');
       });
 
       expect($scope.isAuthenticated).toEqual(true);
@@ -44,7 +44,7 @@ describe('AuthCtrl tests', function () {
       createController();
 
       $scope.$apply(function () {
-        isAuthenticatedDeferred.resolve();
+        deferred.resolve();
       });
 
       expect($scope.isAuthenticated).toEqual(false);

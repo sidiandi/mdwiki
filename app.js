@@ -66,7 +66,7 @@ app.get('/css/styles.css', function (req, res) {
 
 // Authentication routes
 app.get('/auth/user', oauth.user);
-app.post('/auth/logout', oauth.logout);
+app.delete('/auth/user', oauth.logout);
 
 // JSON API
 app.get('/api/serverconfig', serverConfigRequestHandler);

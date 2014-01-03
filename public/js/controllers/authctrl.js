@@ -6,7 +6,7 @@ controllers.controller('AuthCtrl', ['$scope', 'AuthService', function ($scope, a
   $scope.isAuthenticated = false;
   $scope.user = null;
 
-  authService.isAuthenticated()
+  authService.getAuthenticatedUser()
     .then(function (user) {
       $scope.user = user || null;
     });

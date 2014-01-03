@@ -22,7 +22,7 @@ describe('AuthService Specs', function () {
 
         httpMock.expectGET('/auth/user').respond(200, JSON.stringify(response));
 
-        authService.isAuthenticated()
+        authService.getAuthenticatedUser()
           .then(function (data) {
             user = data;
           });
@@ -41,7 +41,7 @@ describe('AuthService Specs', function () {
 
         httpMock.expectGET('/auth/user').respond(200, JSON.stringify(response));
 
-        authService.isAuthenticated()
+        authService.getAuthenticatedUser()
           .then(function (data) {
             user = data;
           });
@@ -59,7 +59,7 @@ describe('AuthService Specs', function () {
       it('Should return ok', function () {
         var answer;
 
-        httpMock.expectPOST('/auth/logout').respond(200, 'Ok');
+        httpMock.expectDELETE('/auth/user').respond(200, 'Ok');
 
         authService.logout()
           .then(function (data) {
@@ -75,7 +75,7 @@ describe('AuthService Specs', function () {
       it('Should return also ok', function () {
         var answer;
 
-        httpMock.expectPOST('/auth/logout').respond(200, 'Ok');
+        httpMock.expectDELETE('/auth/user').respond(200, 'Ok');
 
         authService.logout()
           .then(function (data) {

@@ -5,7 +5,7 @@ var services = services || angular.module('mdwiki.services', []);
 services.factory('AuthService', ['$http', '$q', function ($http, $q) {
   var user = '';
 
-  var isAuthenticated = function () {
+  var getAuthenticatedUser = function () {
     var deferred = $q.defer();
 
     $http({
@@ -27,8 +27,8 @@ services.factory('AuthService', ['$http', '$q', function ($http, $q) {
     var deferred = $q.defer();
 
     $http({
-      method: 'POST',
-      url: '/auth/logout',
+      method: 'DELETE',
+      url: '/auth/user',
     })
     .success(function (data, status, headers, config) {
       deferred.resolve(data);
@@ -42,6 +42,6 @@ services.factory('AuthService', ['$http', '$q', function ($http, $q) {
 
   return {
     logout: logout,
-    isAuthenticated: isAuthenticated
+    getAuthenticatedUser: getAuthenticatedUser
   };
 }]);

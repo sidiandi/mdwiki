@@ -16,7 +16,7 @@ describe('oauth Tests', function () {
     app.use(express.json());
 
     app.get('/auth/user', oauth.user);
-    app.post('/auth/logout', oauth.logout);
+    app.delete('/auth/user', oauth.logout);
 
     sandbox = sinon.sandbox.create();
   });

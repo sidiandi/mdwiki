@@ -9263,5 +9263,9 @@ button > a, button > a:hover {
   text-decoration: none;
 }
 
+span.user {
+  margin-left: 5px;
+}
+
 
 

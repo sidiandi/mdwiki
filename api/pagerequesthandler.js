@@ -2,13 +2,14 @@
 
 var q = require('q'),
     errors = require('../lib/errors'),
+    oauth = require('../lib/oauth'),
     paramHandler = require('../lib/requestParamHandler.js');
 
 var userWantsToHaveMarkdown = function (query) {
   return query.format && query.format === 'markdown';
 };
 
-module.exports = function (req, res) {
+var getPage = function (req, res) {
   var promise, contentType, pageName,
       provider = paramHandler.createProviderFromRequest(req);
 
@@ -42,3 +43,42 @@ module.exports = function (req, res) {
       res.end();
     });
 };
+
+var updatePage = function (req, res) {
+  var pageName = req.params.page,
+      commitMessage = req.body.commitMessage,
+      markdown = req.body.markdown;
+
+  if (!oauth.hasSession(req)) {
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(401, 'not authenticated');
+    res.end();
+    return;
+  }
+
+  if (markdown === undefined || commitMessage === undefined) {
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(400, 'commitMessage and markdown are required');
+    res.end();
+    return;
+  }
+
+  var provider = paramHandler.createProviderFromRequest(req);
+  provider.updatePage(commitMessage, pageName, markdown)
+    .then(function (response) {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Content-Length', new Buffer(response.body).length);
+      res.status(200);
+      res.send(response.body);
+    })
+    .catch(function (error) {
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(500, 'server error: ' + error);
+    })
+    .done(function () {
+      res.end();
+    });
+};
+
+module.exports.get = getPage;
+module.exports.put = updatePage;

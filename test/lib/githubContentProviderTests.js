@@ -2,6 +2,7 @@
 
 var request = require('request'),
     should = require('should'),
+    Q = require('q'),
     sinon = require('sinon'),
     errors = require('../../lib/errors'),
     GitHubContentProvider = require('../../lib/githubContentProvider.js');
@@ -93,10 +94,28 @@ describe('githubContentProvider Tests', function () {
     });
   });
 
+  describe('When the user wants to get a single page', function () {
+    describe('When some pages exists', function () {
+      beforeEach(function () {
+        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '{ "name": "page1.md", "sha": "123" }');
+      });
+
+      it('should return this page', function (done) {
+        provider.getPage('page1')
+          .then(function (page) {
+            should.exists(page);
+            page.should.have.property('name', 'page1');
+            page.should.have.property('sha', '123');
+          })
+          .done(done);
+      });
+    });
+  });
+
   describe('getPages tests', function () {
     describe('When some pages exists', function () {
       beforeEach(function () {
-        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '[ { "name": "page1.md" } ]');
+        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '[ { "name": "page1.md", "sha": "123" } ]');
       });
 
       it('should return this pages', function (done) {
@@ -111,7 +130,7 @@ describe('githubContentProvider Tests', function () {
 
     describe('When not only pages exists', function () {
       beforeEach(function () {
-        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '[ { "name": "page2.md" }, { "name": "otherfile.pdf" } ]');
+        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '[ { "name": "page2.md", "sha": "123" }, { "name": "otherfile.pdf", "sha": "456" } ]');
       });
 
       it('should return only the pages', function (done) {
@@ -164,52 +183,34 @@ describe('githubContentProvider Tests', function () {
   });
 
   describe('Update page tests', function () {
-    describe('When user is not authenticated', function () {
-      var session;
-
-      beforeEach(function () {
-        session = sinon.stub({ });
-      });
-
-      it('Should return a 401 error', function (done) {
-        var lastError;
-        var page = { name: 'git', content: 'content of git page' };
-
-        provider.updatePage(session, 'this is a update for git page', page)
-          .catch(function (error) {
-            lastError = error;
-          })
-          .done(function () {
-            should.exists(lastError);
-            lastError.status.should.be.equal(401);
-            lastError.message.should.be.equal('not authenticated');
-            done();
-          });
-      });
-    });
-
-    describe('When user is authenticated', function () {
-      var session;
+    describe('When user wants to update an existing page', function () {
       var requestStub;
 
       beforeEach(function () {
-        session = sinon.stub({ uid: 'janbaer', oauth: '12345678' });
+        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
         requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
       });
 
-      it('Should send the expected message to github', function (done) {
+      it('Should send the expected message to github and return the new html content', function (done) {
         var lastError;
-        var page = { name: 'git', content: 'content of git page' };
         var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md?access_token=12345678';
         var expectedMessage = {
           message: 'this is a update for git page',
-          content: 'content of git page',
-          sha: '68e5127c246b8430ae7c8d8e96c3e385671f588d'
+          content: 'I2NvbnRlbnQgb2YgZ2l0IHBhZ2U=',
+          sha: '123456',
+          branch: 'master'
         };
+        var expectedHtml = '<h1>content of git page</h1>';
 
-        provider.updatePage(session, 'this is a update for git page', page)
-          .done(function () {
-            requestStub.calledWithMatch({ url: expectedUrl, body: expectedMessage}).should.be.true;
+        provider.oauth = '12345678';
+        provider.updatePage('this is a update for git page', 'git', '#content of git page')
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function (response) {
+            response.should.have.property('body', expectedHtml);
+            requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
+            should.not.exists(lastError);
             done();
           });
       });

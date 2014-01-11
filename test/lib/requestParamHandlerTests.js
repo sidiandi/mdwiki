@@ -33,5 +33,17 @@ describe('requestParamHandler tests', function () {
     });
   });
 
+  describe('When request has a session with oauth token', function () {
+    it('Should add the oauth token to the github user', function () {
+      request.params.githubUser = 'janbaer';
+      request.params.githubRepository = 'wiki';
+      request.session = { oauth: '12345678'};
+
+      var provider = requestParamHandler.createProviderFromRequest(request);
+      provider.should.have.property('oauth', '12345678');
+
+    });
+  });
+
 
 });

@@ -1,5 +1,22 @@
+<script type="text/ng-template" id="commitMessageDialog">
+    <form name="commitMessageForm">
+      <div class="modal-header">
+          <h3>Enter a commit message</h3>
+      </div>
+      <div class="ngdialog-message">
+        <input type="text" class="form-control" id="commitMessageText" placeholder="Enter a commit message" required
+               ng-model="commitMessage">
+      </div>
+      <div class="ngdialog-buttons">
+          <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
+      </div>
+    </form>
+</script>
+
 <div class="content-error alert alert-danger" ng-show="hasError">{{ errorMessage }}</div>
-
-<div ng-bind-html="content" ng-hide="hasError">
-
+<div ng-hide="isEditorVisible">
+  <div ng-bind-html="content" ng-hide="hasError"></div>
+</div>
+<div ng-show="isEditorVisible">
+  <div ui-codemirror ui-refresh="refresh" ng-model="markdown"></div>
 </div>

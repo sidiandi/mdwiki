@@ -71,9 +71,11 @@ app.delete('/auth/user', oauth.logout);
 // JSON API
 app.get('/api/serverconfig', serverConfigRequestHandler);
 app.get('/api/pages', pagesRequestHandler);
-app.get('/api/page/:page?', pageRequestHandler);
+app.get('/api/page/:page?', pageRequestHandler.get);
+app.put('/api/page/page', pageRequestHandler.put);
 app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
-app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler);
+app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler.get);
+app.put('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.put);
 app.post('/api/search', searchRequestHandler.search);
 app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
 

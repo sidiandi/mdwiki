@@ -1,7 +1,9 @@
 'use strict';
 
 var should = require('should'),
-    requestParamHandler = require('../../lib/requestParamHandler.js');
+    requestParamHandler = require('../../lib/requestParamHandler.js'),
+    githubContentProvider = require('../../lib/githubContentProvider.js'),
+    gitContentProvider = require('../../lib/gitContentProvider.js');
 
 describe('requestParamHandler tests', function () {
   var request = {
@@ -17,9 +19,7 @@ describe('requestParamHandler tests', function () {
       request.params.githubRepository = undefined;
 
       var provider = requestParamHandler.createProviderFromRequest(request);
-
-      should.exists(provider);
-      provider.getName().should.equal('git');
+      (provider instanceof gitContentProvider).should.be.true;
     });
   });
 
@@ -29,9 +29,7 @@ describe('requestParamHandler tests', function () {
       request.params.githubRepository = 'wiki';
 
       var provider = requestParamHandler.createProviderFromRequest(request);
-
-      should.exists(provider);
-      provider.getName().should.equal('github');
+      (provider instanceof githubContentProvider).should.be.true;
     });
   });
 

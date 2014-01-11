@@ -1,7 +1,8 @@
 'use strict';
 
 describe('AuthCtrl tests', function () {
-  var $scope,
+  var $rootScope,
+      $scope,
       authService,
       createController,
       deferred;
@@ -11,16 +12,20 @@ describe('AuthCtrl tests', function () {
     module('mdwiki.controllers');
   });
 
-  beforeEach(inject(function ($injector, $rootScope, $controller, $q) {
-    $scope = $rootScope.$new();
+  beforeEach(inject(function ($injector, $controller, $q) {
+    $rootScope = $injector.get('$rootScope');
+    spyOn($rootScope, '$broadcast');
 
     authService = $injector.get('AuthService');
 
     deferred = $q.defer();
     spyOn(authService, 'getAuthenticatedUser').andReturn(deferred.promise);
 
+    $scope = $rootScope.$new();
+
     createController = function () {
       return $controller('AuthCtrl', {
+        $rootScope: $rootScope,
         $scope: $scope,
         authService: authService
       });
@@ -28,7 +33,7 @@ describe('AuthCtrl tests', function () {
   }));
 
   describe('When user is authenticated', function () {
-    it('Should set the user and that user isAuthenticated', function () {
+    it('Should set the user and that user isAuthenticated and broadcast a message', function () {
       createController();
 
       $scope.$apply(function () {
@@ -37,10 +42,11 @@ describe('AuthCtrl tests', function () {
 
       expect($scope.isAuthenticated).toEqual(true);
       expect($scope.user).toEqual('janbaer');
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('isAuthenticated', { isAuthenticated: true });
     });
   });
   describe('When user is not authenticated', function () {
-    it('Should set the user to null and that user is not authenticated', function () {
+    it('Should set the user to null and that user is not authenticated and broadcast a message', function () {
       createController();
 
       $scope.$apply(function () {
@@ -49,6 +55,7 @@ describe('AuthCtrl tests', function () {
 
       expect($scope.isAuthenticated).toEqual(false);
       expect($scope.user).toEqual(null);
+      expect($rootScope.$broadcast).toHaveBeenCalledWith('isAuthenticated', { isAuthenticated: false });
     });
   });
 });

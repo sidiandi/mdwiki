@@ -57,6 +57,27 @@ describe('Page Service tests', function () {
     });
   });
 
+  describe('When the user wants to updated the content of the current page', function () {
+    it('Should send the markdown to the server and return status code 200 with the new html', function () {
+      var actualHtml,
+          expectedHtml = '<h1>Test</h1>';
+
+      httpMock.expectPUT('/api/page/index').respond(200, expectedHtml);
+
+      pageService.updatePage('index', 'commitMessage', '#Test')
+        .then(function (data) {
+          actualHtml = data;
+        }, function (error) {
+
+      });
+
+      httpMock.flush();
+
+      expect(actualHtml).not.toBeUndefined();
+      expect(actualHtml).toEqual(expectedHtml);
+    });
+  });
+
   describe('When the page not exists', function () {
     it('should return an error', function () {
       var actualHtml,

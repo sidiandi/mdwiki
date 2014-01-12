@@ -1,6 +1,6 @@
 'use strict';
 
-var express = require("express"),
+var express = require('express'),
     path = require('path'),
     logger = require('./lib/logger'),
     util = require('util'),
@@ -93,7 +93,6 @@ app.get('*', function (req, res) {
   res.sendfile('./public/index.html');
 });
 
-
 var port = app.get('port');
 var ipAddress = app.get('ipAddress');
 
@@ -106,7 +105,7 @@ if (process.env.HOST !== undefined) {
   });
 } else {
   app.listen(port, function () {
-    logger.info('Listening on port %s ', port);
+    logger.info('Listening on port %s...', port);
   });
 }
 

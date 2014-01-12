@@ -43830,6 +43830,19 @@ controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', funct
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
+controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+  $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
+
+  $scope.closeDialog = function () {
+    ngDialog.close();
+    $rootScope.$broadcast('closeCommitMessageDialog', { commitMessage: $scope.commitMessage });
+  };
+}]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
 controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '$location', '$q', 'PageService', 'SettingsService', function ($rootScope, $scope, $routeParams, $location, $q, pageService, settingsService) {
   $scope.content = '';
   $scope.markdown = '';

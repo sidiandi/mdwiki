@@ -79,6 +79,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
+    console.log('hideeditor');
     showOrHideEditor(false);
   };
 
@@ -122,7 +123,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     hideEditor();
   });
 
-  getPage(pageName);
+  getPage(pageName).then(hideEditor);
 }]);
 
 

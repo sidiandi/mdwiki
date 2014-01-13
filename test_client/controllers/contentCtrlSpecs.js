@@ -117,11 +117,58 @@ describe('Content Controller Tests', function () {
     });
   });
 
+  describe('When the user navigates to a page', function () {
+    var createController, rootScope;
+
+    beforeEach(inject(function ($injector, $q) {
+      rootScope = $injector.get('$rootScope');
+      var $controller = $injector.get('$controller');
+      var $location = $injector.get('$location');
+
+      var $scope = rootScope.$new();
+
+      var pageService = $injector.get('PageService');
+
+      spyOn(pageService, 'getPage').andReturn($q.when('<h1>Test</h1>'));
+
+      spyOn(rootScope, '$broadcast').andCallThrough();
+
+      var settingsService = $injector.get('SettingsService');
+      spyOn(settingsService, 'get').andReturn({ provider: 'git' });
+
+      createController = function () {
+        return $controller('ContentCtrl', {
+          $rootScope: rootScope,
+          $scope: $scope,
+          $routeParams: { page: 'page1'},
+          $location: $location,
+          pageService: pageService,
+          settingsService: settingsService
+        });
+      };
+    }));
+
+    it('Should send a message on the global scope, that the editor is hidden', function () {
+      var isEditorVisible = true;
+
+      rootScope.$on('isEditorVisible', function (event, data) {
+        isEditorVisible = data.isEditorVisible;
+      });
+
+      var controller = createController();
+
+      rootScope.$digest();
+
+      expect(rootScope.$broadcast).toHaveBeenCalledWith('isEditorVisible', { isEditorVisible: false });
+      expect(isEditorVisible).toEqual(false);
+    });
+  });
+
   describe('When html contains some anchors to static files', function () {
     var $scope, $controller, deferred, pageService, settingsService;
 
     beforeEach(inject(function ($injector, $rootScope, $q) {
-      $scope = $rootScope.$new();
+      $scope = $rootScope;
       $controller = $injector.get('$controller');
 
       pageService = $injector.get('PageService');

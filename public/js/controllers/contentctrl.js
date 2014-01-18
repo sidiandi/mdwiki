@@ -79,7 +79,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
-    console.log('hideeditor');
     showOrHideEditor(false);
   };
 

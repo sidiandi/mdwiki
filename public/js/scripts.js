@@ -43920,7 +43920,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
-    console.log('hideeditor');
     showOrHideEditor(false);
   };
 
@@ -43974,9 +43973,25 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('EditContentCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 'ngDialog', function ($rootScope, $scope, $location, ngDialog) {
+  var nonEditablePaths = ['/search', '/git/connect'];
   $scope.isAuthenticated = false;
   $scope.isEditorVisible = false;
+  $scope.canEditPage = false;
+
+  var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
+    var canEditPage = isAuthenticated;
+
+    if (canEditPage) {
+      nonEditablePaths.forEach(function (nonEditablePath) {
+        if (nonEditablePath === path) {
+          canEditPage = false;
+        }
+      });
+    }
+
+    return canEditPage;
+  };
 
   $scope.edit = function () {
     $rootScope.$broadcast('edit');
@@ -43994,8 +44009,15 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', 'ngDialog', f
     });
   };
 
+  $scope.$on('canEditPage', function () {
+    if (!$scope.canEditPage) {
+      $scope.isEditorVisible = false;
+    }
+  });
+
   $rootScope.$on('isAuthenticated', function (event, data) {
     $scope.isAuthenticated = data.isAuthenticated;
+    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
   });
 
   $rootScope.$on('isEditorVisible', function (event, data) {
@@ -44006,13 +44028,18 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', 'ngDialog', f
     $rootScope.$broadcast('save', data);
   });
 
+  $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+  });
+
+  $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
 }]);
 
 'use strict';
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($scope, $location, gitService, pageService, settingsService, serverConfigService) {
+controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, gitService, pageService, settingsService, serverConfigService) {
   var settings = settingsService.get();
   $scope.provider = settingsService.isDefaultSettings(settings) ? 'github' : settings.provider;
   $scope.repositoryUrl = settings.url;
@@ -44066,6 +44093,8 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
           settingsService.put(settings);
           $scope.message = successMessage;
           $location.path('/');
+
+          $rootScope.$broadcast('OnGitConnected', { settings: settings});
         } else {
           $scope.message = 'No startpage was found!';
           $scope.isBusy = false;
@@ -44098,19 +44127,16 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($scope, $route, gitService, pageService, settingsService) {
+controllers.controller('GitPullCtrl', ['$rootScope', '$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($rootScope, $scope, $route, gitService, pageService, settingsService) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
-  $scope.hasContent = false;
+  $scope.isConnectedToGit = false;
   $scope.provider = 'git';
 
-  var checkHasContent = function (pages) {
-    $scope.hasContent = pages && pages.length > 0;
-    $scope.provider = settingsService.get().provider;
+  var checkIfIsConnectedToGit = function (settings) {
+    $scope.isConnectedToGit = settings.provider === 'git' && settings.url.length > 0;
   };
-
-  pageService.registerObserver(checkHasContent);
 
   $scope.pull = function () {
     $scope.isBusy = true;
@@ -44129,8 +44155,13 @@ controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageSe
       .finally(function () {
         $scope.isBusy = false;
       });
-
   };
+
+  $rootScope.$on('OnGitConnected', function (event, data) {
+    checkIfIsConnectedToGit(data.settings);
+  });
+
+  checkIfIsConnectedToGit(settingsService.get());
 }]);
 
 'use strict';

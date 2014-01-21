@@ -19,8 +19,9 @@ controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', funct
   };
 
   $scope.$watch('user', function (newValue, oldValue) {
-    $scope.isAuthenticated = newValue !== null;
-    $rootScope.$broadcast('isAuthenticated', { isAuthenticated: $scope.isAuthenticated });
+    $rootScope.isAuthenticated = newValue !== null;
+    $scope.isAuthenticated = $rootScope.isAuthenticated;
+    $rootScope.$broadcast('isAuthenticated', { isAuthenticated: $rootScope.isAuthenticated });
   });
 
 }]);

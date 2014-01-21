@@ -8,7 +8,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   $scope.pageName = '';
   $scope.errorMessage = '';
   $scope.hasError = false;
-  $scope.isAuthenticated = false;
   $scope.refresh = false;
   $scope.isEditorVisible = false;
   $scope.commitMessage = '';
@@ -18,6 +17,13 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     lineNumbers: true,
     readOnly: 'nocursor',
     mode: 'markdown',
+  };
+
+  $scope.codemirrorLoaded = function (editor) {
+    /* globals CodeMirror */
+    CodeMirror.commands.save = function () {
+      $rootScope.$broadcast('beforeSave');
+    };
   };
 
   var settings = settingsService.get();
@@ -42,7 +48,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     } else {
       $dom.find('a[href^="/static/"]').attr('target', '_blank');
     }
-
     return $dom.html();
   };
 
@@ -82,11 +87,19 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     showOrHideEditor(false);
   };
 
+  var canEdit = function () {
+    return $rootScope.isAuthenticated && !$scope.isEditorVisible;
+  };
+
   $scope.showHtml = function () {
     getPage($scope.pageName).then(hideEditor());
   };
 
   $scope.editMarkdown = function () {
+    if (!canEdit()) {
+      //return;
+    }
+
     showEditor();
 
     pageService.getPage(pageName, 'markdown')

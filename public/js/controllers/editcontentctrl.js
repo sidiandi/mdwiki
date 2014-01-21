@@ -51,6 +51,10 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
     $rootScope.$broadcast('save', data);
   });
 
+  $rootScope.$on('beforeSave', function () {
+    $scope.save();
+  });
+
   $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
     $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
   });

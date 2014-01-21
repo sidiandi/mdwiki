@@ -15,6 +15,7 @@ module.exports = function (config) {
     files: [
       'bower/jquery/jquery.js',
       'bower/bootstrap/dist/js/bootstrap.js',
+      'bower/mousetrap/mousetrap.js',
       'bower/angular/angular.js',
       'bower/angular-animate/angular-animate.js',
       'bower/angular-resource/angular-resource.js',

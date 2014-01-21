@@ -31,3 +31,16 @@ directives.directive('bsSwitchtext', function () {
     }
   };
 });
+
+directives.directive('keybinding', function () {
+  return {
+    restrict: 'E',
+    scope: {
+      invoke: '&'
+    },
+    link: function (scope, el, attr) {
+      /* globals Mousetrap */
+      Mousetrap.bind(attr.on, scope.invoke);
+    }
+  };
+});

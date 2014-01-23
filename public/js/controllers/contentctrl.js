@@ -97,6 +97,8 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.editMarkdown = function () {
+    if (!canEdit()) { return; }
+
     showEditor();
 
     pageService.getPage(pageName, 'markdown')

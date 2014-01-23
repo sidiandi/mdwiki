@@ -44354,9 +44354,9 @@ var mdwiki = angular.module('mdwiki', [
   $locationProvider.html5Mode(true);
 }]);
 
-'use strict';
+/* global Mousetrap */
 
-/* Directives */
+'use strict';
 
 var directives = angular.module('mdwiki.directives', []);
 
@@ -44395,7 +44395,6 @@ directives.directive('keybinding', function () {
       invoke: '&'
     },
     link: function (scope, el, attr) {
-      /* globals Mousetrap */
       Mousetrap.bind(attr.on, scope.invoke);
     }
   };
@@ -44906,6 +44905,8 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.editMarkdown = function () {
+    if (!canEdit()) { return; }
+
     showEditor();
 
     pageService.getPage(pageName, 'markdown')

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global CodeMirror */
+
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '$location', '$q', 'PageService', 'SettingsService', function ($rootScope, $scope, $routeParams, $location, $q, pageService, settingsService) {
@@ -20,7 +22,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.codemirrorLoaded = function (editor) {
-    /* globals CodeMirror */
     CodeMirror.commands.save = function () {
       $rootScope.$broadcast('beforeSave');
     };
@@ -96,10 +97,6 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.editMarkdown = function () {
-    if (!canEdit()) {
-      //return;
-    }
-
     showEditor();
 
     pageService.getPage(pageName, 'markdown')
@@ -116,7 +113,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   };
 
-  $rootScope.$on('save', function (event, data) {
+  var saveUnregister = $rootScope.$on('save', function (event, data) {
     pageService.updatePage($scope.pageName, data.commitMessage, $scope.markdown)
       .then(function (pageContent) {
         $scope.content = prepareLinks(pageContent, settings);
@@ -127,15 +124,22 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   });
 
-  $rootScope.$on('edit', function () {
+  var editUnregister = $rootScope.$on('edit', function () {
     $scope.editMarkdown();
   });
 
-  $rootScope.$on('cancelEdit', function () {
+  var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
     hideEditor();
   });
 
+  $scope.$on('$destroy', function () {
+    saveUnregister();
+    cancelEditUnregister();
+    editUnregister();
+  });
+
   getPage(pageName).then(hideEditor);
+
 }]);
 
 

@@ -18,7 +18,6 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
         }
       });
     }
-
     return canEditPage;
   };
 
@@ -33,31 +32,34 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
   $scope.save = function () {
     ngDialog.open({
       template: 'commitMessageDialog',
+      className: 'ngdialog-theme-default',
       controller: 'CommitMessageDialogCtrl',
-      className: 'ngdialog-theme-default'
     });
   };
 
-  $rootScope.$on('isAuthenticated', function (event, data) {
+  var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
     $scope.isAuthenticated = data.isAuthenticated;
     $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
   });
 
-  $rootScope.$on('isEditorVisible', function (event, data) {
+  var isEditorVisibleUnregister = $rootScope.$on('isEditorVisible', function (event, data) {
     $scope.isEditorVisible = data.isEditorVisible;
   });
 
-  $rootScope.$on('closeCommitMessageDialog', function (event, data) {
-    $rootScope.$broadcast('save', data);
-  });
-
-  $rootScope.$on('beforeSave', function () {
+  var beforeSaveUnregister = $rootScope.$on('beforeSave', function () {
     $scope.save();
   });
 
-  $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+  var routeChangeSuccessUnregister = $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
     $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
   });
 
   $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+
+  $scope.$on('$destroy', function () {
+    beforeSaveUnregister();
+    isAuthenticatedUnregister();
+    isEditorVisibleUnregister();
+    routeChangeSuccessUnregister();
+  });
 }]);

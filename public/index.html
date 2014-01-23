@@ -51,8 +51,8 @@
         </div>
         <div class="nav navbar-nav" ng-controller="EditContentCtrl">
           <form class="navbar-form navbar-left" ng-show="canEditPage" ng-if="isAuthenticated" >
-            <button class="btn btn-default" title="Edit current page (Ctrl+E)" ng-click="edit()" ng-hide="isEditorVisible" bs-tooltip>
-              <keybinding on="ctrl+e" invoke="edit()" />
+            <button class="btn btn-default" title="Edit current page" ng-click="edit()" ng-hide="isEditorVisible" bs-tooltip>
+              <keybinding on="e" invoke="edit()" />
               <i class="icon-edit"></i>
             </button>
             <button class="btn btn-default" title="Commit changes" ng-click="save()" ng-show="isEditorVisible" bs-tooltip>

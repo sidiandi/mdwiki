@@ -7,6 +7,6 @@ controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDi
 
   $scope.closeDialog = function () {
     ngDialog.close();
-    $rootScope.$broadcast('closeCommitMessageDialog', { commitMessage: $scope.commitMessage });
+    $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
   };
 }]);

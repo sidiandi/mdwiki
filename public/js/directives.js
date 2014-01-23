@@ -1,6 +1,6 @@
-'use strict';
+/* global Mousetrap */
 
-/* Directives */
+'use strict';
 
 var directives = angular.module('mdwiki.directives', []);
 
@@ -39,7 +39,6 @@ directives.directive('keybinding', function () {
       invoke: '&'
     },
     link: function (scope, el, attr) {
-      /* globals Mousetrap */
       Mousetrap.bind(attr.on, scope.invoke);
     }
   };

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global Mousetrap */
+
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', function ($rootScope, $scope, authService) {
@@ -15,6 +17,7 @@ controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', funct
     authService.logout()
       .then(function () {
         $scope.user = null;
+        Mousetrap.reset();
       });
   };
 

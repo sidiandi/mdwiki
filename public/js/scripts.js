@@ -44767,6 +44767,8 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
 'use strict';
 
+/* global Mousetrap */
+
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', function ($rootScope, $scope, authService) {
@@ -44782,6 +44784,7 @@ controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', funct
     authService.logout()
       .then(function () {
         $scope.user = null;
+        Mousetrap.reset();
       });
   };
 
@@ -44896,17 +44899,11 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     showOrHideEditor(false);
   };
 
-  var canEdit = function () {
-    return $rootScope.isAuthenticated && !$scope.isEditorVisible;
-  };
-
   $scope.showHtml = function () {
     getPage($scope.pageName).then(hideEditor());
   };
 
   $scope.editMarkdown = function () {
-    if (!canEdit()) { return; }
-
     showEditor();
 
     pageService.getPage(pageName, 'markdown')

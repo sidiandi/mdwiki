@@ -88,17 +88,11 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     showOrHideEditor(false);
   };
 
-  var canEdit = function () {
-    return $rootScope.isAuthenticated && !$scope.isEditorVisible;
-  };
-
   $scope.showHtml = function () {
     getPage($scope.pageName).then(hideEditor());
   };
 
   $scope.editMarkdown = function () {
-    if (!canEdit()) { return; }
-
     showEditor();
 
     pageService.getPage(pageName, 'markdown')

@@ -1,5 +1,3 @@
-/* global Mousetrap */
-
 'use strict';
 
 var directives = angular.module('mdwiki.directives', []);
@@ -39,7 +37,31 @@ directives.directive('keybinding', function () {
       invoke: '&'
     },
     link: function (scope, el, attr) {
+      /* global Mousetrap */
       Mousetrap.bind(attr.on, scope.invoke);
     }
   };
 });
+
+directives.directive('autoFocus', function () {
+  return {
+    restrict: 'AC',
+    link: function (scope, element) {
+      element[0].focus();
+    }
+  };
+});
+
+directives.directive('autoSelect', function ($timeout) {
+  return {
+    restrict: 'AC',
+    link: function (scope, element) {
+      element.bind('focus', function () {
+        $timeout(function () {
+          element[0].select();
+        }, 1);
+      });
+    }
+  };
+});
+

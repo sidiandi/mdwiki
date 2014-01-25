@@ -44354,8 +44354,6 @@ var mdwiki = angular.module('mdwiki', [
   $locationProvider.html5Mode(true);
 }]);
 
-/* global Mousetrap */
-
 'use strict';
 
 var directives = angular.module('mdwiki.directives', []);
@@ -44395,10 +44393,34 @@ directives.directive('keybinding', function () {
       invoke: '&'
     },
     link: function (scope, el, attr) {
+      /* global Mousetrap */
       Mousetrap.bind(attr.on, scope.invoke);
     }
   };
 });
+
+directives.directive('autoFocus', function () {
+  return {
+    restrict: 'AC',
+    link: function (scope, element) {
+      element[0].focus();
+    }
+  };
+});
+
+directives.directive('autoSelect', function ($timeout) {
+  return {
+    restrict: 'AC',
+    link: function (scope, element) {
+      element.bind('focus', function () {
+        $timeout(function () {
+          element[0].select();
+        }, 1);
+      });
+    }
+  };
+});
+
 
 'use strict';
 
@@ -44561,9 +44583,9 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     .success(function (pageContent, status, headers, config) {
       deferred.resolve(pageContent);
     })
-    .error(function (pageContent, status, headers, config) {
+    .error(function (data, status, headers, config) {
       var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       error.code = status;
       deferred.reject(error);
     });
@@ -44613,7 +44635,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     .error(function (data, status, headers, config) {
       var error = new Error();
       error.code = status;
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       deferred.reject(error);
     });
 

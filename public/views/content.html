@@ -5,7 +5,7 @@
       </div>
       <div class="ngdialog-message">
         <input type="text" class="form-control" id="commitMessageText" placeholder="Enter a commit message" required
-               ng-model="commitMessage">
+               auto-focus auto-select ng-model="commitMessage">
       </div>
       <div class="ngdialog-buttons">
           <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>

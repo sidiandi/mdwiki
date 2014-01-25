@@ -42,7 +42,7 @@ describe('pagerequesthandler tests', function () {
 
       it('should return the index page', function (done) {
         request(app).get('/api/page')
-              .expect('Content-Type', "text/html; charset=utf-8")
+              .expect('Content-Type', 'text/html; charset=utf-8')
               .expect(200, '<h1>Test</h1>')
               .end(function (err, res) {
                 if (err) {
@@ -67,7 +67,7 @@ describe('pagerequesthandler tests', function () {
 
       it('should return the index page', function (done) {
         request(app).get('/api/page/index')
-              .expect('Content-Type', "text/html; charset=utf-8")
+              .expect('Content-Type', 'text/html; charset=utf-8')
               .expect(200, '<h1>Test</h1>')
               .end(function (err, res) {
                 if (err) {
@@ -88,7 +88,7 @@ describe('pagerequesthandler tests', function () {
 
       it('Should return the markdown', function (done) {
         request(app).get('/api/page/index?format=markdown')
-              .expect('Content-Type', "text/plain; charset=utf-8")
+              .expect('Content-Type', 'text/plain; charset=utf-8')
               .expect(200, '#Test')
               .end(function (err, res) {
                 if (err) {
@@ -102,7 +102,7 @@ describe('pagerequesthandler tests', function () {
     describe('When an non existing page is given', function () {
       it('should return an 404 http code', function (done) {
         request(app).get('/api/page/nonexistingPage')
-              .expect('Content-Type', "text/plain")
+              .expect('Content-Type', 'text/plain')
               .expect(404)
               .end(function (err, res) {
                 if (err) {
@@ -115,20 +115,6 @@ describe('pagerequesthandler tests', function () {
   });
 
   describe('Page put', function () {
-    describe('When is not authenticated', function () {
-      it('Should return an 401 error', function (done) {
-        request(app).put('/api/page/index')
-          .expect('Content-Type', "text/plain")
-          .expect(401)
-          .end(function (err, res) {
-            if (err) {
-              return done(err);
-            }
-            done();
-          });
-      });
-    });
-
     describe('When the user forget to send the markdown in the body', function () {
       it('Should return an 400 error', function (done) {
         app.request.session = { oauth: '123456789' };
@@ -136,7 +122,7 @@ describe('pagerequesthandler tests', function () {
         request(app).put('/api/page/index')
           .set('Content-Type', 'application/json')
           .send({ commitMessage: 'this is the update'})
-          .expect('Content-Type', "text/plain")
+          .expect('Content-Type', 'text/plain')
           .expect(400)
           .end(function (err, res) {
             if (err) {

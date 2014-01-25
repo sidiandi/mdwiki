@@ -72,10 +72,10 @@ app.delete('/auth/user', oauth.logout);
 app.get('/api/serverconfig', serverConfigRequestHandler);
 app.get('/api/pages', pagesRequestHandler);
 app.get('/api/page/:page?', pageRequestHandler.get);
-app.put('/api/page/page', pageRequestHandler.put);
+app.put('/api/page/:page', oauth.ensureAuthentication, pageRequestHandler.put);
 app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
 app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler.get);
-app.put('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.put);
+app.put('/api/:githubUser/:githubRepository/page/:page', oauth.ensureAuthentication, pageRequestHandler.put);
 app.post('/api/search', searchRequestHandler.search);
 app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
 

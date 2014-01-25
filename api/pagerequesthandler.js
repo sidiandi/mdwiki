@@ -2,7 +2,6 @@
 
 var q = require('q'),
     errors = require('../lib/errors'),
-    oauth = require('../lib/oauth'),
     paramHandler = require('../lib/requestParamHandler.js');
 
 var userWantsToHaveMarkdown = function (query) {
@@ -48,13 +47,6 @@ var updatePage = function (req, res) {
   var pageName = req.params.page,
       commitMessage = req.body.commitMessage,
       markdown = req.body.markdown;
-
-  if (!oauth.hasSession(req)) {
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(401, 'not authenticated');
-    res.end();
-    return;
-  }
 
   if (markdown === undefined || commitMessage === undefined) {
     res.setHeader('Content-Type', 'text/plain');

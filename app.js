@@ -17,7 +17,7 @@ var app = express();
 
 var isProductionMode = app.get('env') === 'production';
 
-var oauthConfig = isProductionMode ? require('./config/oauthconfig.js') : require('./config/oauthconfig.dev.json');
+var oauthConfig = isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json');
 oauth.setup(['github'], oauthConfig);
 
 app.configure(function () {

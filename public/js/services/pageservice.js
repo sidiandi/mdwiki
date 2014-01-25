@@ -22,9 +22,9 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     .success(function (pageContent, status, headers, config) {
       deferred.resolve(pageContent);
     })
-    .error(function (pageContent, status, headers, config) {
+    .error(function (data, status, headers, config) {
       var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       error.code = status;
       deferred.reject(error);
     });
@@ -49,7 +49,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     })
     .error(function (data, status, headers, config) {
       var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       error.code = status;
       deferred.reject(error);
     });
@@ -74,7 +74,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     .error(function (data, status, headers, config) {
       var error = new Error();
       error.code = status;
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       deferred.reject(error);
     });
 

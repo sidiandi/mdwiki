@@ -44588,7 +44588,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     })
     .error(function (data, status, headers, config) {
       var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + data;
       error.code = status;
       deferred.reject(error);
     });

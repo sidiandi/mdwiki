@@ -44408,7 +44408,7 @@ directives.directive('autoFocus', function () {
   };
 });
 
-directives.directive('autoSelect', function ($timeout) {
+directives.directive('autoSelect', ['$timeout', function ($timeout) {
   return {
     restrict: 'AC',
     link: function (scope, element) {
@@ -44419,7 +44419,7 @@ directives.directive('autoSelect', function ($timeout) {
       });
     }
   };
-});
+}]);
 
 
 'use strict';

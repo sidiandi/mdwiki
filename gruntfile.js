@@ -196,7 +196,7 @@ module.exports = function (grunt) {
     },
     clean: {
       tests: {
-        src: ["docs"]
+        src: ['docs']
       }
     }
   });

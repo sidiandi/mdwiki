@@ -15,7 +15,7 @@
     "bootswatch": "~3.0.3",
     "ui.bootstrap": "~0.7.0",
     "angular-ui-codemirror": "~0.0.7",
-    "ngDialog": "*",
+    "ngDialog": "~0.1.0",
     "mousetrap": "~1.4.6"
   },
   "devDependencies": {

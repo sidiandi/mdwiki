@@ -26,7 +26,7 @@
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-controller="PagesCtrl">
+      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-controller="PagesCtrl" ng-cloak>
         <ul class="nav navbar-nav">
           <li class="active"><a href="/"><i class="icon-home icon-large"></i> Home</a></li>
             <li class="dropdown">
@@ -39,7 +39,7 @@
               </ul>
             </li>
         </ul>
-        <div class="nav navbar-nav" ng-controller="SearchCtrl" >
+        <div class="nav navbar-nav" ng-controller="SearchCtrl" ng-cloak>
           <form name="searchForm" class="navbar-form navbar-left" role="search" ng-submit="search()">
             <div class="form-group">
               <input type="search" class="form-control input-sm" placeholder="Search" ng-model="textToSearch" required>
@@ -49,7 +49,7 @@
             </button>
           </form>
         </div>
-        <div class="nav navbar-nav" ng-controller="EditContentCtrl">
+        <div class="nav navbar-nav" ng-controller="EditContentCtrl" ng-cloak>
           <form class="navbar-form navbar-left" ng-show="canEditPage" ng-if="isAuthenticated" >
             <button class="btn btn-default" title="Edit current page" ng-click="edit()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding on="e" invoke="edit()" />
@@ -63,7 +63,7 @@
             </button>
           </form>
         </div>
-        <div class="nav navbar-nav navbar-right" ng-controller="GitPullCtrl">
+        <div class="nav navbar-nav navbar-right" ng-controller="GitPullCtrl" ng-cloak>
           <form class="navbar-form navbar-left">
             <button id="pullButton" type="button" title="Pull latest changes"
                     class="btn btn-default"
@@ -74,8 +74,8 @@
             </button>
           </form>
         </div>
-        <div class="nav navbar-nav navbar-right">
-          <form class="navbar-form navbar-left" ng-controller="AuthCtrl">
+        <div class="nav navbar-nav navbar-right" ng-cloak>
+          <form class="navbar-form navbar-left" ng-controller="AuthCtrl" >
             <button type="button" title="Login with your github account"
                     class="btn btn-default" ng-hide="isAuthenticated" bs-tooltip>
               <a href="/auth/github" target="_self"><i class="icon-signin"></i></a>

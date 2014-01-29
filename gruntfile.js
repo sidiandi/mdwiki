@@ -54,7 +54,6 @@ module.exports = function (grunt) {
         src: [
           'bower/jquery/jquery.js',
           'bower/bootstrap/dist/js/bootstrap.js',
-          'bower/mousetrap/mousetrap.js',
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',
           'bower/angular-animate/angular-animate.js',

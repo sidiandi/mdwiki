@@ -30,15 +30,23 @@ directives.directive('bsSwitchtext', function () {
   };
 });
 
-directives.directive('keybinding', function () {
+directives.directive('keybinding', function ($document, $parse) {
   return {
     restrict: 'E',
     scope: {
+      key: '@key',
+      condition: '&',
       invoke: '&'
     },
-    link: function (scope, el, attr) {
-      /* global Mousetrap */
-      Mousetrap.bind(attr.on, scope.invoke);
+    link: function (scope, $element, attr) {
+      $document.bind('keydown', function (event) {
+        var key = parseInt(scope.key.toString());
+        if (event.keyCode === key) {
+          if (scope.$eval(scope.condition)) {
+            scope.$apply(scope.invoke);
+          }
+        }
+      });
     }
   };
 });

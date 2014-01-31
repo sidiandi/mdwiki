@@ -1,7 +1,9 @@
 'use strict';
 
 var should = require('should'),
-    requestParamHandler = require('../../lib/requestParamHandler.js');
+    requestParamHandler = require('../../lib/requestParamHandler.js'),
+    githubContentProvider = require('../../lib/githubContentProvider.js'),
+    gitContentProvider = require('../../lib/gitContentProvider.js');
 
 describe('requestParamHandler tests', function () {
   var request = {
@@ -17,9 +19,7 @@ describe('requestParamHandler tests', function () {
       request.params.githubRepository = undefined;
 
       var provider = requestParamHandler.createProviderFromRequest(request);
-
-      should.exists(provider);
-      provider.getName().should.equal('git');
+      (provider instanceof gitContentProvider).should.be.true;
     });
   });
 
@@ -29,9 +29,19 @@ describe('requestParamHandler tests', function () {
       request.params.githubRepository = 'wiki';
 
       var provider = requestParamHandler.createProviderFromRequest(request);
+      (provider instanceof githubContentProvider).should.be.true;
+    });
+  });
 
-      should.exists(provider);
-      provider.getName().should.equal('github');
+  describe('When request has a session with oauth token', function () {
+    it('Should add the oauth token to the github user', function () {
+      request.params.githubUser = 'janbaer';
+      request.params.githubRepository = 'wiki';
+      request.session = { oauth: '12345678'};
+
+      var provider = requestParamHandler.createProviderFromRequest(request);
+      provider.should.have.property('oauth', '12345678');
+
     });
   });
 

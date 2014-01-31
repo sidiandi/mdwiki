@@ -15,6 +15,7 @@ module.exports = function (config) {
     files: [
       'bower/jquery/jquery.js',
       'bower/bootstrap/dist/js/bootstrap.js',
+      'bower/mousetrap/mousetrap.js',
       'bower/angular/angular.js',
       'bower/angular-animate/angular-animate.js',
       'bower/angular-resource/angular-resource.js',
@@ -22,6 +23,8 @@ module.exports = function (config) {
       'bower/angular-sanitize/angular-sanitize.js',
       'bower/angular-touch/angular-touch.js',
       'bower/angular-cache/dist/angular-cache.js',
+      'bower/angular-ui-codemirror/ui-codemirror.js',
+      'bower/ngDialog/js/ngDialog.js',
       'bower/angular-mocks/angular-mocks.js',
       'public/js/controllers/*.js',
       'public/js/services/*.js',

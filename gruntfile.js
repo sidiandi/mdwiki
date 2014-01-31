@@ -63,6 +63,10 @@ module.exports = function (grunt) {
           'bower/angular-sanitize/angular-sanitize.js',
           'bower/angular-touch/angular-touch.js',
           'bower/angular-cache/dist/angular-cache.js',
+          'bower/angular-ui-codemirror/ui-codemirror.js',
+          'bower/ngDialog/js/ngDialog.js',
+          'bower/codemirror/lib/codemirror.js',
+          'bower/codemirror/mode/markdown/markdown.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -74,6 +78,9 @@ module.exports = function (grunt) {
         src: [
           'bower/bootswatch/spacelab/bootstrap.css',
           'bower/font-awesome/css/font-awesome.css',
+          'bower/codemirror/lib/codemirror.css',
+          'bower/ngDialog/css/ngDialog.css',
+          'bower/ngDialog/css/ngDialog-theme-default.css',
           'public/css/customstyles.css'
         ],
         dest: 'public/css/styles.css'
@@ -188,7 +195,7 @@ module.exports = function (grunt) {
     },
     clean: {
       tests: {
-        src: ["docs"]
+        src: ['docs']
       }
     }
   });

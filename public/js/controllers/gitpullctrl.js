@@ -2,19 +2,16 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($scope, $route, gitService, pageService, settingsService) {
+controllers.controller('GitPullCtrl', ['$rootScope', '$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($rootScope, $scope, $route, gitService, pageService, settingsService) {
   $scope.isBusy = false;
   $scope.message = '';
   $scope.hasError = false;
-  $scope.hasContent = false;
+  $scope.isConnectedToGit = false;
   $scope.provider = 'git';
 
-  var checkHasContent = function (pages) {
-    $scope.hasContent = pages && pages.length > 0;
-    $scope.provider = settingsService.get().provider;
+  var checkIfIsConnectedToGit = function (settings) {
+    $scope.isConnectedToGit = settings.provider === 'git' && settings.url.length > 0;
   };
-
-  pageService.registerObserver(checkHasContent);
 
   $scope.pull = function () {
     $scope.isBusy = true;
@@ -33,6 +30,11 @@ controllers.controller('GitPullCtrl', ['$scope', '$route', 'GitService', 'PageSe
       .finally(function () {
         $scope.isBusy = false;
       });
-
   };
+
+  $rootScope.$on('OnGitConnected', function (event, data) {
+    checkIfIsConnectedToGit(data.settings);
+  });
+
+  checkIfIsConnectedToGit(settingsService.get());
 }]);

@@ -5,6 +5,8 @@ var mdwiki = angular.module('mdwiki', [
   'ngSanitize',
   'ngAnimate',
   'jmdobry.angular-cache',
+  'ui.codemirror',
+  'ngDialog',
   'mdwiki.controllers',
   'mdwiki.services',
   'mdwiki.directives'

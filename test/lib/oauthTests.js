@@ -54,4 +54,38 @@ describe('oauth Tests', function () {
     });
   });
 
+  describe('ensureAuthentication', function () {
+    describe('When user is authenticated', function () {
+      it('Should call the next func', function () {
+        // ARRANGE
+        var req = { session: { uid: '1234567' } };
+        var next = sinon.spy();
+
+        // ACT
+        oauth.ensureAuthentication(req, null, next);
+
+        // ASSERT
+        next.called.should.be.true;
+      });
+    });
+    describe('When the user is not authenticated', function () {
+      it('Should call send with 401', function () {
+        // ARRANGE
+        var req = { };
+        var res = sinon.stub({
+          send: function (code, text) { },
+          setHeader: function () { },
+          end: function () {}
+        });
+        var next = sinon.spy();
+
+        // ACT
+        oauth.ensureAuthentication(req, res, next);
+
+        // ASSERT
+        next.called.should.be.false;
+        res.send.calledWith(401, 'Not authenticated').should.be.true;
+      });
+    });
+  });
 });

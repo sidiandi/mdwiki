@@ -42,4 +42,14 @@ describe('github UrlBuilder Tests', function () {
       actual.should.be.equal(expectedUrl);
     });
   });
+
+  describe('When the url to get a single page is required', function () {
+    it('Should return the expected url', function () {
+      var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md';
+      var actual = urlBuilder.buildPageUrl(GITHUB_USER, GITHUB_REPOSITORY, 'git');
+
+      actual.should.be.equal(expectedUrl);
+    });
+  });
+
 });

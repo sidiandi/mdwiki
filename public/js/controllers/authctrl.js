@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('AuthCtrl', ['$scope', 'AuthService', function ($scope, authService) {
+controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', function ($rootScope, $scope, authService) {
   $scope.isAuthenticated = false;
   $scope.user = null;
 
@@ -19,7 +19,9 @@ controllers.controller('AuthCtrl', ['$scope', 'AuthService', function ($scope, a
   };
 
   $scope.$watch('user', function (newValue, oldValue) {
-    $scope.isAuthenticated = newValue !== null;
+    $rootScope.isAuthenticated = newValue !== null;
+    $scope.isAuthenticated = $rootScope.isAuthenticated;
+    $rootScope.$broadcast('isAuthenticated', { isAuthenticated: $rootScope.isAuthenticated });
   });
 
 }]);

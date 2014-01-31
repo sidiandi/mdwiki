@@ -99,5 +99,15 @@ span.user {
   margin-left: 5px;
 }
 
+.CodeMirror {
+  margin-top: 10px;
+  border: 1px solid #eee;
+  height: auto;
+}
+.CodeMirror-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 
 

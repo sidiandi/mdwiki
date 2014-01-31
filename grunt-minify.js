@@ -21,7 +21,7 @@ module.exports = function (grunt) {
           banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
         },
         files: {
-          'public/js/scripts.min.js': ['public/js/scripts.js'],
+          'public/js/scripts.min.js': ['public/js/scripts.js']
         }
       }
     }

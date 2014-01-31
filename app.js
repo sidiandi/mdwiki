@@ -1,6 +1,6 @@
 'use strict';
 
-var express = require("express"),
+var express = require('express'),
     path = require('path'),
     logger = require('./lib/logger'),
     util = require('util'),
@@ -17,7 +17,7 @@ var app = express();
 
 var isProductionMode = app.get('env') === 'production';
 
-var oauthConfig = isProductionMode ? require('./config/oauthconfig.js') : require('./config/oauthconfig.dev.json');
+var oauthConfig = isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json');
 oauth.setup(['github'], oauthConfig);
 
 app.configure(function () {
@@ -71,9 +71,11 @@ app.delete('/auth/user', oauth.logout);
 // JSON API
 app.get('/api/serverconfig', serverConfigRequestHandler);
 app.get('/api/pages', pagesRequestHandler);
-app.get('/api/page/:page?', pageRequestHandler);
+app.get('/api/page/:page?', pageRequestHandler.get);
+app.put('/api/page/:page', oauth.ensureAuthentication, pageRequestHandler.put);
 app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
-app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler);
+app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler.get);
+app.put('/api/:githubUser/:githubRepository/page/:page', oauth.ensureAuthentication, pageRequestHandler.put);
 app.post('/api/search', searchRequestHandler.search);
 app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
 
@@ -91,7 +93,6 @@ app.get('*', function (req, res) {
   res.sendfile('./public/index.html');
 });
 
-
 var port = app.get('port');
 var ipAddress = app.get('ipAddress');
 
@@ -104,7 +105,7 @@ if (process.env.HOST !== undefined) {
   });
 } else {
   app.listen(port, function () {
-    logger.info('Listening on port %s ', port);
+    logger.info('Listening on port %s...', port);
   });
 }
 

@@ -17,7 +17,7 @@ describe('ServerConfigRequesthandler Tests', function () {
 
   it('should return the server config with providers', function (done) {
     request(app).get('/api/serverconfig')
-      .expect('Content-Type', "application/json")
+      .expect('Content-Type', 'application/json')
       .expect(200)
       .end(function (err, res) {
         if (err) {

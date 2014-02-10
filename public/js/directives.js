@@ -30,7 +30,7 @@ directives.directive('bsSwitchtext', function () {
   };
 });
 
-directives.directive('keybinding', function ($document, $parse) {
+directives.directive('keybinding', ['$document', '$parse', function ($document, $parse) {
   return {
     restrict: 'E',
     scope: {
@@ -49,7 +49,7 @@ directives.directive('keybinding', function ($document, $parse) {
       });
     }
   };
-});
+}]);
 
 directives.directive('autoFocus', function () {
   return {

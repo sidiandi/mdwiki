@@ -208,9 +208,42 @@ describe('githubContentProvider Tests', function () {
             lastError = error;
           })
           .done(function (response) {
+            should.not.exists(lastError);
             response.should.have.property('body', expectedHtml);
             requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
+            done();
+          });
+      });
+    });
+  });
+
+  describe('create page tests', function () {
+    describe('When the users wants to create a new page', function () {
+      var requestStub;
+
+      beforeEach(function () {
+        requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
+      });
+
+      it('Should send a new page to github and return it as html', function (done) {
+        var lastError;
+        var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/newPage.md?access_token=12345678';
+        var expectedMessage = {
+          message: 'created a new page',
+          content: 'I2NvbnRlbnQgb2YgbmV3IHBhZ2U=',
+          branch: 'master'
+        };
+        var expectedHtml = '<h1>content of new page</h1>';
+
+        provider.oauth = '12345678';
+        provider.createPage('created a new page', 'newPage', '#content of new page')
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function (response) {
             should.not.exists(lastError);
+            response.should.have.property('body', expectedHtml);
+            requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
             done();
           });
       });

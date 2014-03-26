@@ -250,6 +250,26 @@ describe('githubContentProvider Tests', function () {
     });
   });
 
+  describe('buildPageMessage Tests', function () {
+    describe('When sha is provided', function () {
+      it('Should return a message that contains the sha as property', function () {
+        var message = provider.buildPageMessage('create new page',
+                                                '#content of new page',
+                                                '12345');
+        should.exists(message);
+        message.should.have.property('sha', '12345');
+        message.should.have.property('content', 'I2NvbnRlbnQgb2YgbmV3IHBhZ2U=');
+      });
+    });
+    describe('When sha is not provided', function () {
+      it('Should return a message without the sha property', function () {
+        var message = provider.buildPageMessage('create new page', '#content of new page');
+        should.exists(message);
+        message.should.not.have.property('sha');
+      });
+    });
+  });
+
   afterEach(function () {
     sandbox.restore();
   });

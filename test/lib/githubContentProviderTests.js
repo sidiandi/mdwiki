@@ -187,7 +187,6 @@ describe('githubContentProvider Tests', function () {
       var requestStub;
 
       beforeEach(function () {
-        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
         requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
       });
 
@@ -203,7 +202,7 @@ describe('githubContentProvider Tests', function () {
         var expectedHtml = '<h1>content of git page</h1>';
 
         provider.oauth = '12345678';
-        provider.updatePage('this is a update for git page', 'git', '#content of git page')
+        provider.updatePage('this is a update for git page', 'git', '#content of git page', '123456')
           .catch(function (error) {
             lastError = error;
           })
@@ -246,26 +245,6 @@ describe('githubContentProvider Tests', function () {
             requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
             done();
           });
-      });
-    });
-  });
-
-  describe('buildPageMessage Tests', function () {
-    describe('When sha is provided', function () {
-      it('Should return a message that contains the sha as property', function () {
-        var message = provider.buildPageMessage('create new page',
-                                                '#content of new page',
-                                                '12345');
-        should.exists(message);
-        message.should.have.property('sha', '12345');
-        message.should.have.property('content', 'I2NvbnRlbnQgb2YgbmV3IHBhZ2U=');
-      });
-    });
-    describe('When sha is not provided', function () {
-      it('Should return a message without the sha property', function () {
-        var message = provider.buildPageMessage('create new page', '#content of new page');
-        should.exists(message);
-        message.should.not.have.property('sha');
       });
     });
   });

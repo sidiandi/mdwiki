@@ -12,7 +12,6 @@ var request = require('supertest'),
     pageRequestHandler = require('../../api/pagerequesthandler');
 
 describe('pagerequesthandler tests', function () {
-
   var app;
   var sandbox;
 
@@ -138,22 +137,25 @@ describe('pagerequesthandler tests', function () {
           expectedResponse = '<h1>This is the content of the page</h1>';
 
       beforeEach(function () {
-        var provider = { updatePage: function (oauth, commitMessage, pageName, markdown) {}};
-        providerStub = sinon.stub(provider, 'updatePage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
-
-        sinon.stub(paramHandler, 'createProviderFromRequest').returns(provider);
+        var provider = {
+          updatePage: function (oauth, commitMessage, pageName, content, sha) {},
+          getPage: function (pageName) {},
+        };
+        sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
+        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
+        providerStub = sandbox.stub(provider, 'updatePage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
       });
 
       it('Should send the content to the provider and return 200', function (done) {
         var commitMessage = 'this is the update',
-            markdown = '#This is the content of the page',
+            content = '#This is the content of the page',
             oauth = '123456789';
 
         app.request.session = { oauth: oauth };
 
-        request(app).put('/api/janbaer/wiki-content/page/index')
+        request(app).put('/api/janbaer/wiki-content/page/git')
           .set('Content-Type', 'application/json')
-          .send({ commitMessage: commitMessage, markdown: markdown})
+          .send({ commitMessage: commitMessage, markdown: content})
           .expect('Content-Type', 'text/html; charset=utf-8')
           .expect(200, expectedResponse)
           .end(function (err, res) {
@@ -163,7 +165,49 @@ describe('pagerequesthandler tests', function () {
             done();
           });
 
-        providerStub.calledWithMatch(oauth, commitMessage, 'index', markdown).should.be.trues;
+        providerStub.calledWithMatch(oauth, commitMessage, 'git', content).should.be.trues;
+      });
+
+      afterEach(function () {
+        paramHandler.createProviderFromRequest.restore();
+      });
+    });
+
+    describe('When user wants to create a new page', function () {
+      var providerStub,
+          expectedResponse = '<h1>This is the content of the page</h1>';
+
+      beforeEach(function () {
+        var provider = {
+          createPage: function (oauth, commitMessage, pageName, content) {},
+          getPage: function (pageName) {},
+        };
+        sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
+        sandbox.stub(provider, 'getPage').returns(Q.reject(new errors.FileNotFoundError('page not found', 'git')));
+        providerStub = sandbox.stub(provider, 'createPage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
+      });
+
+
+      it('Should should call the createPage function', function (done) {
+        var commitMessage = 'this is a new page',
+            content = '#This is the content of the page',
+            oauth = '123456789';
+
+        app.request.session = { oauth: oauth };
+
+        request(app).put('/api/janbaer/wiki-content/page/git')
+          .set('Content-Type', 'application/json')
+          .send({ commitMessage: commitMessage, markdown: content})
+          .expect('Content-Type', 'text/html; charset=utf-8')
+          .expect(200, expectedResponse)
+          .end(function (err, res) {
+            if (err) {
+              return done(err);
+            }
+            done();
+          });
+
+        providerStub.calledWithMatch(oauth, commitMessage, 'git', content).should.be.trues;
       });
 
       afterEach(function () {

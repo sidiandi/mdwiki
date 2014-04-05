@@ -43,7 +43,21 @@ var getPage = function (req, res) {
     });
 };
 
-var updatePage = function (req, res) {
+var sendResponse = function (response, html, isNewPage) {
+  response.setHeader('Content-Type', 'text/html; charset=utf-8');
+  response.setHeader('Content-Length', new Buffer(html).length);
+  response.status(200);
+  response.send(html);
+  response.end();
+};
+
+var sendErrorResponse = function (response, error) {
+  response.setHeader('Content-Type', 'text/plain');
+  response.send(500, 'server error: ' + error);
+  response.end();
+};
+
+var createOrUpdatePage = function (req, res) {
   var pageName = req.params.page,
       commitMessage = req.body.commitMessage,
       markdown = req.body.markdown;
@@ -56,21 +70,29 @@ var updatePage = function (req, res) {
   }
 
   var provider = paramHandler.createProviderFromRequest(req);
-  provider.updatePage(commitMessage, pageName, markdown)
-    .then(function (response) {
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Content-Length', new Buffer(response.body).length);
-      res.status(200);
-      res.send(response.body);
-    })
-    .catch(function (error) {
-      res.setHeader('Content-Type', 'text/plain');
-      res.send(500, 'server error: ' + error);
-    })
-    .done(function () {
-      res.end();
-    });
+
+  provider.getPage(pageName).then(function (page) {
+    provider.updatePage(commitMessage, pageName, markdown, page.sha)
+      .then(function (response) {
+        sendResponse(res, response.body);
+      })
+      .catch(function (error) {
+        sendErrorResponse(res, error);
+      });
+  }).catch(function (error) {
+    if (error instanceof errors.FileNotFoundError) {
+      provider.createPage(commitMessage, pageName, markdown)
+        .then(function (response) {
+          sendResponse(res, response.body);
+        })
+        .catch(function (error) {
+          sendErrorResponse(res, error);
+        });
+    } else {
+      sendErrorResponse(res, error);
+    }
+  });
 };
 
 module.exports.get = getPage;
-module.exports.put = updatePage;
+module.exports.put = createOrUpdatePage;

@@ -64,7 +64,7 @@ describe('Page Service tests', function () {
 
       httpMock.expectPUT('/api/page/index').respond(200, expectedHtml);
 
-      pageService.updatePage('index', 'commitMessage', '#Test')
+      pageService.savePage('index', 'commitMessage', '#Test')
         .then(function (data) {
           actualHtml = data;
         }, function (error) {

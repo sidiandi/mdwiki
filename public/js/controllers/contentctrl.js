@@ -89,7 +89,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.createPage = function (pageName) {
-    pageService.updatePage(pageName, 'create new page ' + pageName, '#' + pageName)
+    pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
       .then(function (pageContent) {
         $scope.pageName = pageName;
         $rootScope.pages.push(pageName);
@@ -119,7 +119,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var saveUnregister = $rootScope.$on('save', function (event, data) {
-    pageService.updatePage($scope.pageName, data.commitMessage, $scope.markdown)
+    pageService.savePage($scope.pageName, data.commitMessage, $scope.markdown)
       .then(function (pageContent) {
         $scope.content = prepareLinks(pageContent, settings);
         hideEditor();

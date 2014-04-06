@@ -43680,7 +43680,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
-  var updatePage = function (pageName, commitMessage, markdown) {
+  var savePage = function (pageName, commitMessage, markdown) {
     var deferred = $q.defer();
 
     $http({
@@ -43763,7 +43763,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   return {
     findStartPage: findStartPage,
     getPage: getPage,
-    updatePage: updatePage,
+    savePage: savePage,
     getPages: getPages,
     registerObserver: registerObserver
   };
@@ -44006,7 +44006,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   $scope.createPage = function (pageName) {
-    pageService.updatePage(pageName, 'create new page ' + pageName, '#' + pageName)
+    pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
       .then(function (pageContent) {
         $scope.pageName = pageName;
         $rootScope.pages.push(pageName);
@@ -44036,7 +44036,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var saveUnregister = $rootScope.$on('save', function (event, data) {
-    pageService.updatePage($scope.pageName, data.commitMessage, $scope.markdown)
+    pageService.savePage($scope.pageName, data.commitMessage, $scope.markdown)
       .then(function (pageContent) {
         $scope.content = prepareLinks(pageContent, settings);
         hideEditor();

@@ -32,7 +32,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
-  var updatePage = function (pageName, commitMessage, markdown) {
+  var savePage = function (pageName, commitMessage, markdown) {
     var deferred = $q.defer();
 
     $http({
@@ -115,7 +115,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   return {
     findStartPage: findStartPage,
     getPage: getPage,
-    updatePage: updatePage,
+    savePage: savePage,
     getPages: getPages,
     registerObserver: registerObserver
   };

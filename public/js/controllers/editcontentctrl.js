@@ -21,6 +21,14 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
     return canEditPage;
   };
 
+  $scope.create = function () {
+    ngDialog.open({
+      template: 'createNewPageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'NewPageDialogCtrl',
+    });
+  };
+
   $scope.edit = function () {
     $rootScope.$broadcast('edit');
   };

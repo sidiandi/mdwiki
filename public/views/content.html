@@ -13,6 +13,21 @@
     </form>
 </script>
 
+<script type="text/ng-template" id="createNewPageDialog">
+    <form name="createNewPageForm">
+      <div class="modal-header">
+          <h3>Enter a name for the new page</h3>
+      </div>
+      <div class="ngdialog-message">
+        <input type="text" class="form-control" id="pageNameText" placeholder="Enter a pagename" required
+               auto-focus auto-select ng-model="pageName">
+      </div>
+      <div class="ngdialog-buttons">
+          <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="createNewPageForm.$invalid">OK</button>
+      </div>
+    </form>
+</script>
+
 <div class="content-error alert alert-danger" ng-show="hasError">{{ errorMessage }}</div>
 <div ng-hide="isEditorVisible">
   <div ng-bind-html="content" ng-hide="hasError"></div>

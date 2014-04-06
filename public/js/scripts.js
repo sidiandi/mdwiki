@@ -44005,8 +44005,17 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     showOrHideEditor(false);
   };
 
-  $scope.showHtml = function () {
-    getPage($scope.pageName).then(hideEditor());
+  $scope.createPage = function (pageName) {
+    pageService.updatePage(pageName, 'create new page ' + pageName, '#' + pageName)
+      .then(function (pageContent) {
+        $scope.pageName = pageName;
+        $rootScope.pages.push(pageName);
+        $location.path('/' + pageName).search('edit');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Create new page failed: ' + error.message;
+        $scope.hasError = true;
+      });
   };
 
   $scope.editMarkdown = function () {
@@ -44037,6 +44046,10 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   });
 
+  var createUnregister = $rootScope.$on('create', function (event, data) {
+    $scope.createPage(data.pageName);
+  });
+
   var editUnregister = $rootScope.$on('edit', function () {
     $scope.editMarkdown();
   });
@@ -44046,12 +44059,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   });
 
   $scope.$on('$destroy', function () {
-    saveUnregister();
     cancelEditUnregister();
+    createUnregister();
     editUnregister();
+    saveUnregister();
   });
 
-  getPage(pageName).then(hideEditor);
+  getPage(pageName).then(function () {
+    if ($routeParams.edit && $rootScope.isAuthenticated) {
+      $scope.editMarkdown();
+    } else {
+      hideEditor();
+    }
+  });
+
 
 }]);
 
@@ -44079,6 +44100,14 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
       });
     }
     return canEditPage;
+  };
+
+  $scope.create = function () {
+    ngDialog.open({
+      template: 'createNewPageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'NewPageDialogCtrl',
+    });
   };
 
   $scope.edit = function () {
@@ -44257,17 +44286,33 @@ controllers.controller('GitPullCtrl', ['$rootScope', '$scope', '$route', 'GitSer
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, pageService) {
+controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
+  function ($rootScope, $scope, ngDialog) {
+    $scope.pageName = 'NewPage';
+
+    $scope.closeDialog = function () {
+      ngDialog.close();
+      $rootScope.$broadcast('create', { pageName: $scope.pageName });
+    };
+  }
+]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
+controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', function ($rootScope, $scope, pageService) {
   $scope.pages = [];
+  $rootScope.pages = $scope.pages;
 
   var updatePages = function (pages) {
     $scope.pages = pages || [];
+    $rootScope.pages = $scope.pages;
   };
 
   pageService.getPages()
     .then(function (pages) {
-      $scope.pages = pages;
-
+      updatePages(pages);
       pageService.registerObserver(updatePages);
     });
 

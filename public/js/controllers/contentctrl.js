@@ -88,8 +88,17 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     showOrHideEditor(false);
   };
 
-  $scope.showHtml = function () {
-    getPage($scope.pageName).then(hideEditor());
+  $scope.createPage = function (pageName) {
+    pageService.updatePage(pageName, 'create new page ' + pageName, '#' + pageName)
+      .then(function (pageContent) {
+        $scope.pageName = pageName;
+        $rootScope.pages.push(pageName);
+        $location.path('/' + pageName).search('edit');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Create new page failed: ' + error.message;
+        $scope.hasError = true;
+      });
   };
 
   $scope.editMarkdown = function () {
@@ -120,6 +129,10 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   });
 
+  var createUnregister = $rootScope.$on('create', function (event, data) {
+    $scope.createPage(data.pageName);
+  });
+
   var editUnregister = $rootScope.$on('edit', function () {
     $scope.editMarkdown();
   });
@@ -129,12 +142,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   });
 
   $scope.$on('$destroy', function () {
-    saveUnregister();
     cancelEditUnregister();
+    createUnregister();
     editUnregister();
+    saveUnregister();
   });
 
-  getPage(pageName).then(hideEditor);
+  getPage(pageName).then(function () {
+    if ($routeParams.edit && $rootScope.isAuthenticated) {
+      $scope.editMarkdown();
+    } else {
+      hideEditor();
+    }
+  });
+
 
 }]);
 

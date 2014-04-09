@@ -92,7 +92,11 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
       .then(function (pageContent) {
         $scope.pageName = pageName;
-        $rootScope.pages.push(pageName);
+        $rootScope.pages.push({
+          fileName: pageName + '.md',
+          name: pageName,
+          title: pageName
+        });
         $location.path('/' + pageName).search('edit');
       })
       .catch(function (error) {

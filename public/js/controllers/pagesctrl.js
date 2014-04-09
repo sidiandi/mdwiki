@@ -17,7 +17,6 @@ controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', func
       pageService.registerObserver(updatePages);
     });
 
-
   $scope.excludeDefaultPage = function (page) {
     var excludes = ['index', 'home', 'readme'];
     var excludePage = false;
@@ -30,5 +29,4 @@ controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', func
 
     return !excludePage;
   };
-
 }]);

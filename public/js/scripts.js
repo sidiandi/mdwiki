@@ -44009,7 +44009,11 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
       .then(function (pageContent) {
         $scope.pageName = pageName;
-        $rootScope.pages.push(pageName);
+        $rootScope.pages.push({
+          fileName: pageName + '.md',
+          name: pageName,
+          title: pageName
+        });
         $location.path('/' + pageName).search('edit');
       })
       .catch(function (error) {
@@ -44316,7 +44320,6 @@ controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', func
       pageService.registerObserver(updatePages);
     });
 
-
   $scope.excludeDefaultPage = function (page) {
     var excludes = ['index', 'home', 'readme'];
     var excludePage = false;
@@ -44329,7 +44332,6 @@ controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', func
 
     return !excludePage;
   };
-
 }]);
 
 'use strict';

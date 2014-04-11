@@ -44,10 +44,12 @@ var getPage = function (req, res) {
 };
 
 var sendResponse = function (response, html, isNewPage) {
-  response.setHeader('Content-Type', 'text/html; charset=utf-8');
-  response.setHeader('Content-Length', new Buffer(html).length);
-  response.status(200);
-  response.send(html);
+  response.status(isNewPage ? 201 : 200);
+  if (html) {
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Content-Length', new Buffer(html).length);
+    response.send(html);
+  }
   response.end();
 };
 
@@ -79,11 +81,12 @@ var createOrUpdatePage = function (req, res) {
       .catch(function (error) {
         sendErrorResponse(res, error);
       });
-  }).catch(function (error) {
+  })
+  .catch(function (error) {
     if (error instanceof errors.FileNotFoundError) {
       provider.createPage(commitMessage, pageName, markdown)
         .then(function (response) {
-          sendResponse(res, response.body);
+          sendResponse(res, response.body, true);
         })
         .catch(function (error) {
           sendErrorResponse(res, error);
@@ -94,5 +97,26 @@ var createOrUpdatePage = function (req, res) {
   });
 };
 
+var deletePage = function (req, res) {
+  var pageName = req.params.page;
+
+  var provider = paramHandler.createProviderFromRequest(req);
+
+  provider.getPage(pageName)
+    .then(function (page) {
+      provider.deletePage(pageName, page.sha)
+        .then(function (response) {
+          sendResponse(res);
+        })
+        .catch(function (error) {
+          sendErrorResponse(res, error);
+        });
+    })
+    .catch(function (error) {
+      sendErrorResponse(res, error);
+    });
+};
+
 module.exports.get = getPage;
 module.exports.put = createOrUpdatePage;
+module.exports.delete = deletePage;

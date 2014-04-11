@@ -199,7 +199,7 @@ describe('pagerequesthandler tests', function () {
           .set('Content-Type', 'application/json')
           .send({ commitMessage: commitMessage, markdown: content})
           .expect('Content-Type', 'text/html; charset=utf-8')
-          .expect(200, expectedResponse)
+          .expect(201, expectedResponse)
           .end(function (err, res) {
             if (err) {
               return done(err);

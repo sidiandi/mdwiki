@@ -85,6 +85,9 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
+    if ($routeParams.edit) {
+      $location.search({});
+    }
     showOrHideEditor(false);
   };
 
@@ -105,7 +108,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   };
 
-  $scope.editMarkdown = function () {
+  $scope.editMarkdown = function (pageName) {
     showEditor();
 
     pageService.getPage(pageName, 'markdown')
@@ -116,9 +119,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
         if (pageName === startPage && error.code === 404) {
           $location.path('/git/connect');
         } else {
-          $scope.errorMessage = 'Content not found!';
+          $scope.errorMessage = 'Content not found: ' + error.message;
           $scope.hasError = true;
         }
+      });
+  };
+
+  $scope.deletePage = function (pageName) {
+    pageService.deletePage(pageName)
+      .then(function () {
+        $location.path('/');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Delete the current page failed: ' + error.message;
+        $scope.hasError = true;
       });
   };
 
@@ -137,8 +151,12 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     $scope.createPage(data.pageName);
   });
 
+  var deleteUnregister = $rootScope.$on('delete', function (event, data) {
+    $scope.deletePage(data.pageName);
+  });
+
   var editUnregister = $rootScope.$on('edit', function () {
-    $scope.editMarkdown();
+    $scope.editMarkdown($scope.pageName);
   });
 
   var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
@@ -148,13 +166,14 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   $scope.$on('$destroy', function () {
     cancelEditUnregister();
     createUnregister();
+    deleteUnregister();
     editUnregister();
     saveUnregister();
   });
 
   getPage(pageName).then(function () {
     if ($routeParams.edit && $rootScope.isAuthenticated) {
-      $scope.editMarkdown();
+      $scope.editMarkdown(pageName);
     } else {
       hideEditor();
     }

@@ -1,31 +1,43 @@
 <script type="text/ng-template" id="commitMessageDialog">
-    <form name="commitMessageForm">
-      <div class="modal-header">
-          <h3>Enter a commit message</h3>
-      </div>
-      <div class="ngdialog-message">
-        <input type="text" class="form-control" id="commitMessageText" placeholder="Enter a commit message" required
-               auto-focus auto-select ng-model="commitMessage">
-      </div>
-      <div class="ngdialog-buttons">
-          <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
-      </div>
-    </form>
+  <form name="commitMessageForm">
+    <div class="modal-header">
+        <h3>Enter a commit message</h3>
+    </div>
+    <div class="ngdialog-message">
+      <input type="text" class="form-control" id="commitMessageText" placeholder="Enter a commit message" required
+             auto-focus auto-select ng-model="commitMessage">
+    </div>
+    <div class="ngdialog-buttons">
+        <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
+    </div>
+  </form>
 </script>
 
 <script type="text/ng-template" id="createNewPageDialog">
-    <form name="createNewPageForm">
-      <div class="modal-header">
-          <h3>Enter a name for the new page</h3>
-      </div>
-      <div class="ngdialog-message">
-        <input type="text" class="form-control" id="pageNameText" placeholder="Enter a pagename" required
-               auto-focus auto-select ng-model="pageName">
-      </div>
-      <div class="ngdialog-buttons">
-          <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="createNewPageForm.$invalid">OK</button>
-      </div>
-    </form>
+  <form name="createPage">
+    <div class="modal-header">
+        <h3>Enter a name for the new page</h3>
+    </div>
+    <div class="ngdialog-message">
+      <input type="text" class="form-control" id="pageNameText" placeholder="Enter a pagename" required
+             auto-focus auto-select ng-model="pageName">
+    </div>
+    <div class="ngdialog-buttons">
+        <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="createPage.$invalid">OK</button>
+    </div>
+  </form>
+</script>
+
+<script type="text/ng-template" id="deletePageDialog">
+  <form name="deletePageForm">
+    <div class="ngdialog-message">
+      <div class="alert alert-danger">Are you sure that you want to delete the current page?</div>
+    </div>
+    <div class="ngdialog-buttons">
+        <button class="ngdialog-button ngdialog-button-primary" ng-click="confirmDialog()">OK</button>
+        <button class="ngdialog-button ngdialog-button-secondary" ng-click="cancelDialog()">Cancel</button>
+    </div>
+  </form>
 </script>
 
 <div class="content-error alert alert-danger" ng-show="hasError">{{ errorMessage }}</div>

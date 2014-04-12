@@ -43705,6 +43705,26 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
+  var deletePage = function (pageName) {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'DELETE',
+      url: urlBuilder.build('/api/', 'page/' + pageName)
+    })
+    .success(function (pageContent, status, headers, config) {
+      deferred.resolve(pageContent);
+    })
+    .error(function (errorMessage, status, headers, config) {
+      var error = new Error();
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+      error.code = status;
+      deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
   var getPages = function (settings) {
     var deferred = $q.defer();
 
@@ -43764,6 +43784,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     findStartPage: findStartPage,
     getPage: getPage,
     savePage: savePage,
+    deletePage: deletePage,
     getPages: getPages,
     registerObserver: registerObserver
   };
@@ -44002,6 +44023,9 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
+    if ($routeParams.edit) {
+      $location.search({});
+    }
     showOrHideEditor(false);
   };
 
@@ -44022,7 +44046,7 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
       });
   };
 
-  $scope.editMarkdown = function () {
+  $scope.editMarkdown = function (pageName) {
     showEditor();
 
     pageService.getPage(pageName, 'markdown')
@@ -44033,9 +44057,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
         if (pageName === startPage && error.code === 404) {
           $location.path('/git/connect');
         } else {
-          $scope.errorMessage = 'Content not found!';
+          $scope.errorMessage = 'Content not found: ' + error.message;
           $scope.hasError = true;
         }
+      });
+  };
+
+  $scope.deletePage = function (pageName) {
+    pageService.deletePage(pageName)
+      .then(function () {
+        $location.path('/');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Delete the current page failed: ' + error.message;
+        $scope.hasError = true;
       });
   };
 
@@ -44054,8 +44089,12 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
     $scope.createPage(data.pageName);
   });
 
+  var deleteUnregister = $rootScope.$on('delete', function (event, data) {
+    $scope.deletePage(data.pageName);
+  });
+
   var editUnregister = $rootScope.$on('edit', function () {
-    $scope.editMarkdown();
+    $scope.editMarkdown($scope.pageName);
   });
 
   var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
@@ -44065,13 +44104,14 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   $scope.$on('$destroy', function () {
     cancelEditUnregister();
     createUnregister();
+    deleteUnregister();
     editUnregister();
     saveUnregister();
   });
 
   getPage(pageName).then(function () {
     if ($routeParams.edit && $rootScope.isAuthenticated) {
-      $scope.editMarkdown();
+      $scope.editMarkdown(pageName);
     } else {
       hideEditor();
     }
@@ -44087,7 +44127,23 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 'ngDialog', function ($rootScope, $scope, $location, ngDialog) {
+controllers.controller('DeletePageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+  $scope.question = 'Are you sure that you want to delete the page: ' + $rootScope.pageName;
+
+  $scope.confirmDialog = function () {
+    ngDialog.close();
+    $rootScope.$broadcast('delete', { pageName: $rootScope.pageName });
+  };
+  $scope.cancelDialog = function () {
+    ngDialog.close();
+  };
+}]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
+controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
   var nonEditablePaths = ['/search', '/git/connect'];
   $scope.isAuthenticated = false;
   $scope.isEditorVisible = false;
@@ -44111,6 +44167,19 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
       template: 'createNewPageDialog',
       className: 'ngdialog-theme-default',
       controller: 'NewPageDialogCtrl',
+    });
+  };
+
+  $scope.delete = function () {
+    if ($rootScope.pageName === 'index') {
+      $window.alert('It is not a good idea to delete your start page!');
+      return;
+    }
+
+    ngDialog.open({
+      template: 'deletePageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'DeletePageDialogCtrl',
     });
   };
 
@@ -44292,7 +44361,7 @@ var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
   function ($rootScope, $scope, ngDialog) {
-    $scope.pageName = 'NewPage';
+    $scope.pageName = 'newpage';
 
     $scope.closeDialog = function () {
       ngDialog.close();

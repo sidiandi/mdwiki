@@ -59,6 +59,10 @@
               <keybinding modifier="ctrl" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />
               <i class="icon-edit"></i>
             </button>
+            <button class="btn btn-default" title="Delete current page" ng-click="delete()" ng-hide="isEditorVisible" bs-tooltip>
+              <keybinding modifier="ctrl" key="D" invoke="delete()" condition="isAuthenticated && !isEditorVisible" />
+              <i class="icon-remove"></i>
+            </button>
             <button class="btn btn-default" title="Commit changes" ng-click="save()" ng-show="isEditorVisible" bs-tooltip>
               <i class="icon-save"></i>
             </button>

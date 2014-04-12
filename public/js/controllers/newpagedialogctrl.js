@@ -4,7 +4,7 @@ var controllers = controllers || angular.module('mdwiki.controllers', []);
 
 controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
   function ($rootScope, $scope, ngDialog) {
-    $scope.pageName = 'NewPage';
+    $scope.pageName = 'newpage';
 
     $scope.closeDialog = function () {
       ngDialog.close();

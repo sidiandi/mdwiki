@@ -188,6 +188,7 @@ describe('githubContentProvider Tests', function () {
 
       beforeEach(function () {
         requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
+        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
       });
 
       it('Should send the expected message to github and return the new html content', function (done) {
@@ -196,13 +197,13 @@ describe('githubContentProvider Tests', function () {
         var expectedMessage = {
           message: 'this is a update for git page',
           content: 'I2NvbnRlbnQgb2YgZ2l0IHBhZ2U=',
+          branch: 'master',
           sha: '123456',
-          branch: 'master'
         };
         var expectedHtml = '<h1>content of git page</h1>';
 
         provider.oauth = '12345678';
-        provider.updatePage('this is a update for git page', 'git', '#content of git page', '123456')
+        provider.savePage('this is a update for git page', 'git', '#content of git page')
           .catch(function (error) {
             lastError = error;
           })
@@ -222,6 +223,7 @@ describe('githubContentProvider Tests', function () {
 
       beforeEach(function () {
         requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
+        sandbox.stub(provider, 'getPage').returns(Q.reject(new errors.FileNotFoundError('page not found', 'git')));
       });
 
       it('Should send a new page to github and return it as html', function (done) {
@@ -235,7 +237,7 @@ describe('githubContentProvider Tests', function () {
         var expectedHtml = '<h1>content of new page</h1>';
 
         provider.oauth = '12345678';
-        provider.createPage('created a new page', 'newPage', '#content of new page')
+        provider.savePage('created a new page', 'newPage', '#content of new page')
           .catch(function (error) {
             lastError = error;
           })
@@ -248,6 +250,39 @@ describe('githubContentProvider Tests', function () {
       });
     });
   });
+
+  describe('delete page tests', function () {
+    describe('When user wants to delete an existing page', function () {
+      var requestStub;
+
+      beforeEach(function () {
+        requestStub = sandbox.stub(request, 'del').yields(null, { statusCode: 200 }, '{}');
+        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
+      });
+
+      it('Should send the expected message to github and return just ok', function (done) {
+        var lastError;
+        var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md?access_token=12345678';
+        var expectedMessage = {
+          message: 'Delete the page git',
+          branch: 'master',
+          sha: '123456',
+        };
+
+        provider.oauth = '12345678';
+        provider.deletePage('git')
+          .catch(function (error) {
+            lastError = error;
+          })
+          .done(function (response) {
+            should.not.exists(lastError);
+            requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
+            done();
+          });
+      });
+    });
+  });
+
 
   afterEach(function () {
     sandbox.restore();

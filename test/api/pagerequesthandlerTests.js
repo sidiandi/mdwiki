@@ -21,7 +21,9 @@ describe('pagerequesthandler tests', function () {
 
     app.get('/api/page/:page?', pageRequestHandler.get);
     app.put('/api/page/:page', pageRequestHandler.put);
+    app.delete('/api/page/:page', pageRequestHandler.delete);
     app.put('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.put);
+    app.delete('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.delete);
 
     sandbox = sinon.sandbox.create();
   });
@@ -66,14 +68,14 @@ describe('pagerequesthandler tests', function () {
 
       it('should return the index page', function (done) {
         request(app).get('/api/page/index')
-              .expect('Content-Type', 'text/html; charset=utf-8')
-              .expect(200, '<h1>Test</h1>')
-              .end(function (err, res) {
-                if (err) {
-                  return done(err);
-                }
-                done();
-              });
+          .expect('Content-Type', 'text/html; charset=utf-8')
+          .expect(200, '<h1>Test</h1>')
+          .end(function (err, res) {
+            if (err) {
+              return done(err);
+            }
+            done();
+          });
       });
     });
 
@@ -101,14 +103,14 @@ describe('pagerequesthandler tests', function () {
     describe('When an non existing page is given', function () {
       it('should return an 404 http code', function (done) {
         request(app).get('/api/page/nonexistingPage')
-              .expect('Content-Type', 'text/plain')
-              .expect(404)
-              .end(function (err, res) {
-                if (err) {
-                  return done(err);
-                }
-                done();
-              });
+          .expect('Content-Type', 'text/plain')
+          .expect(404)
+          .end(function (err, res) {
+            if (err) {
+              return done(err);
+            }
+            done();
+          });
       });
     });
   });
@@ -132,18 +134,18 @@ describe('pagerequesthandler tests', function () {
       });
     });
 
-    describe('When the user wants to update a page', function () {
+    describe('When the user wants to update or create a page', function () {
       var providerStub,
           expectedResponse = '<h1>This is the content of the page</h1>';
 
       beforeEach(function () {
         var provider = {
-          updatePage: function (oauth, commitMessage, pageName, content, sha) {},
+          savePage: function (commitMessage, pageName, content) {},
           getPage: function (pageName) {},
         };
         sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
         sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
-        providerStub = sandbox.stub(provider, 'updatePage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
+        providerStub = sandbox.stub(provider, 'savePage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
       });
 
       it('Should send the content to the provider and return 200', function (done) {
@@ -165,7 +167,7 @@ describe('pagerequesthandler tests', function () {
             done();
           });
 
-        providerStub.calledWithMatch(oauth, commitMessage, 'git', content).should.be.trues;
+        providerStub.calledWithMatch(commitMessage, 'git', content).should.be.trues;
       });
 
       afterEach(function () {
@@ -173,33 +175,29 @@ describe('pagerequesthandler tests', function () {
       });
     });
 
-    describe('When user wants to create a new page', function () {
-      var providerStub,
-          expectedResponse = '<h1>This is the content of the page</h1>';
+    describe('When the user wants to delete a page', function () {
+      var providerStub;
 
       beforeEach(function () {
         var provider = {
-          createPage: function (oauth, commitMessage, pageName, content) {},
+          deletePage: function (pageName) {},
           getPage: function (pageName) {},
         };
         sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
-        sandbox.stub(provider, 'getPage').returns(Q.reject(new errors.FileNotFoundError('page not found', 'git')));
-        providerStub = sandbox.stub(provider, 'createPage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
+        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
+        providerStub = sandbox.stub(provider, 'deletePage').returns(Q.resolve({ statusCode: 200 }));
       });
 
-
-      it('Should should call the createPage function', function (done) {
-        var commitMessage = 'this is a new page',
-            content = '#This is the content of the page',
+      it('Should send the content to the provider and return 200', function (done) {
+        var commitMessage = 'Delete the page',
             oauth = '123456789';
 
         app.request.session = { oauth: oauth };
 
-        request(app).put('/api/janbaer/wiki-content/page/git')
+        request(app).del('/api/janbaer/wiki-content/page/git')
           .set('Content-Type', 'application/json')
-          .send({ commitMessage: commitMessage, markdown: content})
-          .expect('Content-Type', 'text/html; charset=utf-8')
-          .expect(201, expectedResponse)
+          .send({ commitMessage: commitMessage })
+          .expect(200)
           .end(function (err, res) {
             if (err) {
               return done(err);
@@ -207,7 +205,7 @@ describe('pagerequesthandler tests', function () {
             done();
           });
 
-        providerStub.calledWithMatch(oauth, commitMessage, 'git', content).should.be.trues;
+        providerStub.calledWithMatch('git').should.be.trues;
       });
 
       afterEach(function () {
@@ -215,7 +213,6 @@ describe('pagerequesthandler tests', function () {
       });
     });
   });
-
 });
 
 

@@ -17,7 +17,6 @@ describe('pagesrequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.json());
 
     app.get('/api/pages', pagesRequestHandler);
 

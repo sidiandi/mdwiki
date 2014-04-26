@@ -17,7 +17,7 @@ describe('pagerequesthandler tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.json());
+    app.use(require('body-parser')());
 
     app.get('/api/page/:page?', pageRequestHandler.get);
     app.put('/api/page/:page', pageRequestHandler.put);

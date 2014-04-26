@@ -13,7 +13,6 @@ describe('oauth Tests', function () {
 
   beforeEach(function () {
     app = express();
-    app.use(express.json());
 
     app.get('/auth/user', oauth.user);
     app.delete('/auth/user', oauth.logout);

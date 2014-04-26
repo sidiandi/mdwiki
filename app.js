@@ -4,8 +4,8 @@ var express = require('express'),
     path = require('path'),
     logger = require('./lib/logger'),
     util = require('util'),
-    everyauth = require('everyauth'),
     oauth = require('./lib/oauth'),
+    expressSetup = require('./expresssetup.js'),
     pageRequestHandler = require('./api/pagerequesthandler'),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
     gitRequestHandler = require('./api/gitrequesthandler'),
@@ -17,33 +17,11 @@ var app = express();
 
 var isProductionMode = app.get('env') === 'production';
 
-var oauthConfig = isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json');
-oauth.setup(['github'], oauthConfig);
+oauth.setup(['github'], isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json'));
 
-app.configure(function () {
-  app.set('port', process.env.PORT || 3000);
-  app.use(express.compress());
-  app.use(express.favicon());
-  app.use(express.json());
-  app.use(express.urlencoded());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser('7pb0HHz9Mwq5yZfw'));
-  app.use(express.cookieSession());
-  app.use(everyauth.middleware());
-  app.use(express.logger());
+expressSetup.middleware(app, isProductionMode);
+expressSetup.staticRoutes(app);
 
-  if (isProductionMode) {
-    app.use(express.errorHandler());
-  } else {
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-  }
-
-  app.use('/font', express.static(path.join(__dirname, 'public/font')));
-  app.use('/views', express.static(path.join(__dirname, 'public/views')));
-  app.use('/images', express.static(path.join(__dirname, 'public/images')));
-
-  app.use(app.router);
-});
 
 app.get('/js/scripts.js', function (req, res) {
   if (isProductionMode) {
@@ -86,9 +64,11 @@ app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.searc
 app.post('/api/git/clone', gitRequestHandler.clone);
 app.post('/api/git/pull', gitRequestHandler.pull);
 
+// Static pages
 app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 app.get('/static/*', staticFileRequestHandler);
 
+// Routes that should just send the index.html
 app.get('/git/clone', function (req, res) {
   res.sendfile('./public/index.html');
 });
@@ -97,8 +77,7 @@ app.get('*', function (req, res) {
   res.sendfile('./public/index.html');
 });
 
-var port = app.get('port');
-var ipAddress = app.get('ipAddress');
+var port = process.env.PORT || 3000;
 
 logger.info('Starting server in %s mode', app.get('env'));
 

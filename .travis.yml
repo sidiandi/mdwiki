@@ -15,4 +15,4 @@ before_script:
 
 script:
   - mocha
-  - './node_modules/.bin/karma start --single-run --browsers PhantomJS'
+  - 'karma start --single-run --browsers PhantomJS'

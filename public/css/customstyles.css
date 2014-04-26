@@ -2,7 +2,6 @@ body {
   padding-top: 50px;
 }
 
-
 form {
   margin-top: 20px;
 }
@@ -29,13 +28,14 @@ form {
   margin-top: 20px;
 }
 
+button > a, button > a:hover {
+  color: white;
+  text-decoration: none;
+}
+
 @media (min-width: 768px) {
   body > .navbar {
     max-height: 50px;
-  }
-
-  li.active a, .dropdown-toggle.pagesMenu {
-    padding-top: 12;
   }
 
   .navbar-nav form {
@@ -61,7 +61,6 @@ form {
     margin-left: 10px;
   }
 }
-
 
 .content-view.ng-enter, .content-view.ng-leave {
   -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
@@ -96,5 +95,22 @@ form {
   text-decoration: none;
 }
 
+span.user {
+  margin-left: 5px;
+}
+
+.CodeMirror {
+  margin-top: 10px;
+  border: 1px solid #eee;
+  height: auto;
+}
+.CodeMirror-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
 
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Git Controller Tests', function () {
+describe('GitConnect Controller Tests', function () {
 
   beforeEach(function () {
     module('mdwiki');
@@ -8,7 +8,7 @@ describe('Git Controller Tests', function () {
   });
 
   describe('When the user enters a valid git url', function () {
-    var $scope, $location, gitCtrl,
+    var $scope, $location, createController,
         gitService, pageService, settingsService,
         gitCloneDeferred, pagesDeferred, serverConfigDeferred;
 
@@ -41,17 +41,21 @@ describe('Git Controller Tests', function () {
       serverConfigDeferred = $q.defer();
       spyOn(serverConfigService, 'getConfig').andReturn(serverConfigDeferred.promise);
 
-      gitCtrl = $controller('GitConnectCtrl', {
-        $scope: $scope,
-        $location: $location,
-        gitService: gitService,
-        settingsService: settingsService,
-        serverConfigService: serverConfigService
-      });
+      createController = function () {
+        return $controller('GitConnectCtrl', {
+          $scope: $scope,
+          $location: $location,
+          gitService: gitService,
+          settingsService: settingsService,
+          serverConfigService: serverConfigService
+        });
+      };
     }));
 
     describe('And the users chooses git as provider', function () {
       it('should call the clone method, getpages, saves the settings when successful', function () {
+        var gitCtrl = createController();
+
         $scope.provider = 'Git';
         $scope.repositoryUrl = 'https://github.com/mdwiki/mdwiki.wiki.git';
         $scope.clone();
@@ -70,6 +74,8 @@ describe('Git Controller Tests', function () {
 
     describe('And the users chooses github as provider', function () {
       it('should call just getpages and saves the settings when successful', function () {
+        var gitCtrl = createController();
+
         $scope.provider = 'github';
         $scope.repositoryUrl = 'janbaer/wiki';
         $scope.connect();
@@ -86,6 +92,8 @@ describe('Git Controller Tests', function () {
 
     describe('When the ServiceConfigService returns github as supported provider', function () {
       it('Should set isGithubIsSupported and isGitSupported to the expected value', function () {
+        var gitCtrl = createController();
+
         $scope.$apply(function () {
           serverConfigDeferred.resolve({providers: ['github']});
         });
@@ -96,11 +104,27 @@ describe('Git Controller Tests', function () {
 
     describe('When the ServiceConfigService returns git as supported provider', function () {
       it('Should set isGitHubSupported and isGitsupported to the expected value', function () {
+        var gitCtrl = createController();
+
         $scope.$apply(function () {
           serverConfigDeferred.resolve({providers: ['git']});
         });
         expect($scope.isGitSupported).toEqual(true);
         expect($scope.isGithubSupported).toEqual(false);
+      });
+    });
+
+    describe('When no settings are saved', function () {
+      it('Should show github as default provider', function () {
+        // ARRANGE
+        spyOn(settingsService, 'get').andReturn(settingsService.getDefaultSettings());
+
+        // ACT
+        var gitCtrl = createController();
+
+        // ASSERT
+        expect($scope.provider).toEqual('github');
+
       });
     });
   });

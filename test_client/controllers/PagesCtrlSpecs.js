@@ -8,9 +8,10 @@ describe('Pages Controller Tests', function () {
   });
 
   describe('When page exists', function () {
-    var $scope, pageCtrl, pageService, deferred;
+    var $rootScope, $scope, pageCtrl, pageService, deferred;
 
-    beforeEach(inject(function ($injector, $rootScope, $q) {
+    beforeEach(inject(function ($injector, $q) {
+      $rootScope = $injector.get('$rootScope');
       $scope = $rootScope.$new();
       var $controller = $injector.get('$controller');
 
@@ -32,6 +33,7 @@ describe('Pages Controller Tests', function () {
 
       expect($scope.pages).not.toBeUndefined;
       expect($scope.pages.length).toEqual(2);
+      expect($scope.pages).toEqual($rootScope.pages);
     });
 
     describe('Filter excludeDefaultPage tests', function () {

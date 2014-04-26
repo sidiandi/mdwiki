@@ -2,9 +2,9 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($scope, $location, gitService, pageService, settingsService, serverConfigService) {
-  var settings = settingsService.get() || { provider: 'github', url: '' };
-  $scope.provider = settings.provider;
+controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, gitService, pageService, settingsService, serverConfigService) {
+  var settings = settingsService.get();
+  $scope.provider = settingsService.isDefaultSettings(settings) ? 'github' : settings.provider;
   $scope.repositoryUrl = settings.url;
 
   $scope.isBusy = false;
@@ -56,6 +56,8 @@ controllers.controller('GitConnectCtrl', ['$scope', '$location', 'GitService', '
           settingsService.put(settings);
           $scope.message = successMessage;
           $location.path('/');
+
+          $rootScope.$broadcast('OnGitConnected', { settings: settings});
         } else {
           $scope.message = 'No startpage was found!';
           $scope.isBusy = false;

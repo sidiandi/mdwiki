@@ -16,10 +16,13 @@
   "white": true,
   "trailing": true,
   "expr": true,
+  "quotmark": "single",
   "globals": {
     "describe": true,
+    "ddescribe": true,
     "expect": true,
     "it": true,
+    "iit": true,
     "before": true,
     "after": true,
     "beforeEach": true,

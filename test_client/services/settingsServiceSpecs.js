@@ -48,11 +48,27 @@ describe('SettingsService tests', function () {
       spyOn(cache, 'put');
 
       var settings = {
-        provider: 'github'
+        provider: 'git'
       };
       settingsService.put(settings);
 
       expect(cache.put).toHaveBeenCalledWith('settings', settings);
+    });
+  });
+
+  describe('isDefaultSettings ', function () {
+    describe('When Settings are equal to default settings', function () {
+      it('Should return true', function () {
+        var settings = settingsService.getDefaultSettings();
+        expect(settingsService.isDefaultSettings(settings)).toEqual(true);
+      });
+    });
+    describe('When Settings are not equal to default settings', function () {
+      it('Should return false', function () {
+        var settings = settingsService.getDefaultSettings();
+        settings.url = 'http://....';
+        expect(settingsService.isDefaultSettings(settings)).toEqual(false);
+      });
     });
   });
 

@@ -28,11 +28,12 @@
     "winston": "~0.7.2",
     "node-markdown": "~0.1.1",
     "marked": "~0.2.9",
-    "request": "~2.27.0",
+    "request": "~2.30.0",
     "grunt-cli": "~0.1.11",
     "grunt": "~0.4",
     "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-uglify": "~0.2.4"
+    "grunt-contrib-uglify": "~0.2.4",
+    "everyauth": "~0.4.5"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.7.2",
@@ -42,16 +43,16 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-exec": "~0.4.2",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-mocha-test": "~0.7.0",
+    "grunt-mocha-test": "~0.8.1",
     "grunt-karma": "~0.6.1",
     "grunt-nodemon": "~0.1.1",
     "grunt-concurrent": "~0.4.2",
     "matchdep": "~0.3.0",
     "blanket": "~1.1.5",
-    "istanbul": "~0.1.44",
+    "istanbul": "~0.2.1",
     "sinon": "~1.7.3",
     "supertest": "~0.8.1",
-    "mocha": "~1.14.0",
+    "mocha": "~1.16.1",
     "should": "~2.1.0",
     "karma": "~0.10.1",
     "karma-jasmine": "~0.1.0",
@@ -67,6 +68,7 @@
   "scripts": {
     "start": "node ./app.js",
     "test": "grunt test",
+    "bower": "bower install && grunt deploy",
     "postinstall": "grunt --gruntfile grunt-minify.js",
     "blanket": {
       "pattern": "//^((?!/node_modules/)(?!/test/).)*$/ig",

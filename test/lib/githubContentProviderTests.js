@@ -188,7 +188,7 @@ describe('githubContentProvider Tests', function () {
 
       beforeEach(function () {
         requestStub = sandbox.stub(request, 'put').yields(null, { statusCode: 200 }, '{}');
-        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
+        sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
       });
 
       it('Should send the expected message to github and return the new html content', function (done) {
@@ -257,7 +257,7 @@ describe('githubContentProvider Tests', function () {
 
       beforeEach(function () {
         requestStub = sandbox.stub(request, 'del').yields(null, { statusCode: 200 }, '{}');
-        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
+        sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
       });
 
       it('Should send the expected message to github and return just ok', function (done) {

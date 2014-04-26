@@ -29,7 +29,7 @@ describe('searchrequesthandler tests', function () {
     });
 
     it('should return the search result and return 200', function (done) {
-      var stub = sandbox.stub(textSearcher, 'search').returns(Q.resolve('Result'));
+      var stub = sandbox.stub(textSearcher, 'search').returns(new Q('Result'));
 
       request(app).post('/api/search')
         .send({ textToSearch: 'searchingThisText'})

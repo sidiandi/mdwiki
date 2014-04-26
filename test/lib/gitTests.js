@@ -79,8 +79,6 @@ describe('git module tests', function () {
         });
       });
 
-
-
       afterEach(function () {
         sandbox.restore();
       });

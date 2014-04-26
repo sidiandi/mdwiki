@@ -30,7 +30,7 @@ describe('gitrequesthandler tests', function () {
     });
 
     it('should clone the repository from the give url in the content folder and return 200', function (done) {
-      var stub = sandbox.stub(git, 'clone').returns(Q.resolve());
+      var stub = sandbox.stub(git, 'clone').returns(new Q());
 
       request(app)
         .post('/api/git/clone')
@@ -69,7 +69,7 @@ describe('gitrequesthandler tests', function () {
     });
 
     it('calls the pull function and return 200', function (done) {
-      var stub = sandbox.stub(git, 'pull').returns(Q.resolve());
+      var stub = sandbox.stub(git, 'pull').returns(new Q());
       request(app)
         .post('/api/git/pull')
         .send()
@@ -90,7 +90,7 @@ describe('gitrequesthandler tests', function () {
     });
 
     it('should not execute the clone function and return an http error code 400', function (done) {
-      var stub = sandbox.stub(git, 'clone').returns(Q.resolve());
+      var stub = sandbox.stub(git, 'clone').returns(new Q());
 
       request(app)
         .post('/api/git/clone')

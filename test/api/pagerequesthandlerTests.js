@@ -144,8 +144,8 @@ describe('pagerequesthandler tests', function () {
           getPage: function (pageName) {},
         };
         sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
-        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
-        providerStub = sandbox.stub(provider, 'savePage').returns(Q.resolve({ statusCode: 200, body: expectedResponse }));
+        sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
+        providerStub = sandbox.stub(provider, 'savePage').returns(new Q({ statusCode: 200, body: expectedResponse }));
       });
 
       it('Should send the content to the provider and return 200', function (done) {
@@ -184,8 +184,8 @@ describe('pagerequesthandler tests', function () {
           getPage: function (pageName) {},
         };
         sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
-        sandbox.stub(provider, 'getPage').returns(Q.resolve({ name: 'git', sha: '123456'}));
-        providerStub = sandbox.stub(provider, 'deletePage').returns(Q.resolve({ statusCode: 200 }));
+        sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
+        providerStub = sandbox.stub(provider, 'deletePage').returns(new Q({ statusCode: 200 }));
       });
 
       it('Should send the content to the provider and return 200', function (done) {

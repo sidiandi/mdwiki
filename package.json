@@ -31,8 +31,8 @@
     "request": "~2.34.0",
     "grunt-cli": "~0.1.11",
     "grunt": "~0.4",
-    "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-cssmin": "~0.9.0",
+    "grunt-contrib-uglify": "~0.4.0",
     "everyauth": "~0.4.5"
   },
   "devDependencies": {

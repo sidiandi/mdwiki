@@ -43436,15 +43436,30 @@ directives.directive('keybinding', ['$document', '$parse', '$window', function (
   var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 
   function isModifier(modifier, event, isMac) {
+    var isShift = event.shiftKey;
+    var isAlt = event.altKey;
+    var isCtrl = isMac ? event.metaKey : event.ctrlKey;
+
     if (modifier) {
       switch (modifier) {
+        case 'ctrl+shift':
+        case 'shift+ctrl':
+          return isShift && isCtrl;
+        case 'alt+shift':
+        case 'shift+alt':
+          return isShift && isAlt;
+        case 'ctrl+alt':
+        case 'cmd+alt':
+          return isAlt && isCtrl;
+        case 'cmd+ctrl':
+          return event.metaKey && event.CtrlKey;
         case 'shift':
-          return event.shiftKey;
+          return isShift;
         case 'ctrl':
         case 'cmd':
-          return isMac ? event.metaKey : event.ctrlKey;
+          return isCtrl;
         case 'alt':
-          return event.altKey;
+          return isAlt;
       }
     }
     return false;
@@ -43680,7 +43695,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
-  var updatePage = function (pageName, commitMessage, markdown) {
+  var savePage = function (pageName, commitMessage, markdown) {
     var deferred = $q.defer();
 
     $http({
@@ -43691,6 +43706,26 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
         commitMessage: commitMessage,
         markdown: markdown
       }
+    })
+    .success(function (pageContent, status, headers, config) {
+      deferred.resolve(pageContent);
+    })
+    .error(function (errorMessage, status, headers, config) {
+      var error = new Error();
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+      error.code = status;
+      deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
+  var deletePage = function (pageName) {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'DELETE',
+      url: urlBuilder.build('/api/', 'page/' + pageName)
     })
     .success(function (pageContent, status, headers, config) {
       deferred.resolve(pageContent);
@@ -43763,7 +43798,8 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   return {
     findStartPage: findStartPage,
     getPage: getPage,
-    updatePage: updatePage,
+    savePage: savePage,
+    deletePage: deletePage,
     getPages: getPages,
     registerObserver: registerObserver
   };
@@ -44002,14 +44038,13 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
+    if ($routeParams.edit) {
+      $location.search({});
+    }
     showOrHideEditor(false);
   };
 
-  $scope.showHtml = function () {
-    getPage($scope.pageName).then(hideEditor());
-  };
-
-  $scope.editMarkdown = function () {
+  var editPage = function (pageName) {
     showEditor();
 
     pageService.getPage(pageName, 'markdown')
@@ -44020,25 +44055,79 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
         if (pageName === startPage && error.code === 404) {
           $location.path('/git/connect');
         } else {
-          $scope.errorMessage = 'Content not found!';
+          $scope.errorMessage = 'Content not found: ' + error.message;
           $scope.hasError = true;
         }
       });
   };
 
-  var saveUnregister = $rootScope.$on('save', function (event, data) {
-    pageService.updatePage($scope.pageName, data.commitMessage, $scope.markdown)
+  var createPage = function (pageName) {
+    pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
+      .then(function (pageContent) {
+        $scope.pageName = pageName;
+        $rootScope.pages.push({
+          fileName: pageName + '.md',
+          name: pageName,
+          title: pageName
+        });
+        $location.path('/' + pageName).search('edit');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Create new page failed: ' + error.message;
+        $scope.hasError = true;
+      });
+  };
+
+  var removePageFromPages = function (pages, pageName) {
+    var index = -1;
+
+    pages.forEach(function (page) {
+      if (page.name === pageName) {
+        index = pages.indexOf(page);
+      }
+    });
+    if (index >= 0) {
+      pages.splice(index, 1);
+    }
+  };
+
+  var deletePage = function (pageName) {
+    pageService.deletePage(pageName)
+      .then(function () {
+        removePageFromPages($rootScope.pages, pageName);
+        $location.path('/');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Delete the current page failed: ' + error.message;
+        $scope.hasError = true;
+      });
+  };
+
+  var savePage = function (pageName, commitMessage, content) {
+    pageService.savePage(pageName, commitMessage, content)
       .then(function (pageContent) {
         $scope.content = prepareLinks(pageContent, settings);
         hideEditor();
       }, function (error) {
-        $scope.errorMessage = error.message;
+        $scope.errorMessage = 'Save current page failed: ' + error.message;
         $scope.hasError = true;
       });
+  };
+
+  var saveUnregister = $rootScope.$on('save', function (event, data) {
+    savePage($scope.pageName, data.commitMessage, $scope.markdown);
+  });
+
+  var createUnregister = $rootScope.$on('create', function (event, data) {
+    createPage(data.pageName);
+  });
+
+  var deleteUnregister = $rootScope.$on('delete', function (event, data) {
+    deletePage(data.pageName);
   });
 
   var editUnregister = $rootScope.$on('edit', function () {
-    $scope.editMarkdown();
+    editPage($scope.pageName);
   });
 
   var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
@@ -44046,13 +44135,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   });
 
   $scope.$on('$destroy', function () {
-    saveUnregister();
     cancelEditUnregister();
+    createUnregister();
+    deleteUnregister();
     editUnregister();
+    saveUnregister();
   });
 
-  getPage(pageName).then(hideEditor);
-
+  getPage(pageName).then(function () {
+    if ($routeParams.edit && $rootScope.isAuthenticated) {
+      editPage(pageName);
+    } else {
+      hideEditor();
+    }
+  });
 }]);
 
 
@@ -44062,7 +44158,23 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 'ngDialog', function ($rootScope, $scope, $location, ngDialog) {
+controllers.controller('DeletePageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+  $scope.question = 'Are you sure that you want to delete the page: ' + $rootScope.pageName;
+
+  $scope.confirmDialog = function () {
+    ngDialog.close();
+    $rootScope.$broadcast('delete', { pageName: $rootScope.pageName });
+  };
+  $scope.cancelDialog = function () {
+    ngDialog.close();
+  };
+}]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
+controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
   var nonEditablePaths = ['/search', '/git/connect'];
   $scope.isAuthenticated = false;
   $scope.isEditorVisible = false;
@@ -44079,6 +44191,27 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
       });
     }
     return canEditPage;
+  };
+
+  $scope.create = function () {
+    ngDialog.open({
+      template: 'createNewPageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'NewPageDialogCtrl',
+    });
+  };
+
+  $scope.delete = function () {
+    if ($rootScope.pageName === 'index') {
+      $window.alert('It is not a good idea to delete your start page!');
+      return;
+    }
+
+    ngDialog.open({
+      template: 'deletePageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'DeletePageDialogCtrl',
+    });
   };
 
   $scope.edit = function () {
@@ -44257,20 +44390,35 @@ controllers.controller('GitPullCtrl', ['$rootScope', '$scope', '$route', 'GitSer
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, pageService) {
+controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
+  function ($rootScope, $scope, ngDialog) {
+    $scope.pageName = 'newpage';
+
+    $scope.closeDialog = function () {
+      ngDialog.close();
+      $rootScope.$broadcast('create', { pageName: $scope.pageName });
+    };
+  }
+]);
+
+'use strict';
+
+var controllers = controllers || angular.module('mdwiki.controllers', []);
+
+controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', function ($rootScope, $scope, pageService) {
   $scope.pages = [];
+  $rootScope.pages = $scope.pages;
 
   var updatePages = function (pages) {
     $scope.pages = pages || [];
+    $rootScope.pages = $scope.pages;
   };
 
   pageService.getPages()
     .then(function (pages) {
-      $scope.pages = pages;
-
+      updatePages(pages);
       pageService.registerObserver(updatePages);
     });
-
 
   $scope.excludeDefaultPage = function (page) {
     var excludes = ['index', 'home', 'readme'];
@@ -44284,7 +44432,6 @@ controllers.controller('PagesCtrl', ['$scope', 'PageService', function ($scope, 
 
     return !excludePage;
   };
-
 }]);
 
 'use strict';

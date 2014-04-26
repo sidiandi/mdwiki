@@ -32,7 +32,7 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
     return deferred.promise;
   };
 
-  var updatePage = function (pageName, commitMessage, markdown) {
+  var savePage = function (pageName, commitMessage, markdown) {
     var deferred = $q.defer();
 
     $http({
@@ -43,6 +43,26 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
         commitMessage: commitMessage,
         markdown: markdown
       }
+    })
+    .success(function (pageContent, status, headers, config) {
+      deferred.resolve(pageContent);
+    })
+    .error(function (errorMessage, status, headers, config) {
+      var error = new Error();
+      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+      error.code = status;
+      deferred.reject(error);
+    });
+
+    return deferred.promise;
+  };
+
+  var deletePage = function (pageName) {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'DELETE',
+      url: urlBuilder.build('/api/', 'page/' + pageName)
     })
     .success(function (pageContent, status, headers, config) {
       deferred.resolve(pageContent);
@@ -115,7 +135,8 @@ services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function
   return {
     findStartPage: findStartPage,
     getPage: getPage,
-    updatePage: updatePage,
+    savePage: savePage,
+    deletePage: deletePage,
     getPages: getPages,
     registerObserver: registerObserver
   };

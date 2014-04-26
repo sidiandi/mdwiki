@@ -34,15 +34,30 @@ directives.directive('keybinding', ['$document', '$parse', '$window', function (
   var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 
   function isModifier(modifier, event, isMac) {
+    var isShift = event.shiftKey;
+    var isAlt = event.altKey;
+    var isCtrl = isMac ? event.metaKey : event.ctrlKey;
+
     if (modifier) {
       switch (modifier) {
+        case 'ctrl+shift':
+        case 'shift+ctrl':
+          return isShift && isCtrl;
+        case 'alt+shift':
+        case 'shift+alt':
+          return isShift && isAlt;
+        case 'ctrl+alt':
+        case 'cmd+alt':
+          return isAlt && isCtrl;
+        case 'cmd+ctrl':
+          return event.metaKey && event.CtrlKey;
         case 'shift':
-          return event.shiftKey;
+          return isShift;
         case 'ctrl':
         case 'cmd':
-          return isMac ? event.metaKey : event.ctrlKey;
+          return isCtrl;
         case 'alt':
-          return event.altKey;
+          return isAlt;
       }
     }
     return false;

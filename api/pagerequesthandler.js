@@ -43,34 +43,59 @@ var getPage = function (req, res) {
     });
 };
 
-var updatePage = function (req, res) {
+var sendResponse = function (response, content, statusCode) {
+  statusCode = statusCode || 200;
+  response.status(statusCode);
+  if (content) {
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    response.setHeader('Content-Length', new Buffer(content).length);
+    response.send(content);
+  }
+  response.end();
+};
+
+var sendErrorResponse = function (response, error, statusCode) {
+  statusCode = statusCode || 500;
+  response.setHeader('Content-Type', 'text/plain');
+  response.send(statusCode, 'server error: ' + error);
+  response.end();
+};
+
+var savePage = function (req, res) {
   var pageName = req.params.page,
       commitMessage = req.body.commitMessage,
       markdown = req.body.markdown;
 
   if (markdown === undefined || commitMessage === undefined) {
-    res.setHeader('Content-Type', 'text/plain');
-    res.send(400, 'commitMessage and markdown are required');
-    res.end();
+    sendErrorResponse(res, new Error('commitMessage and markdown are required'), 400);
     return;
   }
 
   var provider = paramHandler.createProviderFromRequest(req);
-  provider.updatePage(commitMessage, pageName, markdown)
+
+  provider.savePage(commitMessage, pageName, markdown)
     .then(function (response) {
-      res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Content-Length', new Buffer(response.body).length);
-      res.status(200);
-      res.send(response.body);
+      sendResponse(res, response.body, response.statusCode);
     })
     .catch(function (error) {
-      res.setHeader('Content-Type', 'text/plain');
-      res.send(500, 'server error: ' + error);
+      sendErrorResponse(res, error);
+    });
+};
+
+var deletePage = function (req, res) {
+  var pageName = req.params.page;
+
+  var provider = paramHandler.createProviderFromRequest(req);
+
+  provider.deletePage(pageName)
+    .then(function (response) {
+      sendResponse(res);
     })
-    .done(function () {
-      res.end();
+    .catch(function (error) {
+      sendErrorResponse(res, error);
     });
 };
 
 module.exports.get = getPage;
-module.exports.put = updatePage;
+module.exports.put = savePage;
+module.exports.delete = deletePage;

@@ -22,7 +22,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M3" bs-tooltip >
+        <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M4" bs-tooltip >
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,9 +51,18 @@
         </div>
         <div class="nav navbar-nav" ng-controller="EditContentCtrl">
           <form class="navbar-form navbar-left" ng-show="canEditPage" ng-if="isAuthenticated" >
+            <button class="btn btn-default" title="create a new page" ng-click="create()" ng-hide="isEditorVisible" bs-tooltip>
+              <keybinding modifier="alt+shift" key="N" invoke="create()" condition="isAuthenticated && !isEditorVisible" />
+              <i class="icon-file-text-alt"></i>
+            </button>
             <button class="btn btn-default" title="Edit current page" ng-click="edit()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding modifier="ctrl" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />
+              <keybinding modifier="alt+shift" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />
               <i class="icon-edit"></i>
+            </button>
+            <button class="btn btn-default" title="Delete current page" ng-click="delete()" ng-hide="isEditorVisible" bs-tooltip>
+              <keybinding modifier="alt+shift" key="D" invoke="delete()" condition="isAuthenticated && !isEditorVisible" />
+              <i class="icon-remove"></i>
             </button>
             <button class="btn btn-default" title="Commit changes" ng-click="save()" ng-show="isEditorVisible" bs-tooltip>
               <i class="icon-save"></i>

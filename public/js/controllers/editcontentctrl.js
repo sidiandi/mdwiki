@@ -2,7 +2,7 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 'ngDialog', function ($rootScope, $scope, $location, ngDialog) {
+controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
   var nonEditablePaths = ['/search', '/git/connect'];
   $scope.isAuthenticated = false;
   $scope.isEditorVisible = false;
@@ -19,6 +19,27 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
       });
     }
     return canEditPage;
+  };
+
+  $scope.create = function () {
+    ngDialog.open({
+      template: 'createNewPageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'NewPageDialogCtrl',
+    });
+  };
+
+  $scope.delete = function () {
+    if ($rootScope.pageName === 'index') {
+      $window.alert('It is not a good idea to delete your start page!');
+      return;
+    }
+
+    ngDialog.open({
+      template: 'deletePageDialog',
+      className: 'ngdialog-theme-default',
+      controller: 'DeletePageDialogCtrl',
+    });
   };
 
   $scope.edit = function () {

@@ -85,14 +85,13 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   };
 
   var hideEditor = function () {
+    if ($routeParams.edit) {
+      $location.search({});
+    }
     showOrHideEditor(false);
   };
 
-  $scope.showHtml = function () {
-    getPage($scope.pageName).then(hideEditor());
-  };
-
-  $scope.editMarkdown = function () {
+  var editPage = function (pageName) {
     showEditor();
 
     pageService.getPage(pageName, 'markdown')
@@ -103,25 +102,79 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
         if (pageName === startPage && error.code === 404) {
           $location.path('/git/connect');
         } else {
-          $scope.errorMessage = 'Content not found!';
+          $scope.errorMessage = 'Content not found: ' + error.message;
           $scope.hasError = true;
         }
       });
   };
 
-  var saveUnregister = $rootScope.$on('save', function (event, data) {
-    pageService.updatePage($scope.pageName, data.commitMessage, $scope.markdown)
+  var createPage = function (pageName) {
+    pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
+      .then(function (pageContent) {
+        $scope.pageName = pageName;
+        $rootScope.pages.push({
+          fileName: pageName + '.md',
+          name: pageName,
+          title: pageName
+        });
+        $location.path('/' + pageName).search('edit');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Create new page failed: ' + error.message;
+        $scope.hasError = true;
+      });
+  };
+
+  var removePageFromPages = function (pages, pageName) {
+    var index = -1;
+
+    pages.forEach(function (page) {
+      if (page.name === pageName) {
+        index = pages.indexOf(page);
+      }
+    });
+    if (index >= 0) {
+      pages.splice(index, 1);
+    }
+  };
+
+  var deletePage = function (pageName) {
+    pageService.deletePage(pageName)
+      .then(function () {
+        removePageFromPages($rootScope.pages, pageName);
+        $location.path('/');
+      })
+      .catch(function (error) {
+        $scope.errorMessage = 'Delete the current page failed: ' + error.message;
+        $scope.hasError = true;
+      });
+  };
+
+  var savePage = function (pageName, commitMessage, content) {
+    pageService.savePage(pageName, commitMessage, content)
       .then(function (pageContent) {
         $scope.content = prepareLinks(pageContent, settings);
         hideEditor();
       }, function (error) {
-        $scope.errorMessage = error.message;
+        $scope.errorMessage = 'Save current page failed: ' + error.message;
         $scope.hasError = true;
       });
+  };
+
+  var saveUnregister = $rootScope.$on('save', function (event, data) {
+    savePage($scope.pageName, data.commitMessage, $scope.markdown);
+  });
+
+  var createUnregister = $rootScope.$on('create', function (event, data) {
+    createPage(data.pageName);
+  });
+
+  var deleteUnregister = $rootScope.$on('delete', function (event, data) {
+    deletePage(data.pageName);
   });
 
   var editUnregister = $rootScope.$on('edit', function () {
-    $scope.editMarkdown();
+    editPage($scope.pageName);
   });
 
   var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
@@ -129,13 +182,20 @@ controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '
   });
 
   $scope.$on('$destroy', function () {
-    saveUnregister();
     cancelEditUnregister();
+    createUnregister();
+    deleteUnregister();
     editUnregister();
+    saveUnregister();
   });
 
-  getPage(pageName).then(hideEditor);
-
+  getPage(pageName).then(function () {
+    if ($routeParams.edit && $rootScope.isAuthenticated) {
+      editPage(pageName);
+    } else {
+      hideEditor();
+    }
+  });
 }]);
 
 

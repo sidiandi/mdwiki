@@ -56,15 +56,12 @@ module.exports = function (grunt) {
           'bower/bootstrap/dist/js/bootstrap.js',
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',
-          'bower/angular-animate/angular-animate.js',
-          'bower/angular-resource/angular-resource.js',
           'bower/angular-resource/angular-resource.js',
           'bower/angular-route/angular-route.js',
           'bower/angular-sanitize/angular-sanitize.js',
-          'bower/angular-touch/angular-touch.js',
           'bower/angular-cache/dist/angular-cache.js',
-          'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/ngDialog/js/ngDialog.js',
+          'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
           'bower/codemirror/mode/markdown/markdown.js',
           'public/js/app.js',
@@ -154,7 +151,7 @@ module.exports = function (grunt) {
       },
 
       karma: {
-        files: ['public/js/**/*.js', '!public/js/scripts.js', '!public/js/scripts.min.js', '!public/js/lib/**/*.js', 'test_client/**/*Specs.js'],
+        files: ['public/js/**/*.js', 'test_client/**/*Specs.js', '!public/js/scripts.js', '!public/js/scripts.min.js', '!public/js/lib/**/*.js'],
         tasks: ['jshint', 'karma:unit', 'concat:js', 'uglify']
       },
 

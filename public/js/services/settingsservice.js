@@ -7,7 +7,7 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
   var getDefaultSettings = function () {
     return {
-      provider: 'git',
+      provider: 'github',
       url: '',
       startPage: 'index'
     };

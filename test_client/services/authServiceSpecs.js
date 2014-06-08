@@ -1,6 +1,6 @@
 'use strict';
 
-describe('AuthService Specs', function () {
+describe('AuthService Spec', function () {
   var httpMock;
   var authService;
 

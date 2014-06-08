@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directives', function () {
+describe('Directives spec', function () {
   var rootScope, compile;
 
   beforeEach(function () {

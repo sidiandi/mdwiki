@@ -44807,54 +44807,6 @@ services.factory('AuthService', ['$http', '$q', function ($http, $q) {
 
 var services = services || angular.module('mdwiki.services', []);
 
-services.factory('GitService', ['$http', '$q', function ($http, $q) {
-  var clone = function (repositoryUrl) {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/git/clone',
-      headers: { 'Content-Type' : 'application/json' },
-      data: { repositoryUrl: repositoryUrl }
-    })
-    .success(function (data, status, headers, config) {
-      deferred.resolve();
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(new Error('Unexpected server error'));
-    });
-
-    return deferred.promise;
-  };
-
-  var pull = function () {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/git/pull',
-      headers: { 'Content-Type' : 'application/json' }
-    })
-    .success(function (data, status, headers, config) {
-      deferred.resolve();
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(new Error('Unexpected server error'));
-    });
-
-    return deferred.promise;
-  };
-
-  return {
-    clone: clone,
-    pull: pull
-  };
-}]);
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
 services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (settingsService) {
   var build = function (contentType, settings) {
     contentType = contentType || 'application/json';
@@ -45090,7 +45042,7 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
   var getDefaultSettings = function () {
     return {
-      provider: 'git',
+      provider: 'github',
       url: '',
       startPage: 'index'
     };
@@ -45472,51 +45424,32 @@ controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', 
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, gitService, pageService, settingsService, serverConfigService) {
+controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, pageService, settingsService, serverConfigService) {
   var settings = settingsService.get();
-  $scope.provider = settingsService.isDefaultSettings(settings) ? 'github' : settings.provider;
-  $scope.repositoryUrl = settings.url;
+  $scope.provider = settings.provider || 'github';
+  $scope.githubUser = settings.githubUser || 'mdwiki';
+  $scope.repositoryName = settings.githubRepository || 'wiki';
+
+  $scope.message = 'Please enter your GitHub user name and the name of the repository that you want to use for mdwiki.';
+  $scope.githubUserPlaceHolderText = 'Enter here your GitHub username';
+  $scope.repositoryNamePlaceHolderText = 'Enter here the name of the repository';
 
   $scope.isBusy = false;
-  $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
-  $scope.repositoryUrlPlaceHolderText = '';
   $scope.hasError = false;
-
-  $scope.isGithubSupported = false;
-  $scope.isGitSupported = false;
-
-  serverConfigService.getConfig()
-    .then(function (config) {
-      $scope.isGithubSupported = config.providers.indexOf('github') >= 0;
-      $scope.isGitSupported = config.providers.indexOf('git') >= 0;
-    });
-
-  $scope.clone = function () {
-    $scope.isBusy = true;
-    $scope.message = 'Please wait while cloning your repository...';
-    $scope.hasError = false;
-
-    gitService.clone($scope.repositoryUrl)
-      .then(function () {
-        $scope.connect('The repository was successfully cloned!');
-      }, function (error) {
-        $scope.message = 'An error occurred while cloning the repository: ' + error.message;
-        $scope.isBusy = false;
-        $scope.hasError = true;
-      });
-  };
 
   $scope.connect = function (successMessage) {
     successMessage = successMessage || 'The git-repository was successfully connected!';
 
-    $scope.message = 'Please wait while connecting your repository...';
+    $scope.message = 'Please wait while connecting to your repository...';
 
-    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+    var respositoryUrl = $scope.githubUser + '/' + $scope.repositoryName;
 
-    if ($scope.provider === 'github') {
-      settings.githubUser = $scope.repositoryUrl.split('/')[0];
-      settings.githubRepository = $scope.repositoryUrl.split('/')[1];
-    }
+    var settings = {
+      provider: $scope.provider,
+      url: respositoryUrl,
+      githubRepository: $scope.repositoryName,
+      githubUser: $scope.githubUser
+    };
 
     pageService.getPages(settings)
       .then(function (pages) {
@@ -45543,58 +45476,6 @@ controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', '
       });
   };
 
-  $scope.$watch('provider', function () {
-    switch ($scope.provider) {
-    case 'git':
-      $scope.repositoryUrlPlaceHolderText = 'Enter here the git-url of the repository';
-      break;
-    case 'github':
-      $scope.repositoryUrlPlaceHolderText = 'Enter here the name of the git user and repository in format user/repository';
-      break;
-    }
-  });
-
-}]);
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('GitPullCtrl', ['$rootScope', '$scope', '$route', 'GitService', 'PageService', 'SettingsService', function ($rootScope, $scope, $route, gitService, pageService, settingsService) {
-  $scope.isBusy = false;
-  $scope.message = '';
-  $scope.hasError = false;
-  $scope.isConnectedToGit = false;
-  $scope.provider = 'git';
-
-  var checkIfIsConnectedToGit = function (settings) {
-    $scope.isConnectedToGit = settings.provider === 'git' && settings.url.length > 0;
-  };
-
-  $scope.pull = function () {
-    $scope.isBusy = true;
-    $scope.message = 'Please wait while we pulling the latest changes in your repository...';
-    $scope.hasError = false;
-
-    gitService.pull()
-      .then(pageService.getPages)
-      .then(function () {
-        $scope.message = 'The repository was successful update...';
-        $route.reload();
-      }, function (error) {
-        $scope.message = 'There is an error occured while updating your repository: ' + error.message;
-        $scope.hasError = true;
-      })
-      .finally(function () {
-        $scope.isBusy = false;
-      });
-  };
-
-  $rootScope.$on('OnGitConnected', function (event, data) {
-    checkIfIsConnectedToGit(data.settings);
-  });
-
-  checkIfIsConnectedToGit(settingsService.get());
 }]);
 
 'use strict';

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('AuthCtrl tests', function () {
+describe('AuthCtrl spec', function () {
   var $rootScope,
       $scope,
       authService,

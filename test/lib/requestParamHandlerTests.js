@@ -2,8 +2,7 @@
 
 var should = require('should'),
     requestParamHandler = require('../../lib/requestParamHandler.js'),
-    githubContentProvider = require('../../lib/githubContentProvider.js'),
-    gitContentProvider = require('../../lib/gitContentProvider.js');
+    githubContentProvider = require('../../lib/githubContentProvider.js');
 
 describe('requestParamHandler tests', function () {
   var request = {
@@ -12,16 +11,6 @@ describe('requestParamHandler tests', function () {
       githubRepository: undefined
     }
   };
-
-  describe('When no github params are set', function () {
-    it('should return the git provider', function () {
-      request.params.githubUser = undefined;
-      request.params.githubRepository = undefined;
-
-      var provider = requestParamHandler.createProviderFromRequest(request);
-      (provider instanceof gitContentProvider).should.be.true;
-    });
-  });
 
   describe('When the githubUser and githubRepository params are set', function () {
     it('should return the github provider', function () {

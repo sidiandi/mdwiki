@@ -4,28 +4,30 @@ var request = require('supertest'),
     express = require('express'),
     should = require('should'),
     sinon = require('sinon'),
-    fs = require('fs'),
     Q = require('q'),
     storage = require('../../lib/pageStorageFS'),
     errors = require('../../lib/errors'),
+    GithubProvider = require('../../lib/githubContentProvider.js'),
     paramHandler = require('../../lib/requestParamHandler.js'),
     pageRequestHandler = require('../../api/pagerequesthandler');
 
 describe('pagerequesthandler tests', function () {
   var app;
   var sandbox;
+  var provider;
 
   beforeEach(function () {
     app = express();
     app.use(require('body-parser')());
 
-    app.get('/api/page/:page?', pageRequestHandler.get);
-    app.put('/api/page/:page', pageRequestHandler.put);
-    app.delete('/api/page/:page', pageRequestHandler.delete);
+    app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler.get);
     app.put('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.put);
     app.delete('/api/:githubUser/:githubRepository/page/:page', pageRequestHandler.delete);
 
     sandbox = sinon.sandbox.create();
+
+    provider = new GithubProvider('janbaer', 'wiki');
+    sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
   });
 
   afterEach(function () {
@@ -35,14 +37,11 @@ describe('pagerequesthandler tests', function () {
   describe('Page get', function () {
     describe('When no parameter is given', function () {
       beforeEach(function () {
-        sandbox.stub(fs, 'existsSync').returns(true);
-        sandbox.stub(fs, 'readFile', function (path, callback) {
-          callback(null, '#Test');
-        });
+        sandbox.stub(provider, 'getPageContentAsHtml').returns(new Q('<h1>Test</h1>'));
       });
 
       it('should return the index page', function (done) {
-        request(app).get('/api/page')
+        request(app).get('/api/janbaer/wiki/page')
               .expect('Content-Type', 'text/html; charset=utf-8')
               .expect(200, '<h1>Test</h1>')
               .end(function (err, res) {
@@ -56,10 +55,7 @@ describe('pagerequesthandler tests', function () {
 
     describe('When parameter index is given', function () {
       beforeEach(function () {
-        sandbox.stub(fs, 'existsSync').returns(true);
-        sandbox.stub(fs, 'readFile', function (path, callback) {
-          callback(null, '#Test');
-        });
+        sandbox.stub(provider, 'getPageContentAsHtml').returns(new Q('<h1>Test</h1>'));
       });
 
       afterEach(function () {
@@ -67,7 +63,7 @@ describe('pagerequesthandler tests', function () {
       });
 
       it('should return the index page', function (done) {
-        request(app).get('/api/page/index')
+        request(app).get('/api/janbaer/wiki/page/index')
           .expect('Content-Type', 'text/html; charset=utf-8')
           .expect(200, '<h1>Test</h1>')
           .end(function (err, res) {
@@ -81,14 +77,11 @@ describe('pagerequesthandler tests', function () {
 
     describe('When the user wants to fetch just the markdown', function () {
       beforeEach(function () {
-        sandbox.stub(fs, 'existsSync').returns(true);
-        sandbox.stub(fs, 'readFile', function (path, callback) {
-          callback(null, '#Test');
-        });
+        sandbox.stub(provider, 'getPageContent').returns(new Q('#Test'));
       });
 
       it('Should return the markdown', function (done) {
-        request(app).get('/api/page/index?format=markdown')
+        request(app).get('/api/janbaer/wiki/page/index?format=markdown')
               .expect('Content-Type', 'text/plain; charset=utf-8')
               .expect(200, '#Test')
               .end(function (err, res) {
@@ -98,11 +91,18 @@ describe('pagerequesthandler tests', function () {
                 done();
               });
       });
+      afterEach(function () {
+        provider.getPageContent.restore();
+      });
     });
 
-    describe('When an non existing page is given', function () {
+    describe('When a non existing page is given', function () {
+      beforeEach(function () {
+        sandbox.stub(provider, 'getPageContentAsHtml').returns(Q.reject(new errors.FileNotFoundError('page not found', 'nonexistingPage')));
+      });
+
       it('should return an 404 http code', function (done) {
-        request(app).get('/api/page/nonexistingPage')
+        request(app).get('/api/janbaer/wiki/page/nonexistingPage')
           .expect('Content-Type', 'text/plain')
           .expect(404)
           .end(function (err, res) {
@@ -112,6 +112,10 @@ describe('pagerequesthandler tests', function () {
             done();
           });
       });
+
+      afterEach(function () {
+        provider.getPageContentAsHtml.restore();
+      });
     });
   });
 
@@ -120,7 +124,7 @@ describe('pagerequesthandler tests', function () {
       it('Should return an 400 error', function (done) {
         app.request.session = { oauth: '123456789' };
 
-        request(app).put('/api/page/index')
+        request(app).put('/api/janbaer/wiki/page/index')
           .set('Content-Type', 'application/json')
           .send({ commitMessage: 'this is the update'})
           .expect('Content-Type', 'text/plain')
@@ -139,11 +143,6 @@ describe('pagerequesthandler tests', function () {
           expectedResponse = '<h1>This is the content of the page</h1>';
 
       beforeEach(function () {
-        var provider = {
-          savePage: function (commitMessage, pageName, content) {},
-          getPage: function (pageName) {},
-        };
-        sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
         sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
         providerStub = sandbox.stub(provider, 'savePage').returns(new Q({ statusCode: 200, body: expectedResponse }));
       });
@@ -155,7 +154,7 @@ describe('pagerequesthandler tests', function () {
 
         app.request.session = { oauth: oauth };
 
-        request(app).put('/api/janbaer/wiki-content/page/git')
+        request(app).put('/api/janbaer/wiki/page/git')
           .set('Content-Type', 'application/json')
           .send({ commitMessage: commitMessage, markdown: content})
           .expect('Content-Type', 'text/html; charset=utf-8')
@@ -179,11 +178,6 @@ describe('pagerequesthandler tests', function () {
       var providerStub;
 
       beforeEach(function () {
-        var provider = {
-          deletePage: function (pageName) {},
-          getPage: function (pageName) {},
-        };
-        sandbox.stub(paramHandler, 'createProviderFromRequest').returns(provider);
         sandbox.stub(provider, 'getPage').returns(new Q({ name: 'git', sha: '123456'}));
         providerStub = sandbox.stub(provider, 'deletePage').returns(new Q({ statusCode: 200 }));
       });
@@ -194,7 +188,7 @@ describe('pagerequesthandler tests', function () {
 
         app.request.session = { oauth: oauth };
 
-        request(app).del('/api/janbaer/wiki-content/page/git')
+        request(app).del('/api/janbaer/wiki/page/git')
           .set('Content-Type', 'application/json')
           .send({ commitMessage: commitMessage })
           .expect(200)

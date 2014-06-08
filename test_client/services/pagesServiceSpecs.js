@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Page Service tests', function () {
+describe('PageService spec', function () {
   var httpMock;
   var pageService;
 
@@ -12,14 +12,17 @@ describe('Page Service tests', function () {
   beforeEach(inject(function ($injector) {
     httpMock = $injector.get('$httpBackend');
     pageService = $injector.get('PageService');
+
+    var settingsService = $injector.get('SettingsService');
+    spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
   }));
 
-  describe('When the page exists and ths user dont specifies markdown as format', function () {
+  describe('When the page exists and the user dont specifies markdown as format', function () {
     it('should fetch the requested page over the rest api as html', function () {
       var actualHtml,
           expectedHtml = '<h1>Test</h1>';
 
-      httpMock.expectGET('/api/page/index').respond(200, expectedHtml);
+      httpMock.expectGET('/api/janbaer/wiki/page/index').respond(200, expectedHtml);
 
       pageService.getPage('index')
         .then(function (data) {
@@ -41,7 +44,7 @@ describe('Page Service tests', function () {
       var actual,
           expected = '#1Test';
 
-      httpMock.expectGET('/api/page/index?format=markdown').respond(200, expected);
+      httpMock.expectGET('/api/janbaer/wiki/page/index?format=markdown').respond(200, expected);
 
       pageService.getPage('index', 'markdown')
         .then(function (data) {
@@ -62,7 +65,7 @@ describe('Page Service tests', function () {
       var actualHtml,
           expectedHtml = '<h1>Test</h1>';
 
-      httpMock.expectPUT('/api/page/index').respond(200, expectedHtml);
+      httpMock.expectPUT('/api/janbaer/wiki/page/index').respond(200, expectedHtml);
 
       pageService.savePage('index', 'commitMessage', '#Test')
         .then(function (data) {
@@ -83,7 +86,7 @@ describe('Page Service tests', function () {
       var actualHtml,
           lastError;
 
-      httpMock.expectGET('/api/page/index').respond(404);
+      httpMock.expectGET('/api/janbaer/wiki/page/index').respond(404);
 
       pageService.getPage('index')
         .then(function (data) {
@@ -106,7 +109,7 @@ describe('Page Service tests', function () {
       var expected = [ { name: 'Page1' }, { name: 'Page2' }],
           actual;
 
-      httpMock.expectGET('/api/pages').respond(200, expected);
+      httpMock.expectGET('/api/janbaer/wiki/pages').respond(200, expected);
 
       pageService.getPages()
         .then(function (data) {

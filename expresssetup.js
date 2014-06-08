@@ -6,7 +6,6 @@ var express = require('express'),
     path = require('path'),
     pageRequestHandler = require('./api/pagerequesthandler'),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
-    gitRequestHandler = require('./api/gitrequesthandler'),
     searchRequestHandler = require('./api/searchrequesthandler'),
     staticFileRequestHandler = require('./api/staticfilerequesthandler'),
     serverConfigRequestHandler = require('./api/serverconfigrequesthandler');
@@ -63,14 +62,6 @@ module.exports.defineRoutes = function (app, oauth, isProductionMode) {
   // JSON API
   app.get('/api/serverconfig', serverConfigRequestHandler);
 
-  app.get('/api/pages', pagesRequestHandler);
-  app.get('/api/page/:page?', pageRequestHandler.get);
-
-  app.route('/api/page/:page')
-    .all(oauth.ensureAuthentication)
-    .put(pageRequestHandler.put)
-    .delete(pageRequestHandler.delete);
-
   app.get('/api/:githubUser/:githubRepository/pages', pagesRequestHandler);
   app.get('/api/:githubUser/:githubRepository/page/:page?', pageRequestHandler.get);
 
@@ -79,20 +70,10 @@ module.exports.defineRoutes = function (app, oauth, isProductionMode) {
     .put(pageRequestHandler.put)
     .delete(pageRequestHandler.delete);
 
-  app.post('/api/search', searchRequestHandler.search);
   app.post('/api/:githubUser/:githubRepository/search', searchRequestHandler.search);
-
-  app.post('/api/git/clone', gitRequestHandler.clone);
-  app.post('/api/git/pull', gitRequestHandler.pull);
 
   // Static pages
   app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
-  app.get('/static/*', staticFileRequestHandler);
-
-  // Routes that should just send the index.html
-  app.get('/git/clone', function (req, res) {
-    res.sendfile('./public/index.html');
-  });
 
   app.get('*', function (req, res) {
     res.sendfile('./public/index.html');

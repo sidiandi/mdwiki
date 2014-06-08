@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Content Controller Tests', function () {
+describe('ContentCtrl spec', function () {
 
   beforeEach(function () {
     module('mdwiki');

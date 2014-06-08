@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pages Controller Tests', function () {
+describe('PagesCtrl Spec', function () {
 
   beforeEach(function () {
     module('mdwiki');

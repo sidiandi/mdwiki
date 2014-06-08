@@ -72,17 +72,6 @@
             </button>
           </form>
         </div>
-        <div class="nav navbar-nav navbar-right" ng-controller="GitPullCtrl">
-          <form class="navbar-form navbar-left">
-            <button id="pullButton" type="button" title="Pull latest changes"
-                    class="btn btn-default"
-                    ng-show="isConnectedToGit" ng-click="pull()"
-                    bs-tooltip bs-switchtext
-                    data-loading-text="Pulling..." >
-              <i class="icon-cloud-download"></i>
-            </button>
-          </form>
-        </div>
         <div class="nav navbar-nav navbar-right">
           <form class="navbar-form navbar-left" ng-controller="AuthCtrl" >
             <button type="button" title="Login with your github account"

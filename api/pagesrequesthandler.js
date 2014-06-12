@@ -1,7 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-    q = require('q'),
+var q = require('q'),
     paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Search Controller Tests', function () {
+describe('SearchCtrl Spec', function () {
 
     beforeEach(function () {
         module('mdwiki');

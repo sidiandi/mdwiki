@@ -1,6 +1,6 @@
 'use strict';
 
-describe('SettingsService tests', function () {
+describe('SettingsService spec', function () {
   var $cacheFactory,
       settingsService,
       cache;
@@ -26,7 +26,7 @@ describe('SettingsService tests', function () {
       var settings = settingsService.get();
 
       expect(settings).not.toBeUndefined();
-      expect(settings.provider).toBe('git');
+      expect(settings.provider).toBe('github');
     });
 
     it('should return the saved object', function () {

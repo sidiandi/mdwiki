@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ApiUrlBuilder Service specs', function () {
+describe('ApiUrlBuilderService Spec', function () {
   var service;
 
   beforeEach(function () {

@@ -113,4 +113,8 @@ span.user {
   display: none !important;
 }
 
+div.ng-binding > p {
+  margin-top: 10px;
+}
+
 

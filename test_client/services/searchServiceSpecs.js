@@ -1,8 +1,7 @@
 'use strict';
 
-describe('Git Search specs', function () {
-    var httpMock;
-    var searchService;
+describe('SearchService spec', function () {
+    var httpMock, searchService;
 
     beforeEach(function () {
         module('mdwiki');
@@ -12,6 +11,9 @@ describe('Git Search specs', function () {
     beforeEach(inject(function ($injector) {
         httpMock = $injector.get('$httpBackend');
         searchService = $injector.get('SearchService');
+
+        var settingsService = $injector.get('SettingsService');
+        spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
       }));
 
     it('should call the search function with the given text to search', function () {
@@ -19,7 +21,7 @@ describe('Git Search specs', function () {
 
         var data = { textToSearch: textToSearch };
 
-        httpMock.expectPOST('/api/search', data).respond(200, '');
+        httpMock.expectPOST('/api/janbaer/wiki/search', data).respond(200, '');
 
         searchService.search(textToSearch);
 

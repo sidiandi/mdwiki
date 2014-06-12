@@ -7,8 +7,10 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
 
   var getDefaultSettings = function () {
     return {
-      provider: 'git',
-      url: '',
+      provider: 'github',
+      githubUser: 'mdwiki',
+      githubRepository: 'wiki',
+      url: 'mdwiki/wiki',
       startPage: 'index'
     };
   };
@@ -22,7 +24,6 @@ services.factory('SettingsService', ['$angularCacheFactory', function ($angularC
     if (settings === undefined) {
       settings = this.getDefaultSettings();
     }
-
     return settings;
   };
 

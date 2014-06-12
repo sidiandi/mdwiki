@@ -2,51 +2,32 @@
 
 var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'GitService', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, gitService, pageService, settingsService, serverConfigService) {
+controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, pageService, settingsService, serverConfigService) {
   var settings = settingsService.get();
-  $scope.provider = settingsService.isDefaultSettings(settings) ? 'github' : settings.provider;
-  $scope.repositoryUrl = settings.url;
+  $scope.provider = settings.provider || 'github';
+  $scope.githubUser = settings.githubUser || 'mdwiki';
+  $scope.repositoryName = settings.githubRepository || 'wiki';
+
+  $scope.message = 'Please enter your GitHub user name and the name of the repository that you want to use for mdwiki.';
+  $scope.githubUserPlaceHolderText = 'Enter here your GitHub username';
+  $scope.repositoryNamePlaceHolderText = 'Enter here the name of the repository';
 
   $scope.isBusy = false;
-  $scope.message = 'Please choose the provider that you want to use and enter the url of your git-repository';
-  $scope.repositoryUrlPlaceHolderText = '';
   $scope.hasError = false;
-
-  $scope.isGithubSupported = false;
-  $scope.isGitSupported = false;
-
-  serverConfigService.getConfig()
-    .then(function (config) {
-      $scope.isGithubSupported = config.providers.indexOf('github') >= 0;
-      $scope.isGitSupported = config.providers.indexOf('git') >= 0;
-    });
-
-  $scope.clone = function () {
-    $scope.isBusy = true;
-    $scope.message = 'Please wait while cloning your repository...';
-    $scope.hasError = false;
-
-    gitService.clone($scope.repositoryUrl)
-      .then(function () {
-        $scope.connect('The repository was successfully cloned!');
-      }, function (error) {
-        $scope.message = 'An error occurred while cloning the repository: ' + error.message;
-        $scope.isBusy = false;
-        $scope.hasError = true;
-      });
-  };
 
   $scope.connect = function (successMessage) {
     successMessage = successMessage || 'The git-repository was successfully connected!';
 
-    $scope.message = 'Please wait while connecting your repository...';
+    $scope.message = 'Please wait while connecting to your repository...';
 
-    var settings = { provider: $scope.provider, url: $scope.repositoryUrl };
+    var respositoryUrl = $scope.githubUser + '/' + $scope.repositoryName;
 
-    if ($scope.provider === 'github') {
-      settings.githubUser = $scope.repositoryUrl.split('/')[0];
-      settings.githubRepository = $scope.repositoryUrl.split('/')[1];
-    }
+    var settings = {
+      provider: $scope.provider,
+      url: respositoryUrl,
+      githubRepository: $scope.repositoryName,
+      githubUser: $scope.githubUser
+    };
 
     pageService.getPages(settings)
       .then(function (pages) {
@@ -72,16 +53,5 @@ controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', '
         $scope.isBusy = false;
       });
   };
-
-  $scope.$watch('provider', function () {
-    switch ($scope.provider) {
-    case 'git':
-      $scope.repositoryUrlPlaceHolderText = 'Enter here the git-url of the repository';
-      break;
-    case 'github':
-      $scope.repositoryUrlPlaceHolderText = 'Enter here the name of the git user and repository in format user/repository';
-      break;
-    }
-  });
 
 }]);

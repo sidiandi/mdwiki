@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ServerConfigServiceSpec', function () {
+describe('ServerConfigService spec', function () {
   var httpMock;
   var service;
 

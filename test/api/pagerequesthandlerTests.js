@@ -103,7 +103,7 @@ describe('pagerequesthandler tests', function () {
 
       it('should return an 404 http code', function (done) {
         request(app).get('/api/janbaer/wiki/page/nonexistingPage')
-          .expect('Content-Type', 'text/plain')
+          .expect('Content-Type', /^text\/plain/)
           .expect(404)
           .end(function (err, res) {
             if (err) {
@@ -127,7 +127,7 @@ describe('pagerequesthandler tests', function () {
         request(app).put('/api/janbaer/wiki/page/index')
           .set('Content-Type', 'application/json')
           .send({ commitMessage: 'this is the update'})
-          .expect('Content-Type', 'text/plain')
+          .expect('Content-Type', /^text\/plain/)
           .expect(400)
           .end(function (err, res) {
             if (err) {

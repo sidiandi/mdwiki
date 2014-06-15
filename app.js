@@ -9,10 +9,11 @@ var app = express();
 
 var isProductionMode = app.get('env') === 'production';
 
-oauth.setup(['github'], isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json'));
-
-expressSetup.middleware(app, isProductionMode);
 expressSetup.staticRoutes(app);
+expressSetup.middleware(app, isProductionMode);
+
+oauth.setup(app, ['github'], isProductionMode ? require('./config/oauthconfig.json') : require('./config/oauthconfig.dev.json'));
+
 expressSetup.defineRoutes(app, oauth, isProductionMode);
 
 var port = process.env.PORT || 3000;

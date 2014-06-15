@@ -1,7 +1,6 @@
 'use strict';
 
 var express = require('express'),
-    everyauth = require('everyauth'),
     logger = require('./lib/logger'),
     path = require('path'),
     pageRequestHandler = require('./api/pagerequesthandler'),
@@ -16,11 +15,9 @@ module.exports.middleware = function (app, isProductionMode) {
   app.use(require('static-favicon')(__dirname + '/public/images/favicon.ico'));
   app.use(require('cookie-parser')('7pb0HHz9Mwq5yZfw'));
   app.use(require('cookie-session')({ secret: '7pb0HHz9Mwq5yZfw' }));
-  app.use(require('compression')());
-
-  app.use(everyauth.middleware());
 
   if (isProductionMode) {
+    app.use(require('compression')());
     app.use(require('morgan')('dev'));
     app.use(require('errorhandler')());
   } else {

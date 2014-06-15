@@ -26,6 +26,7 @@ describe('requestParamHandler tests', function () {
 
   describe('When request has a session with oauth token', function () {
     beforeEach(function () {
+      sinon.stub(oauth, 'hasSession').returns(true);
       sinon.stub(oauth, 'getOAuthToken').returns('12345678');
     });
 

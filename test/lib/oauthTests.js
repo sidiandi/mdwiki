@@ -23,7 +23,7 @@ describe('oauth Tests', function () {
   describe('Get user', function () {
     describe('When user is authenticated', function () {
       it('Should return the name of the user', function (done) {
-        app.request.session = { uid: 'janbaer' };
+        app.request.user = { name: 'janbaer' };
 
         request(app)
           .get('/auth/user')
@@ -39,7 +39,7 @@ describe('oauth Tests', function () {
 
     describe('When user is not authenticated', function () {
       it('Should return a empty response object ', function (done) {
-        app.request.session = null;
+        app.request.user = null;
 
         request(app)
           .get('/auth/user')
@@ -57,7 +57,7 @@ describe('oauth Tests', function () {
     describe('When user is authenticated', function () {
       it('Should call the next func', function () {
         // ARRANGE
-        var req = { session: { uid: '1234567' } };
+        var req = { user: { uid: '1234567' } };
         var next = sinon.spy();
 
         // ACT

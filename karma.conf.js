@@ -30,6 +30,7 @@ module.exports = function (config) {
       'public/js/directives.js',
       'public/js/filters.js',
       'public/js/app.js',
+      'test_client/jasmine-aliases.js',
       'test_client/**/*Specs.js'
     ],
 
@@ -41,6 +42,12 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['spec', 'growl'],
+
+    specReporter : {
+      suppressPassed: true,
+      suppressFailed: false,
+      suppressSkipped: true
+    },
 
     // web server port
     port: 9876,

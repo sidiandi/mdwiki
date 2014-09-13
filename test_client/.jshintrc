@@ -1,0 +1,24 @@
+{
+  "globals": {
+    "describe": true,
+    "ddescribe": true,
+    "expect": true,
+    "it": true,
+    "iit": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "should": true,
+    "angular": true,
+    "inject": true,
+    "spyOn": true,
+    "$": true,
+    "context": true,
+    "establish": true,
+    "given": true,
+    "because": true,
+    "when": true,
+    "then": true
+  }
+}

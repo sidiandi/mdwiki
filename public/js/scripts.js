@@ -43999,404 +43999,416 @@ CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
 
 CodeMirror.defineMIME("text/x-markdown", "markdown");
 
-'use strict';
+(function (angular) {
+  'use strict';
 
-var mdwiki = angular.module('mdwiki', [
-  'ngRoute',
-  'ngSanitize',
-  'ngAnimate',
-  'jmdobry.angular-cache',
-  'ui.codemirror',
-  'ngDialog',
-  'mdwiki.controllers',
-  'mdwiki.services',
-  'mdwiki.directives'
-]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider, $angularCacheProvider) {
-  $routeProvider
-    .when('/git/connect', {
-      templateUrl: './views/gitconnect.html',
-      controller: 'GitConnectCtrl'
-    })
-    .when('/', {
-      templateUrl: './views/content.html',
-      controller: 'ContentCtrl'
-    })
-    .when('/search', {
-      templateUrl: './views/searchResult.html',
-      controller: 'SearchCtrl'
-    })
-    .when('/:page', {
-      templateUrl: './views/content.html',
-      controller: 'ContentCtrl'
-    }).otherwise({
-      redirectTo: '/index'
-    });
-
-  $locationProvider.html5Mode(true);
-}]);
-
-'use strict';
-
-var directives = angular.module('mdwiki.directives', []);
-
-directives.directive('bsTooltip', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
-      element.tooltip({
-        animation: true,
-        placement: 'bottom',
-        delay: { show: 100, hide: 100 }
+  var mdwiki = angular.module('mdwiki', [
+    'ngRoute',
+    'ngSanitize',
+    'ngAnimate',
+    'jmdobry.angular-cache',
+    'ui.codemirror',
+    'ngDialog',
+    'mdwiki.controllers',
+    'mdwiki.services',
+    'mdwiki.directives',
+    'mdwiki.filters',
+  ]).config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider, $angularCacheProvider) {
+    $routeProvider
+      .when('/git/connect', {
+        templateUrl: './views/gitconnect.html',
+        controller: 'GitConnectCtrl'
+      })
+      .when('/', {
+        templateUrl: './views/content.html',
+        controller: 'ContentCtrl'
+      })
+      .when('/search', {
+        templateUrl: './views/searchResult.html',
+        controller: 'SearchCtrl'
+      })
+      .when('/:page', {
+        templateUrl: './views/content.html',
+        controller: 'ContentCtrl'
+      }).otherwise({
+        redirectTo: '/index'
       });
-    }
-  };
-});
 
-directives.directive('bsSwitchtext', function () {
-  return {
-    restrict: 'A',
-    link: function (scope, element, attrs) {
-      scope.$watch('isBusy', function (newValue, oldValue) {
-        if (newValue === true) {
-          element.button('loading');
-        } else {
-          element.button('reset');
-        }
-      });
-    }
-  };
-});
+    $locationProvider.html5Mode(true);
+  }]);
 
-directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
-  var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
+  angular.module('mdwiki.controllers', []);
+  angular.module('mdwiki.services', []);
+  angular.module('mdwiki.directives', []);
+  angular.module('mdwiki.filters', []);
+})(angular);
 
-  function isModifier(modifier, event, isMac) {
-    var isShift = event.shiftKey;
-    var isAlt = event.altKey;
-    var isCtrl = isMac ? event.metaKey : event.ctrlKey;
 
-    if (modifier) {
-      switch (modifier) {
-        case 'ctrl+shift':
-        case 'shift+ctrl':
-          return isShift && isCtrl;
-        case 'alt+shift':
-        case 'shift+alt':
-          return isShift && isAlt;
-        case 'ctrl+alt':
-        case 'cmd+alt':
-          return isAlt && isCtrl;
-        case 'cmd+ctrl':
-          return event.metaKey && event.CtrlKey;
-        case 'shift':
-          return isShift;
-        case 'ctrl':
-        case 'cmd':
-          return isCtrl;
-        case 'alt':
-          return isAlt;
+(function (directives) {
+  'use strict';
+
+  directives.directive('bsTooltip', function () {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        element.tooltip({
+          animation: true,
+          placement: 'bottom',
+          delay: { show: 100, hide: 100 }
+        });
       }
-    }
-    return false;
-  }
+    };
+  });
 
-  function verifyKeyCode(event, modifier, key) {
-    if (String.fromCharCode(event.keyCode) === key) {
+  directives.directive('bsSwitchtext', function () {
+    return {
+      restrict: 'A',
+      link: function (scope, element, attrs) {
+        scope.$watch('isBusy', function (newValue, oldValue) {
+          if (newValue === true) {
+            element.button('loading');
+          } else {
+            element.button('reset');
+          }
+        });
+      }
+    };
+  });
+
+  directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
+    var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
+
+    function isModifier(modifier, event, isMac) {
+      var isShift = event.shiftKey;
+      var isAlt = event.altKey;
+      var isCtrl = isMac ? event.metaKey : event.ctrlKey;
+
       if (modifier) {
-        return isModifier(modifier, event, isMac);
+        switch (modifier) {
+          case 'ctrl+shift':
+          case 'shift+ctrl':
+            return isShift && isCtrl;
+          case 'alt+shift':
+          case 'shift+alt':
+            return isShift && isAlt;
+          case 'ctrl+alt':
+          case 'cmd+alt':
+            return isAlt && isCtrl;
+          case 'cmd+ctrl':
+            return event.metaKey && event.CtrlKey;
+          case 'shift':
+            return isShift;
+          case 'ctrl':
+          case 'cmd':
+            return isCtrl;
+          case 'alt':
+            return isAlt;
+        }
+      }
+      return false;
+    }
+
+    function verifyKeyCode(event, modifier, key) {
+      if (String.fromCharCode(event.keyCode) === key) {
+        if (modifier) {
+          return isModifier(modifier, event, isMac);
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function verifyCondition($eval, condition) {
+      if (condition) {
+        return $eval(condition);
       }
       return true;
     }
-    return false;
-  }
-
-  function verifyCondition($eval, condition) {
-    if (condition) {
-      return $eval(condition);
-    }
-    return true;
-  }
-
-  return {
-    restrict: 'E',
-    scope: {
-      modifier: '@modifier',
-      key: '@key',
-      condition: '&',
-      invoke: '&'
-    },
-    link: function (scope, $element, attr) {
-      $document.bind('keydown', function (event) {
-        if (verifyKeyCode(event, scope.modifier, scope.key) &&
-            verifyCondition(scope.$eval, scope.condition)) {
-          scope.$apply(scope.invoke);
-        }
-      });
-    }
-  };
-}]);
-
-directives.directive('autoFocus', function () {
-  return {
-    restrict: 'AC',
-    link: function (scope, element) {
-      element[0].focus();
-    }
-  };
-});
-
-directives.directive('autoSelect', ['$timeout', function ($timeout) {
-  return {
-    restrict: 'AC',
-    link: function (scope, element) {
-      element.bind('focus', function () {
-        $timeout(function () {
-          element[0].select();
-        }, 1);
-      });
-    }
-  };
-}]);
-
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('ApiUrlBuilderService', [ 'SettingsService', function (settingsService) {
-  var build = function (urlBefore, urlAfter, settings) {
-    settings = settings || settingsService.get();
-
-    if (settings.provider === 'github') {
-      return urlBefore + settings.githubUser + '/' + settings.githubRepository + '/' + urlAfter;
-    }
-
-    return urlBefore + urlAfter;
-  };
-
-  return {
-    build: build
-  };
-}]);
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('AuthService', ['$http', '$q', function ($http, $q) {
-  var user = '';
-
-  var getAuthenticatedUser = function () {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'GET',
-      url: '/auth/user',
-      headers: {'Content-Type': 'application/json'},
-    })
-    .success(function (auth, status, headers, config) {
-      deferred.resolve(auth.user);
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(data);
-    });
-
-    return deferred.promise;
-  };
-
-  var logout = function () {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'DELETE',
-      url: '/auth/user',
-    })
-    .success(function (data, status, headers, config) {
-      deferred.resolve(data);
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(data);
-    });
-
-    return deferred.promise;
-  };
-
-  return {
-    logout: logout,
-    getAuthenticatedUser: getAuthenticatedUser
-  };
-}]);
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (settingsService) {
-  var build = function (contentType, settings) {
-    contentType = contentType || 'application/json';
-    settings = settings || settingsService.get();
 
     return {
-      'Content-Type': 'application/json',
-      'X-MDWiki-Provider': settings.provider,
-      'X-MDWiki-Url': settings.url
+      restrict: 'E',
+      scope: {
+        modifier: '@modifier',
+        key: '@key',
+        condition: '&',
+        invoke: '&'
+      },
+      link: function (scope, $element, attr) {
+        $document.bind('keydown', function (event) {
+          if (verifyKeyCode(event, scope.modifier, scope.key) &&
+              verifyCondition(scope.$eval, scope.condition)) {
+            scope.$apply(scope.invoke);
+          }
+        });
+      }
     };
-  };
+  }]);
 
-  return {
-    build: build
-  };
-}]);
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
-  var updatePagesObservers = [];
-
-  var getPage = function (page, format) {
-    format = format || 'html';
-    var deferred = $q.defer(),
-        requestUrl = urlBuilder.build('/api/', 'page/' + page);
-
-    if (format === 'markdown')
-    {
-      requestUrl += '?format=markdown';
-    }
-
-    $http({
-      method: 'GET',
-      url: requestUrl
-    })
-    .success(function (pageContent, status, headers, config) {
-      deferred.resolve(pageContent);
-    })
-    .error(function (errorMessage, status, headers, config) {
-      var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
-      error.code = status;
-      deferred.reject(error);
-    });
-
-    return deferred.promise;
-  };
-
-  var savePage = function (pageName, commitMessage, markdown) {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'PUT',
-      url: urlBuilder.build('/api/', 'page/' + pageName),
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        commitMessage: commitMessage,
-        markdown: markdown
+  directives.directive('autoFocus', function () {
+    return {
+      restrict: 'AC',
+      link: function (scope, element) {
+        element[0].focus();
       }
-    })
-    .success(function (pageContent, status, headers, config) {
-      deferred.resolve(pageContent);
-    })
-    .error(function (errorMessage, status, headers, config) {
-      var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
-      error.code = status;
-      deferred.reject(error);
-    });
+    };
+  });
 
-    return deferred.promise;
-  };
-
-  var deletePage = function (pageName) {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'DELETE',
-      url: urlBuilder.build('/api/', 'page/' + pageName)
-    })
-    .success(function (pageContent, status, headers, config) {
-      deferred.resolve(pageContent);
-    })
-    .error(function (errorMessage, status, headers, config) {
-      var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
-      error.code = status;
-      deferred.reject(error);
-    });
-
-    return deferred.promise;
-  };
-
-  var getPages = function (settings) {
-    var deferred = $q.defer();
-
-    $http({
-      method: 'GET',
-      url: urlBuilder.build('/api/', 'pages', settings),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .success(function (data, status, headers, config) {
-      var pages = data || [];
-
-      notifyObservers(pages);
-      deferred.resolve(pages);
-    })
-    .error(function (errorMessage, status, headers, config) {
-      var error = new Error();
-      error.code = status;
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
-      deferred.reject(error);
-    });
-
-    return deferred.promise;
-  };
-
-  var findStartPage = function (pages) {
-    var pagesToFind = ['index', 'home', 'readme'];
-
-    for (var i = 0; i < pagesToFind.length ; i++) {
-      var startPage = findPage(pages, pagesToFind[i]);
-      if (startPage !== undefined && startPage.length > 0) {
-        return startPage;
+  directives.directive('autoSelect', ['$timeout', function ($timeout) {
+    return {
+      restrict: 'AC',
+      link: function (scope, element) {
+        element.bind('focus', function () {
+          $timeout(function () {
+            element[0].select();
+          }, 1);
+        });
       }
-    }
-    return '';
-  };
+    };
+  }]);
+})(angular.module('mdwiki.directives'));
 
-  var findPage = function (pages, pageName) {
-    for (var i = 0; i < pages.length; i++) {
-      if (pageName === pages[i].name.toLowerCase()) {
-        return pages[i].name;
+
+(function (services) {
+  'use strict';
+
+  services.factory('ApiUrlBuilderService', [ 'SettingsService', function (settingsService) {
+    var build = function (urlBefore, urlAfter, settings) {
+      settings = settings || settingsService.get();
+
+      if (settings.provider === 'github') {
+        return urlBefore + settings.githubUser + '/' + settings.githubRepository + '/' + urlAfter;
       }
-    }
-    return '';
-  };
 
-  var registerObserver = function (callback) {
-    updatePagesObservers.push(callback);
-  };
+      return urlBefore + urlAfter;
+    };
 
-  var notifyObservers = function (pages) {
-    angular.forEach(updatePagesObservers, function (callback) {
-      callback(pages);
-    });
-  };
+    return {
+      build: build
+    };
+  }]);
+})(angular.module('mdwiki.services'));
 
-  return {
-    findStartPage: findStartPage,
-    getPage: getPage,
-    savePage: savePage,
-    deletePage: deletePage,
-    getPages: getPages,
-    registerObserver: registerObserver
-  };
-}]);
 
-'use strict';
+(function (services) {
+  'use strict';
 
-var services = services || angular.module('mdwiki.services', []);
+  services.factory('AuthService', ['$http', '$q', function ($http, $q) {
+    var user = '';
 
-services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
+    var getAuthenticatedUser = function () {
+      var deferred = $q.defer();
+
+      $http({
+        method: 'GET',
+        url: '/auth/user',
+        headers: {'Content-Type': 'application/json'},
+      })
+      .success(function (auth, status, headers, config) {
+        deferred.resolve(auth.user);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject(data);
+      });
+
+      return deferred.promise;
+    };
+
+    var logout = function () {
+      var deferred = $q.defer();
+
+      $http({
+        method: 'DELETE',
+        url: '/auth/user',
+      })
+      .success(function (data, status, headers, config) {
+        deferred.resolve(data);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject(data);
+      });
+
+      return deferred.promise;
+    };
+
+    return {
+      logout: logout,
+      getAuthenticatedUser: getAuthenticatedUser
+    };
+  }]);
+})(angular.module('mdwiki.services'));
+
+
+(function (services) {
+  'use strict';
+
+  services.factory('HttpHeaderBuilderService', [ 'SettingsService', function (settingsService) {
+    var build = function (contentType, settings) {
+      contentType = contentType || 'application/json';
+      settings = settings || settingsService.get();
+
+      return {
+        'Content-Type': 'application/json',
+        'X-MDWiki-Provider': settings.provider,
+        'X-MDWiki-Url': settings.url
+      };
+    };
+
+    return {
+      build: build
+    };
+  }]);
+})(angular.module('mdwiki.services'));
+
+
+(function (services) {
+  'use strict';
+
+  services.factory('PageService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
+    var updatePagesObservers = [];
+
+    var getPage = function (page, format) {
+      format = format || 'html';
+      var deferred = $q.defer(),
+          requestUrl = urlBuilder.build('/api/', 'page/' + page);
+
+      if (format === 'markdown')
+      {
+        requestUrl += '?format=markdown';
+      }
+
+      $http({
+        method: 'GET',
+        url: requestUrl
+      })
+      .success(function (pageContent, status, headers, config) {
+        deferred.resolve(pageContent);
+      })
+      .error(function (errorMessage, status, headers, config) {
+        var error = new Error();
+        error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+        error.code = status;
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    };
+
+    var savePage = function (pageName, commitMessage, markdown) {
+      var deferred = $q.defer();
+
+      $http({
+        method: 'PUT',
+        url: urlBuilder.build('/api/', 'page/' + pageName),
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          commitMessage: commitMessage,
+          markdown: markdown
+        }
+      })
+      .success(function (pageContent, status, headers, config) {
+        deferred.resolve(pageContent);
+      })
+      .error(function (errorMessage, status, headers, config) {
+        var error = new Error();
+        error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+        error.code = status;
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    };
+
+    var deletePage = function (pageName) {
+      var deferred = $q.defer();
+
+      $http({
+        method: 'DELETE',
+        url: urlBuilder.build('/api/', 'page/' + pageName)
+      })
+      .success(function (pageContent, status, headers, config) {
+        deferred.resolve(pageContent);
+      })
+      .error(function (errorMessage, status, headers, config) {
+        var error = new Error();
+        error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+        error.code = status;
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    };
+
+    var getPages = function (settings) {
+      var deferred = $q.defer();
+
+      $http({
+        method: 'GET',
+        url: urlBuilder.build('/api/', 'pages', settings),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .success(function (data, status, headers, config) {
+        var pages = data || [];
+
+        notifyObservers(pages);
+        deferred.resolve(pages);
+      })
+      .error(function (errorMessage, status, headers, config) {
+        var error = new Error();
+        error.code = status;
+        error.message = status === 404 ? 'Content not found' : 'Unexpected server error: ' + errorMessage;
+        deferred.reject(error);
+      });
+
+      return deferred.promise;
+    };
+
+    var findStartPage = function (pages) {
+      var pagesToFind = ['index', 'home', 'readme'];
+
+      for (var i = 0; i < pagesToFind.length ; i++) {
+        var startPage = findPage(pages, pagesToFind[i]);
+        if (startPage !== undefined && startPage.length > 0) {
+          return startPage;
+        }
+      }
+      return '';
+    };
+
+    var findPage = function (pages, pageName) {
+      for (var i = 0; i < pages.length; i++) {
+        if (pageName === pages[i].name.toLowerCase()) {
+          return pages[i].name;
+        }
+      }
+      return '';
+    };
+
+    var registerObserver = function (callback) {
+      updatePagesObservers.push(callback);
+    };
+
+    var notifyObservers = function (pages) {
+      angular.forEach(updatePagesObservers, function (callback) {
+        callback(pages);
+      });
+    };
+
+    return {
+      findStartPage: findStartPage,
+      getPage: getPage,
+      savePage: savePage,
+      deletePage: deletePage,
+      getPages: getPages,
+      registerObserver: registerObserver
+    };
+  }]);
+})(angular.module('mdwiki.services'));
+
+
+(function (services) {
+  'use strict';
+
+  services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
@@ -44425,537 +44437,546 @@ services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', functi
     };
 
   }]);
+})(angular.module('mdwiki.services'));
 
-'use strict';
 
-var services = services || angular.module('mdwiki.services', []);
+(function (services) {
+  'use strict';
 
-services.factory('ServerConfigService', ['$http', '$q', function ($http, $q) {
-  var getConfig = function (page) {
-    var deferred = $q.defer();
+  services.factory('ServerConfigService', ['$http', '$q', function ($http, $q) {
+    var getConfig = function (page) {
+      var deferred = $q.defer();
 
-    $http({
-      method: 'GET',
-      url: '/api/serverconfig',
-      headers: {'Content-Type': 'application/json'},
-    })
-    .success(function (data, status, headers, config) {
-      deferred.resolve(data);
-    })
-    .error(function (data, status, headers, config) {
-      var error = new Error();
-      error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
-      error.code = status;
-      deferred.reject(error);
-    });
-
-    return deferred.promise;
-  };
-
-  return {
-    getConfig: getConfig
-  };
-}]);
-
-'use strict';
-
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('SettingsService', ['$angularCacheFactory', function ($angularCacheFactory) {
-  var cache = $angularCacheFactory('mdwiki', { storageMode: 'localStorage' });
-
-  var getDefaultSettings = function () {
-    return {
-      provider: 'github',
-      githubUser: 'mdwiki',
-      githubRepository: 'wiki',
-      url: 'mdwiki/wiki',
-      startPage: 'index'
-    };
-  };
-
-  var isDefaultSettings = function (settings) {
-    return angular.equals(settings, this.getDefaultSettings());
-  };
-
-  var get = function () {
-    var settings = cache.get('settings');
-    if (settings === undefined) {
-      settings = this.getDefaultSettings();
-    }
-    return settings;
-  };
-
-  var put = function (settings) {
-    cache.put('settings', settings);
-  };
-
-  return {
-    get: get,
-    put: put,
-    getDefaultSettings: getDefaultSettings,
-    isDefaultSettings: isDefaultSettings
-  };
-}]);
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', function ($rootScope, $scope, authService) {
-  $scope.isAuthenticated = false;
-  $scope.user = null;
-
-  authService.getAuthenticatedUser()
-    .then(function (user) {
-      $scope.user = user || null;
-    });
-
-  $scope.logout = function () {
-    authService.logout()
-      .then(function () {
-        $scope.user = null;
-      });
-  };
-
-  $scope.$watch('user', function (newValue, oldValue) {
-    $rootScope.isAuthenticated = newValue !== null;
-    $scope.isAuthenticated = $rootScope.isAuthenticated;
-    $rootScope.$broadcast('isAuthenticated', { isAuthenticated: $rootScope.isAuthenticated });
-  });
-
-}]);
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
-  $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
-
-  $scope.closeDialog = function () {
-    ngDialog.close();
-    $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
-  };
-}]);
-
-'use strict';
-
-/* global CodeMirror */
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '$location', '$q', 'PageService', 'SettingsService', function ($rootScope, $scope, $routeParams, $location, $q, pageService, settingsService) {
-  $scope.content = '';
-  $scope.markdown = '';
-  $scope.pageName = '';
-  $scope.errorMessage = '';
-  $scope.hasError = false;
-  $scope.refresh = false;
-  $scope.isEditorVisible = false;
-  $scope.commitMessage = '';
-
-  $scope.codemirror = {
-    lineWrapping : true,
-    lineNumbers: true,
-    readOnly: 'nocursor',
-    mode: 'markdown',
-  };
-
-  $scope.codemirrorLoaded = function (editor) {
-    CodeMirror.commands.save = function () {
-      $rootScope.$broadcast('beforeSave');
-    };
-  };
-
-  var settings = settingsService.get();
-  var startPage = settings.startPage || 'index';
-  var pageName = $routeParams.page || startPage;
-
-  var prepareLinks = function (html, settings) {
-    var $dom = $('<div>' + html + '</div>');
-
-    $dom.find('a[href^="wiki/"]').each(function () {
-      var $link = $(this);
-      $link.attr('href', $link.attr('href').substring(4));
-    });
-
-    if (settings.provider === 'github') {
-      $dom.find('a[href^="/static/"]').each(function () {
-        var $link = $(this);
-        var newLink = '/static/'.concat(settings.githubUser, '/', settings.githubRepository, '/', $link.attr('href').substring('/static/'.length));
-        $link.attr('href', newLink);
-        $link.attr('target', '_blank');
-      });
-    } else {
-      $dom.find('a[href^="/static/"]').attr('target', '_blank');
-    }
-    return $dom.html();
-  };
-
-  var getPage = function (pageName) {
-    var deferred = $q.defer();
-
-    pageService.getPage(pageName)
-      .then(function (pageContent) {
-        $scope.pageName = pageName;
-        $rootScope.pageName = pageName;
-        $scope.content = prepareLinks(pageContent, settings);
-        deferred.resolve();
-      }, function (error) {
-        if (pageName === startPage && error.code === 404) {
-          $location.path('/git/connect');
-        } else {
-          $scope.errorMessage = 'Content not found!';
-          $scope.hasError = true;
-        }
+      $http({
+        method: 'GET',
+        url: '/api/serverconfig',
+        headers: {'Content-Type': 'application/json'},
+      })
+      .success(function (data, status, headers, config) {
+        deferred.resolve(data);
+      })
+      .error(function (data, status, headers, config) {
+        var error = new Error();
+        error.message = status === 404 ? 'Content not found' : 'Unexpected server error';
+        error.code = status;
         deferred.reject(error);
       });
 
-    return deferred.promise;
-  };
-
-  var showOrHideEditor = function (isVisible) {
-    $scope.isEditorVisible = isVisible;
-    $rootScope.isEditorVisible = isVisible;
-    $rootScope.$broadcast('isEditorVisible', { isEditorVisible: isVisible });
-  };
-
-  var showEditor = function () {
-    showOrHideEditor(true);
-  };
-
-  var hideEditor = function () {
-    if ($routeParams.edit) {
-      $location.search({});
-    }
-    showOrHideEditor(false);
-  };
-
-  var editPage = function (pageName) {
-    showEditor();
-
-    pageService.getPage(pageName, 'markdown')
-      .then(function (markdown) {
-        $scope.markdown = markdown;
-        $scope.refresh = true;
-      }, function (error) {
-        if (pageName === startPage && error.code === 404) {
-          $location.path('/git/connect');
-        } else {
-          $scope.errorMessage = 'Content not found: ' + error.message;
-          $scope.hasError = true;
-        }
-      });
-  };
-
-  var createPage = function (pageName) {
-    pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
-      .then(function (pageContent) {
-        $scope.pageName = pageName;
-        $rootScope.pages.push({
-          fileName: pageName + '.md',
-          name: pageName,
-          title: pageName
-        });
-        $location.path('/' + pageName).search('edit');
-      })
-      .catch(function (error) {
-        $scope.errorMessage = 'Create new page failed: ' + error.message;
-        $scope.hasError = true;
-      });
-  };
-
-  var removePageFromPages = function (pages, pageName) {
-    var index = -1;
-
-    pages.forEach(function (page) {
-      if (page.name === pageName) {
-        index = pages.indexOf(page);
-      }
-    });
-    if (index >= 0) {
-      pages.splice(index, 1);
-    }
-  };
-
-  var deletePage = function (pageName) {
-    pageService.deletePage(pageName)
-      .then(function () {
-        removePageFromPages($rootScope.pages, pageName);
-        $location.path('/');
-      })
-      .catch(function (error) {
-        $scope.errorMessage = 'Delete the current page failed: ' + error.message;
-        $scope.hasError = true;
-      });
-  };
-
-  var savePage = function (pageName, commitMessage, content) {
-    pageService.savePage(pageName, commitMessage, content)
-      .then(function (pageContent) {
-        $scope.content = prepareLinks(pageContent, settings);
-        hideEditor();
-      }, function (error) {
-        $scope.errorMessage = 'Save current page failed: ' + error.message;
-        $scope.hasError = true;
-      });
-  };
-
-  var saveUnregister = $rootScope.$on('save', function (event, data) {
-    savePage($scope.pageName, data.commitMessage, $scope.markdown);
-  });
-
-  var createUnregister = $rootScope.$on('create', function (event, data) {
-    createPage(data.pageName);
-  });
-
-  var deleteUnregister = $rootScope.$on('delete', function (event, data) {
-    deletePage(data.pageName);
-  });
-
-  var editUnregister = $rootScope.$on('edit', function () {
-    editPage($scope.pageName);
-  });
-
-  var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
-    hideEditor();
-  });
-
-  $scope.$on('$destroy', function () {
-    cancelEditUnregister();
-    createUnregister();
-    deleteUnregister();
-    editUnregister();
-    saveUnregister();
-  });
-
-  getPage(pageName).then(function () {
-    if ($routeParams.edit && $rootScope.isAuthenticated) {
-      editPage(pageName);
-    } else {
-      hideEditor();
-    }
-  });
-}]);
-
-
-
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('DeletePageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
-  $scope.question = 'Are you sure that you want to delete the page: ' + $rootScope.pageName;
-
-  $scope.confirmDialog = function () {
-    ngDialog.close();
-    $rootScope.$broadcast('delete', { pageName: $rootScope.pageName });
-  };
-  $scope.cancelDialog = function () {
-    ngDialog.close();
-  };
-}]);
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
-  var nonEditablePaths = ['/search', '/git/connect'];
-  $scope.isAuthenticated = false;
-  $scope.isEditorVisible = false;
-  $scope.canEditPage = false;
-
-  var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
-    var canEditPage = isAuthenticated;
-
-    if (canEditPage) {
-      nonEditablePaths.forEach(function (nonEditablePath) {
-        if (nonEditablePath === path) {
-          canEditPage = false;
-        }
-      });
-    }
-    return canEditPage;
-  };
-
-  $scope.create = function () {
-    ngDialog.open({
-      template: 'createNewPageDialog',
-      className: 'ngdialog-theme-default',
-      controller: 'NewPageDialogCtrl',
-    });
-  };
-
-  $scope.delete = function () {
-    if ($rootScope.pageName === 'index') {
-      $window.alert('It is not a good idea to delete your start page!');
-      return;
-    }
-
-    ngDialog.open({
-      template: 'deletePageDialog',
-      className: 'ngdialog-theme-default',
-      controller: 'DeletePageDialogCtrl',
-    });
-  };
-
-  $scope.edit = function () {
-    $rootScope.$broadcast('edit');
-  };
-
-  $scope.cancelEdit = function () {
-    $rootScope.$broadcast('cancelEdit');
-  };
-
-  $scope.save = function () {
-    ngDialog.open({
-      template: 'commitMessageDialog',
-      className: 'ngdialog-theme-default',
-      controller: 'CommitMessageDialogCtrl',
-    });
-  };
-
-  var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
-    $scope.isAuthenticated = data.isAuthenticated;
-    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-  });
-
-  var isEditorVisibleUnregister = $rootScope.$on('isEditorVisible', function (event, data) {
-    $scope.isEditorVisible = data.isEditorVisible;
-  });
-
-  var beforeSaveUnregister = $rootScope.$on('beforeSave', function () {
-    $scope.save();
-  });
-
-  var routeChangeSuccessUnregister = $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-  });
-
-  $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-
-  $scope.$on('$destroy', function () {
-    beforeSaveUnregister();
-    isAuthenticatedUnregister();
-    isEditorVisibleUnregister();
-    routeChangeSuccessUnregister();
-  });
-}]);
-
-'use strict';
-
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, pageService, settingsService, serverConfigService) {
-  var settings = settingsService.get();
-  $scope.provider = settings.provider || 'github';
-  $scope.githubUser = settings.githubUser || 'mdwiki';
-  $scope.repositoryName = settings.githubRepository || 'wiki';
-
-  $scope.message = 'Please enter your GitHub user name and the name of the repository that you want to use for mdwiki.';
-  $scope.githubUserPlaceHolderText = 'Enter here your GitHub username';
-  $scope.repositoryNamePlaceHolderText = 'Enter here the name of the repository';
-
-  $scope.isBusy = false;
-  $scope.hasError = false;
-
-  $scope.connect = function (successMessage) {
-    successMessage = successMessage || 'The git-repository was successfully connected!';
-
-    $scope.message = 'Please wait while connecting to your repository...';
-
-    var respositoryUrl = $scope.githubUser + '/' + $scope.repositoryName;
-
-    var settings = {
-      provider: $scope.provider,
-      url: respositoryUrl,
-      githubRepository: $scope.repositoryName,
-      githubUser: $scope.githubUser
+      return deferred.promise;
     };
 
-    pageService.getPages(settings)
-      .then(function (pages) {
-        var startPage = pageService.findStartPage(pages);
-        if (startPage !== undefined && startPage.length > 0) {
-          settings.startPage = startPage;
-          settingsService.put(settings);
-          $scope.message = successMessage;
-          $location.path('/');
+    return {
+      getConfig: getConfig
+    };
+  }]);
+})(angular.module('mdwiki.services'));
 
-          $rootScope.$broadcast('OnGitConnected', { settings: settings});
-        } else {
-          $scope.message = 'No startpage was found!';
-          $scope.isBusy = false;
-          $scope.hasError = true;
-        }
-      }, function (error) {
-        $scope.message = 'An error occurred while connection to the git-repository: ' + error.message;
-        $scope.isBusy = false;
-        $scope.hasError = true;
-      })
-      .finally(function () {
-        $scope.isBusy = false;
+
+(function (services) {
+  'use strict';
+
+  services.factory('SettingsService', ['$angularCacheFactory', function ($angularCacheFactory) {
+    var cache = $angularCacheFactory('mdwiki', { storageMode: 'localStorage' });
+
+    var getDefaultSettings = function () {
+      return {
+        provider: 'github',
+        githubUser: 'mdwiki',
+        githubRepository: 'wiki',
+        url: 'mdwiki/wiki',
+        startPage: 'index'
+      };
+    };
+
+    var isDefaultSettings = function (settings) {
+      return angular.equals(settings, this.getDefaultSettings());
+    };
+
+    var get = function () {
+      var settings = cache.get('settings');
+      if (settings === undefined) {
+        settings = this.getDefaultSettings();
+      }
+      return settings;
+    };
+
+    var put = function (settings) {
+      cache.put('settings', settings);
+    };
+
+    return {
+      get: get,
+      put: put,
+      getDefaultSettings: getDefaultSettings,
+      isDefaultSettings: isDefaultSettings
+    };
+  }]);
+})(angular.module('mdwiki.services'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('AuthCtrl', ['$rootScope', '$scope', 'AuthService', function ($rootScope, $scope, authService) {
+    $scope.isAuthenticated = false;
+    $scope.user = null;
+
+    authService.getAuthenticatedUser()
+      .then(function (user) {
+        $scope.user = user || null;
       });
-  };
 
-}]);
+    $scope.logout = function () {
+      authService.logout()
+        .then(function () {
+          $scope.user = null;
+        });
+    };
 
-'use strict';
+    $scope.$watch('user', function (newValue, oldValue) {
+      $rootScope.isAuthenticated = newValue !== null;
+      $scope.isAuthenticated = $rootScope.isAuthenticated;
+      $rootScope.$broadcast('isAuthenticated', { isAuthenticated: $rootScope.isAuthenticated });
+    });
 
-var controllers = controllers || angular.module('mdwiki.controllers', []);
+  }]);
+})(angular.module('mdwiki.controllers'));
 
-controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
-  function ($rootScope, $scope, ngDialog) {
-    $scope.pageName = 'newpage';
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+    $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
 
     $scope.closeDialog = function () {
       ngDialog.close();
-      $rootScope.$broadcast('create', { pageName: $scope.pageName });
+      $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
     };
-  }
-]);
+  }]);
+})(angular.module('mdwiki.controllers'));
 
-'use strict';
 
-var controllers = controllers || angular.module('mdwiki.controllers', []);
+(function (controllers, CodeMirror) {
+  'use strict';
 
-controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', function ($rootScope, $scope, pageService) {
-  $scope.pages = [];
-  $rootScope.pages = $scope.pages;
+  controllers.controller('ContentCtrl', ['$rootScope', '$scope', '$routeParams', '$location', '$q', 'PageService', 'SettingsService', function ($rootScope, $scope, $routeParams, $location, $q, pageService, settingsService) {
+    $scope.content = '';
+    $scope.markdown = '';
+    $scope.pageName = '';
+    $scope.errorMessage = '';
+    $scope.hasError = false;
+    $scope.refresh = false;
+    $scope.isEditorVisible = false;
+    $scope.commitMessage = '';
 
-  var updatePages = function (pages) {
-    $scope.pages = pages || [];
-    $rootScope.pages = $scope.pages;
-  };
+    $scope.codemirror = {
+      lineWrapping : true,
+      lineNumbers: true,
+      readOnly: 'nocursor',
+      mode: 'markdown',
+    };
 
-  pageService.getPages()
-    .then(function (pages) {
-      updatePages(pages);
-      pageService.registerObserver(updatePages);
+    $scope.codemirrorLoaded = function (editor) {
+      CodeMirror.commands.save = function () {
+        $rootScope.$broadcast('beforeSave');
+      };
+    };
+
+    var settings = settingsService.get();
+    var startPage = settings.startPage || 'index';
+    var pageName = $routeParams.page || startPage;
+
+    var prepareLinks = function (html, settings) {
+      var $dom = $('<div>' + html + '</div>');
+
+      $dom.find('a[href^="wiki/"]').each(function () {
+        var $link = $(this);
+        $link.attr('href', $link.attr('href').substring(4));
+      });
+
+      if (settings.provider === 'github') {
+        $dom.find('a[href^="/static/"]').each(function () {
+          var $link = $(this);
+          var newLink = '/static/'.concat(settings.githubUser, '/', settings.githubRepository, '/', $link.attr('href').substring('/static/'.length));
+          $link.attr('href', newLink);
+          $link.attr('target', '_blank');
+        });
+      } else {
+        $dom.find('a[href^="/static/"]').attr('target', '_blank');
+      }
+      return $dom.html();
+    };
+
+    var getPage = function (pageName) {
+      var deferred = $q.defer();
+
+      pageService.getPage(pageName)
+        .then(function (pageContent) {
+          $scope.pageName = pageName;
+          $rootScope.pageName = pageName;
+          $scope.content = prepareLinks(pageContent, settings);
+          deferred.resolve();
+        }, function (error) {
+          if (pageName === startPage && error.code === 404) {
+            $location.path('/git/connect');
+          } else {
+            $scope.errorMessage = 'Content not found!';
+            $scope.hasError = true;
+          }
+          deferred.reject(error);
+        });
+
+      return deferred.promise;
+    };
+
+    var showOrHideEditor = function (isVisible) {
+      $scope.isEditorVisible = isVisible;
+      $rootScope.isEditorVisible = isVisible;
+      $rootScope.$broadcast('isEditorVisible', { isEditorVisible: isVisible });
+    };
+
+    var showEditor = function () {
+      showOrHideEditor(true);
+    };
+
+    var hideEditor = function () {
+      if ($routeParams.edit) {
+        $location.search({});
+      }
+      showOrHideEditor(false);
+    };
+
+    var editPage = function (pageName) {
+      showEditor();
+
+      pageService.getPage(pageName, 'markdown')
+        .then(function (markdown) {
+          $scope.markdown = markdown;
+          $scope.refresh = true;
+        }, function (error) {
+          if (pageName === startPage && error.code === 404) {
+            $location.path('/git/connect');
+          } else {
+            $scope.errorMessage = 'Content not found: ' + error.message;
+            $scope.hasError = true;
+          }
+        });
+    };
+
+    var createPage = function (pageName) {
+      pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
+        .then(function (pageContent) {
+          $scope.pageName = pageName;
+          $rootScope.pages.push({
+            fileName: pageName + '.md',
+            name: pageName,
+            title: pageName
+          });
+          $location.path('/' + pageName).search('edit');
+        })
+        .catch(function (error) {
+          $scope.errorMessage = 'Create new page failed: ' + error.message;
+          $scope.hasError = true;
+        });
+    };
+
+    var removePageFromPages = function (pages, pageName) {
+      var index = -1;
+
+      pages.forEach(function (page) {
+        if (page.name === pageName) {
+          index = pages.indexOf(page);
+        }
+      });
+      if (index >= 0) {
+        pages.splice(index, 1);
+      }
+    };
+
+    var deletePage = function (pageName) {
+      pageService.deletePage(pageName)
+        .then(function () {
+          removePageFromPages($rootScope.pages, pageName);
+          $location.path('/');
+        })
+        .catch(function (error) {
+          $scope.errorMessage = 'Delete the current page failed: ' + error.message;
+          $scope.hasError = true;
+        });
+    };
+
+    var savePage = function (pageName, commitMessage, content) {
+      pageService.savePage(pageName, commitMessage, content)
+        .then(function (pageContent) {
+          $scope.content = prepareLinks(pageContent, settings);
+          hideEditor();
+        }, function (error) {
+          $scope.errorMessage = 'Save current page failed: ' + error.message;
+          $scope.hasError = true;
+        });
+    };
+
+    var saveUnregister = $rootScope.$on('save', function (event, data) {
+      savePage($scope.pageName, data.commitMessage, $scope.markdown);
     });
 
-  $scope.excludeDefaultPage = function (page) {
-    var excludes = ['index', 'home', 'readme'];
-    var excludePage = false;
+    var createUnregister = $rootScope.$on('create', function (event, data) {
+      createPage(data.pageName);
+    });
 
-    angular.forEach(excludes, function (exclude) {
-      if (page.name.toLowerCase() === exclude) {
-        excludePage = true;
+    var deleteUnregister = $rootScope.$on('delete', function (event, data) {
+      deletePage(data.pageName);
+    });
+
+    var editUnregister = $rootScope.$on('edit', function () {
+      editPage($scope.pageName);
+    });
+
+    var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
+      hideEditor();
+    });
+
+    $scope.$on('$destroy', function () {
+      cancelEditUnregister();
+      createUnregister();
+      deleteUnregister();
+      editUnregister();
+      saveUnregister();
+    });
+
+    getPage(pageName).then(function () {
+      if ($routeParams.edit && $rootScope.isAuthenticated) {
+        editPage(pageName);
+      } else {
+        hideEditor();
       }
     });
+  }]);
+})(angular.module('mdwiki.controllers'), window.CodeMirror);
 
-    return !excludePage;
-  };
-}]);
 
-'use strict';
 
-var controllers = controllers || angular.module('mdwiki.controllers', []);
 
-controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchService', function ($scope, $location, $route, searchService) {
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('DeletePageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+    $scope.question = 'Are you sure that you want to delete the page: ' + $rootScope.pageName;
+
+    $scope.confirmDialog = function () {
+      ngDialog.close();
+      $rootScope.$broadcast('delete', { pageName: $rootScope.pageName });
+    };
+    $scope.cancelDialog = function () {
+      ngDialog.close();
+    };
+  }]);
+})(angular.module('mdwiki.controllers'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
+    var nonEditablePaths = ['/search', '/git/connect'];
+    $scope.isAuthenticated = false;
+    $scope.isEditorVisible = false;
+    $scope.canEditPage = false;
+
+    var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
+      var canEditPage = isAuthenticated;
+
+      if (canEditPage) {
+        nonEditablePaths.forEach(function (nonEditablePath) {
+          if (nonEditablePath === path) {
+            canEditPage = false;
+          }
+        });
+      }
+      return canEditPage;
+    };
+
+    $scope.create = function () {
+      ngDialog.open({
+        template: 'createNewPageDialog',
+        className: 'ngdialog-theme-default',
+        controller: 'NewPageDialogCtrl',
+      });
+    };
+
+    $scope.delete = function () {
+      if ($rootScope.pageName === 'index') {
+        $window.alert('It is not a good idea to delete your start page!');
+        return;
+      }
+
+      ngDialog.open({
+        template: 'deletePageDialog',
+        className: 'ngdialog-theme-default',
+        controller: 'DeletePageDialogCtrl',
+      });
+    };
+
+    $scope.edit = function () {
+      $rootScope.$broadcast('edit');
+    };
+
+    $scope.cancelEdit = function () {
+      $rootScope.$broadcast('cancelEdit');
+    };
+
+    $scope.save = function () {
+      ngDialog.open({
+        template: 'commitMessageDialog',
+        className: 'ngdialog-theme-default',
+        controller: 'CommitMessageDialogCtrl',
+      });
+    };
+
+    var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
+      $scope.isAuthenticated = data.isAuthenticated;
+      $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+    });
+
+    var isEditorVisibleUnregister = $rootScope.$on('isEditorVisible', function (event, data) {
+      $scope.isEditorVisible = data.isEditorVisible;
+    });
+
+    var beforeSaveUnregister = $rootScope.$on('beforeSave', function () {
+      $scope.save();
+    });
+
+    var routeChangeSuccessUnregister = $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+      $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+    });
+
+    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+
+    $scope.$on('$destroy', function () {
+      beforeSaveUnregister();
+      isAuthenticatedUnregister();
+      isEditorVisibleUnregister();
+      routeChangeSuccessUnregister();
+    });
+  }]);
+})(angular.module('mdwiki.controllers'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('GitConnectCtrl', ['$rootScope', '$scope', '$location', 'PageService', 'SettingsService', 'ServerConfigService', function ($rootScope, $scope, $location, pageService, settingsService, serverConfigService) {
+    var settings = settingsService.get();
+    $scope.provider = settings.provider || 'github';
+    $scope.githubUser = settings.githubUser || 'mdwiki';
+    $scope.repositoryName = settings.githubRepository || 'wiki';
+
+    $scope.message = 'Please enter your GitHub user name and the name of the repository that you want to use for mdwiki.';
+    $scope.githubUserPlaceHolderText = 'Enter here your GitHub username';
+    $scope.repositoryNamePlaceHolderText = 'Enter here the name of the repository';
+
+    $scope.isBusy = false;
+    $scope.hasError = false;
+
+    $scope.connect = function (successMessage) {
+      successMessage = successMessage || 'The git-repository was successfully connected!';
+
+      $scope.message = 'Please wait while connecting to your repository...';
+
+      var respositoryUrl = $scope.githubUser + '/' + $scope.repositoryName;
+
+      var settings = {
+        provider: $scope.provider,
+        url: respositoryUrl,
+        githubRepository: $scope.repositoryName,
+        githubUser: $scope.githubUser
+      };
+
+      pageService.getPages(settings)
+        .then(function (pages) {
+          var startPage = pageService.findStartPage(pages);
+          if (startPage !== undefined && startPage.length > 0) {
+            settings.startPage = startPage;
+            settingsService.put(settings);
+            $scope.message = successMessage;
+            $location.path('/');
+
+            $rootScope.$broadcast('OnGitConnected', { settings: settings});
+          } else {
+            $scope.message = 'No startpage was found!';
+            $scope.isBusy = false;
+            $scope.hasError = true;
+          }
+        }, function (error) {
+          $scope.message = 'An error occurred while connection to the git-repository: ' + error.message;
+          $scope.isBusy = false;
+          $scope.hasError = true;
+        })
+        .finally(function () {
+          $scope.isBusy = false;
+        });
+    };
+
+  }]);
+})(angular.module('mdwiki.controllers'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('NewPageDialogCtrl', ['$rootScope', '$scope', 'ngDialog',
+    function ($rootScope, $scope, ngDialog) {
+      $scope.pageName = 'newpage';
+
+      $scope.closeDialog = function () {
+        ngDialog.close();
+        $rootScope.$broadcast('create', { pageName: $scope.pageName });
+      };
+    }
+  ]);
+})(angular.module('mdwiki.controllers'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('PagesCtrl', ['$rootScope', '$scope', 'PageService', function ($rootScope, $scope, pageService) {
+    $scope.pages = [];
+    $rootScope.pages = $scope.pages;
+
+    var updatePages = function (pages) {
+      $scope.pages = pages || [];
+      $rootScope.pages = $scope.pages;
+    };
+
+    pageService.getPages()
+      .then(function (pages) {
+        updatePages(pages);
+        pageService.registerObserver(updatePages);
+      });
+
+    $scope.excludeDefaultPage = function (page) {
+      var excludes = ['index', 'home', 'readme'];
+      var excludePage = false;
+
+      angular.forEach(excludes, function (exclude) {
+        if (page.name.toLowerCase() === exclude) {
+          excludePage = true;
+        }
+      });
+
+      return !excludePage;
+    };
+  }]);
+})(angular.module('mdwiki.controllers'));
+
+
+(function (controllers) {
+  'use strict';
+
+  controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchService', function ($scope, $location, $route, searchService) {
     $scope.textToSearch = '';
     $scope.searchResult = searchService.searchResult;
     $scope.message = '';
@@ -44978,3 +44999,5 @@ controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchSe
         });
     };
   }]);
+})(angular.module('mdwiki.controllers'));
+

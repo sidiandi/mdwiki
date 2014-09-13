@@ -1,12 +1,13 @@
-'use strict';
+(function (controllers) {
+  'use strict';
 
-var controllers = controllers || angular.module('mdwiki.controllers', []);
+  controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
+    $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
 
-controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
-  $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
+    $scope.closeDialog = function () {
+      ngDialog.close();
+      $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
+    };
+  }]);
+})(angular.module('mdwiki.controllers'));
 
-  $scope.closeDialog = function () {
-    ngDialog.close();
-    $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
-  };
-}]);

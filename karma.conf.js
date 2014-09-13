@@ -25,11 +25,11 @@ module.exports = function (config) {
       'bower/angular-ui-codemirror/ui-codemirror.js',
       'bower/ngDialog/js/ngDialog.js',
       'bower/angular-mocks/angular-mocks.js',
+      'public/js/app.js',
       'public/js/controllers/*.js',
       'public/js/services/*.js',
       'public/js/directives.js',
       'public/js/filters.js',
-      'public/js/app.js',
       'test_client/jasmine-aliases.js',
       'test_client/**/*Specs.js'
     ],

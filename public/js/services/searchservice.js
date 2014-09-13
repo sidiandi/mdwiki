@@ -1,8 +1,7 @@
-'use strict';
+(function (services) {
+  'use strict';
 
-var services = services || angular.module('mdwiki.services', []);
-
-services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
+  services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', function ($http, $q, urlBuilder) {
     var searchServiceInstance = {};
     searchServiceInstance.searchResult = '';
 
@@ -31,3 +30,5 @@ services.factory('SearchService', ['$http', '$q', 'ApiUrlBuilderService', functi
     };
 
   }]);
+})(angular.module('mdwiki.services'));
+

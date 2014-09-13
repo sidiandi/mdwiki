@@ -18,6 +18,7 @@
   "expr": true,
   "quotmark": "single",
   "globals": {
+    "window": true,
     "describe": true,
     "ddescribe": true,
     "expect": true,

@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-describe('SearchCtrl Spec', function () {
-
+  describe('SearchCtrl Spec', function () {
     beforeEach(function () {
         module('mdwiki');
         module('mdwiki.controllers');
@@ -73,3 +73,6 @@ describe('SearchCtrl Spec', function () {
         });
       });
   });
+})();
+
+

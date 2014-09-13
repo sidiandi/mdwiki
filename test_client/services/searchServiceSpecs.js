@@ -1,6 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-describe('SearchService spec', function () {
+  describe('SearchService spec', function () {
     var httpMock, searchService;
 
     beforeEach(function () {
@@ -28,3 +29,6 @@ describe('SearchService spec', function () {
         httpMock.flush();
       });
   });
+})();
+
+

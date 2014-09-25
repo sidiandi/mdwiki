@@ -2,8 +2,6 @@
   'use strict';
 
   services.factory('AuthService', ['$http', '$q', function ($http, $q) {
-    var user = '';
-
     var getAuthenticatedUser = function () {
       var deferred = $q.defer();
 

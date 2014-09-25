@@ -2,10 +2,8 @@
 
 var request = require('supertest'),
     express = require('express'),
-    should = require('should'),
-    sinon = require('sinon');
-
-var oauth = require('../../lib/oauth.js');
+    sinon = require('sinon'),
+    oauth = require('../../lib/oauth.js');
 
 describe('oauth Tests', function () {
   var app;
@@ -72,6 +70,7 @@ describe('oauth Tests', function () {
         // ARRANGE
         var req = { };
         var res = sinon.stub({
+          /* jshint unused: false */
           send: function (code, text) { },
           setHeader: function () { },
           end: function () {}

@@ -24,9 +24,7 @@
       service.getConfig()
         .then(function (data) {
           actual = data;
-        }, function (error) {
-
-      });
+        });
 
       httpMock.flush();
 

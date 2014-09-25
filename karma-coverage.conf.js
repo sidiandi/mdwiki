@@ -6,7 +6,6 @@ module.exports = function (config) {
   sharedConfig(config);
 
   config.set({
-
     preprocessors: {
       'public/js/controllers/*.js': ['coverage'],
       'public/js/services/*.js': ['coverage'],

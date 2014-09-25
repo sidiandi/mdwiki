@@ -2,14 +2,11 @@
 
 var factory = require('../../lib/contentProviderFactory'),
     githubContentProvider = require('../../lib/githubContentProvider'),
-    errors = require('../../lib/errors'),
-    should = require('should');
+    errors = require('../../lib/errors');
 
 describe('provider factory tests', function () {
-
   describe('When the provider github was given ', function () {
     it('should return the github provider', function () {
-      var provider = factory.create('GitHub', 'janbaer', 'wiki-content');
       (factory.create('github') instanceof githubContentProvider).should.be.true;
     });
   });

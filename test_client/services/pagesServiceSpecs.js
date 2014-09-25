@@ -28,9 +28,7 @@
         pageService.getPage('index')
           .then(function (data) {
             actualHtml = data;
-          }, function (error) {
-
-        });
+          });
 
         httpMock.flush();
 
@@ -50,9 +48,7 @@
         pageService.getPage('index', 'markdown')
           .then(function (data) {
             actual = data;
-          }, function (error) {
-
-        });
+          });
 
         httpMock.flush();
 
@@ -71,9 +67,7 @@
         pageService.savePage('index', 'commitMessage', '#Test')
           .then(function (data) {
             actualHtml = data;
-          }, function (error) {
-
-        });
+          });
 
         httpMock.flush();
 
@@ -115,9 +109,7 @@
         pageService.getPages()
           .then(function (data) {
             actual = data;
-          }, function (error) {
-
-        });
+          });
 
         httpMock.flush();
         expect(actual).not.toBeUndefined();

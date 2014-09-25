@@ -37,7 +37,7 @@
 
         it('should call the popup function', function () {
           // ARRANGE
-          spyOn($.fn, 'tooltip').andCallThrough;
+          spyOn($.fn, 'tooltip').andCallThrough();
 
           // ACT
           element = createAndCompileHtml(scope, html);

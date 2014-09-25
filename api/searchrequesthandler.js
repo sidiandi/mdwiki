@@ -10,9 +10,11 @@ var search = function (req, res) {
     .then(function (searchResult) {
       console.log('textToSearch:' + req.body.textToSearch);
       console.log('searchResult.....:' + searchResult);
-      res.statusCode = 200;
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+
       var stringifiedResult = JSON.stringify(searchResult);
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Length', stringifiedResult.length);
       res.write(stringifiedResult);
       res.end();
     })

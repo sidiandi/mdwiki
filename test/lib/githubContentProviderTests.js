@@ -274,7 +274,7 @@ describe('githubContentProvider Tests', function () {
           .catch(function (error) {
             lastError = error;
           })
-          .done(function (response) {
+          .done(function () {
             should.not.exists(lastError);
             requestStub.calledWithMatch({ url: expectedUrl, headers: { 'user-agent': 'mdwiki' }, body: expectedMessage, json: true}).should.be.true;
             done();

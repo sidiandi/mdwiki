@@ -1,7 +1,6 @@
 'use strict';
 
-var q = require('q'),
-    errors = require('../lib/errors'),
+var errors = require('../lib/errors'),
     paramHandler = require('../lib/requestParamHandler.js');
 
 var userWantsToHaveMarkdown = function (query) {
@@ -88,7 +87,7 @@ var deletePage = function (req, res) {
   var provider = paramHandler.createProviderFromRequest(req);
 
   provider.deletePage(pageName)
-    .then(function (response) {
+    .then(function () {
       sendResponse(res);
     })
     .catch(function (error) {

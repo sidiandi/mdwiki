@@ -52,7 +52,6 @@ module.exports = function (grunt) {
     concat: {
       js: {
         src: [
-          'bower/jquery/jquery.js',
           'bower/bootstrap/dist/js/bootstrap.js',
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',

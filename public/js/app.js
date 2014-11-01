@@ -6,7 +6,6 @@
     'ngSanitize',
     'ngAnimate',
     'jmdobry.angular-cache',
-    'ui.codemirror',
     'ngDialog',
     'mdwiki.controllers',
     'mdwiki.services',

@@ -14,7 +14,7 @@
         searchService = $injector.get('SearchService');
 
         var settingsService = $injector.get('SettingsService');
-        spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
+        spyOn(settingsService, 'get').and.returnValue({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
       }));
 
     it('should call the search function with the given text to search', function () {

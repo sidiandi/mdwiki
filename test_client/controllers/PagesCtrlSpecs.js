@@ -17,7 +17,7 @@
 
         pageService = $injector.get('PageService');
         deferred = $q.defer();
-        spyOn(pageService, 'getPages').andReturn(deferred.promise);
+        spyOn(pageService, 'getPages').and.returnValue(deferred.promise);
 
         pageCtrl = $controller('PagesCtrl', {
           $scope: $scope,

@@ -37,7 +37,7 @@
 
         it('should call the popup function', function () {
           // ARRANGE
-          spyOn($.fn, 'tooltip').andCallThrough();
+          spyOn($.fn, 'tooltip').and.callThrough();
 
           // ACT
           element = createAndCompileHtml(scope, html);
@@ -65,7 +65,7 @@
       describe('when the model isBusy changes to true', function () {
         it('should call the button method with loading', function () {
           // ARRANGE
-          spyOn($.fn, 'button').andCallThrough();
+          spyOn($.fn, 'button').and.callThrough();
 
           // ACT
           scope.$apply(function () {
@@ -81,7 +81,7 @@
       describe('when the model isBusy changes to false changes', function () {
         it('should call the button method with loading', function () {
           // ARRANGE
-          spyOn($.fn, 'button').andCallThrough();
+          spyOn($.fn, 'button').and.callThrough();
 
           // ACT
           scope.$apply(function () {

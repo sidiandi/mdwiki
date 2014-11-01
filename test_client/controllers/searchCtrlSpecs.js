@@ -18,7 +18,7 @@
           $route = $injector.get('$route');
 
           searchService = $injector.get('SearchService');
-          spyOn(searchService, 'search').andReturn($q.when([{fileNameWithoutExtension: 'name', fileContext: 'context'}]));
+          spyOn(searchService, 'search').and.returnValue($q.when([{fileNameWithoutExtension: 'name', fileContext: 'context'}]));
 
           var $http = $injector.get('$httpBackend');
           $http.expectGET('./views/searchResult.html').respond(200, '</h1>');
@@ -54,7 +54,7 @@
         describe('When the user is on the search page', function () {
           it('Should call the search service and reload the search page', function () {
             // ARRANGE
-            spyOn($location, 'path').andReturn('/search');
+            spyOn($location, 'path').and.returnValue('/search');
             spyOn($route, 'reload');
 
             createController();

@@ -28,7 +28,7 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse" ng-cloak>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/"><i class="icon-home icon-large"></i> Home</a></li>
+          <li class="active"><a href="/"><i class="icon-home icon-large"></i> MyHome</a></li>
             <li class="dropdown">
               <a class="dropdown-toggle pagesMenu" data-toggle="dropdown">
                 Pages <span class="caret"></span>
@@ -98,5 +98,10 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="js/scripts.js"></script>
+  <script>
+  if (window.location.hostname === 'localhost') {
+    window.document.write('<script src="http://localhost:35729/livereload.js"><\/script>');
+  }
+  </script>
 </body>
 </html>

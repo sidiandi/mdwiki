@@ -110,12 +110,12 @@ module.exports = function (grunt) {
 
     nodemon: {
       dev: {
+        script: 'app.js',
         options: {
-          file: './app.js',
           args: [],
           nodeArgs: ['--debug'],
-          watchedExtensions: ['js'],
-          watchedFolders: ['api', 'lib'],
+          ext: 'js',
+          ignore: ['public/**', 'node_modules/**', 'bower/**', 'test/**'],
           delayTime: 1,
           legacyWatch: true,
           env: {
@@ -123,24 +123,7 @@ module.exports = function (grunt) {
           },
           cwd: __dirname
         }
-      },
-      prod: {
-        options: {
-          file: './app.js',
-          args: [],
-          nodeArgs: [],
-          ignoredFiles: ['README.md', 'node_modules/**'],
-          watchedExtensions: ['js'],
-          watchedFolders: ['api', 'lib'],
-          delayTime: 1,
-          legacyWatch: true,
-          env: {
-            PORT: '3000',
-            NODE_ENV: 'production'
-          },
-          cwd: __dirname
-        }
-      },
+      }
     },
 
     watch: {
@@ -157,12 +140,20 @@ module.exports = function (grunt) {
       styles: {
         files: ['public/css/customstyles.css'],
         tasks: ['concat:css', 'cssmin']
+      },
+
+      livereload: {
+        files: ['public/**/*.html', 'public/js/scripts.js', 'public/css/styles.css'],
+        tasks: [],
+        options: {
+          livereload: true
+        }
       }
     },
 
     concurrent: {
       target: {
-        tasks: ['karma:unit', 'nodemon:dev', 'watch'],
+        tasks: ['nodemon', 'watch'],
         options: {
           logConcurrentOutput: true
         }
@@ -197,7 +188,7 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'concat', 'minify', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
@@ -213,5 +204,4 @@ module.exports = function (grunt) {
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);
-
 };

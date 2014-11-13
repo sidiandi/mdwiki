@@ -15,7 +15,7 @@
       pageService = $injector.get('PageService');
 
       var settingsService = $injector.get('SettingsService');
-      spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
+      spyOn(settingsService, 'get').and.returnValue({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
     }));
 
     describe('When the page exists and the user dont specifies markdown as format', function () {

@@ -20,7 +20,7 @@
       authService = $injector.get('AuthService');
 
       deferred = $q.defer();
-      spyOn(authService, 'getAuthenticatedUser').andReturn(deferred.promise);
+      spyOn(authService, 'getAuthenticatedUser').and.returnValue(deferred.promise);
 
       $scope = $rootScope.$new();
 

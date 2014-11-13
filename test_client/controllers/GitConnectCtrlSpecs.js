@@ -25,14 +25,14 @@
         pageService = $injector.get('PageService');
         pagesDeferred = $q.defer();
         pagesDeferred.resolve([{ name: 'index' }]);
-        spyOn(pageService, 'getPages').andReturn(pagesDeferred.promise);
+        spyOn(pageService, 'getPages').and.returnValue(pagesDeferred.promise);
 
         settingsService = $injector.get('SettingsService');
         spyOn(settingsService, 'put');
 
         var serverConfigService = $injector.get('ServerConfigService');
         serverConfigDeferred = $q.defer();
-        spyOn(serverConfigService, 'getConfig').andReturn(serverConfigDeferred.promise);
+        spyOn(serverConfigService, 'getConfig').and.returnValue(serverConfigDeferred.promise);
 
         createController = function () {
           return $controller('GitConnectCtrl', {

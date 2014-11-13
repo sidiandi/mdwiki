@@ -14,21 +14,6 @@
     };
   });
 
-  directives.directive('bsSwitchtext', function () {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        scope.$watch('isBusy', function (newValue, oldValue) {
-          if (newValue === true) {
-            element.button('loading');
-          } else {
-            element.button('reset');
-          }
-        });
-      }
-    };
-  });
-
   directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
     var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 

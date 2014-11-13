@@ -22,7 +22,7 @@
 
     describe('get tests', function () {
       it('should return a default settings object when no settings are saved', function () {
-        spyOn(cache, 'get').andReturn(undefined);
+        spyOn(cache, 'get').and.returnValue(undefined);
 
         var settings = settingsService.get();
 
@@ -31,7 +31,7 @@
       });
 
       it('should return the saved object', function () {
-        spyOn(cache, 'get').andReturn({
+        spyOn(cache, 'get').and.returnValue({
           provider: 'github',
           githubUser: 'janbaer',
           githubRepository: 'wiki'

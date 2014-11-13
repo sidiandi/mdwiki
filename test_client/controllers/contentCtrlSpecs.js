@@ -16,10 +16,10 @@
         var $controller = $injector.get('$controller');
 
         var pageService = $injector.get('PageService');
-        spyOn(pageService, 'getPage').andReturn($q.when('<h1>Test</h1>'));
+        spyOn(pageService, 'getPage').and.returnValue($q.when('<h1>Test</h1>'));
 
         var settingsService = $injector.get('SettingsService');
-        spyOn(settingsService, 'get').andReturn({ provider: 'git' });
+        spyOn(settingsService, 'get').and.returnValue({ provider: 'git' });
 
         createController = function () {
           return $controller('ContentCtrl', {
@@ -54,7 +54,7 @@
 
         var pageService = $injector.get('PageService');
 
-        spyOn(pageService, 'getPage').andReturn($q.reject({ code: 404}));
+        spyOn(pageService, 'getPage').and.returnValue($q.reject({ code: 404}));
 
         var settingsService = $injector.get('SettingsService');
 
@@ -92,7 +92,7 @@
         var $controller = $injector.get('$controller');
         var pageService = $injector.get('PageService');
 
-        spyOn(pageService, 'getPage').andReturn($q.reject({ code: 404 }));
+        spyOn(pageService, 'getPage').and.returnValue($q.reject({ code: 404 }));
 
         var settingsService = $injector.get('SettingsService');
 
@@ -132,9 +132,9 @@
 
         var pageService = $injector.get('PageService');
 
-        spyOn(pageService, 'getPage').andReturn($q.when('<h1>Test</h1>'));
+        spyOn(pageService, 'getPage').and.returnValue($q.when('<h1>Test</h1>'));
 
-        spyOn($rootScope, '$broadcast').andCallThrough();
+        spyOn($rootScope, '$broadcast').and.callThrough();
 
         var settingsService = $injector.get('SettingsService');
 
@@ -174,7 +174,7 @@
         var $controller = $injector.get('$controller');
 
         pageService = $injector.get('PageService');
-        spyOn(pageService, 'getPage').andReturn($.when('<a href="/static/staticfile.pdf">Test</a>'));
+        spyOn(pageService, 'getPage').and.returnValue($.when('<a href="/static/staticfile.pdf">Test</a>'));
 
         settingsService = $injector.get('SettingsService');
 
@@ -191,7 +191,7 @@
       }));
 
       it('should add a target attribute to the anchors', function () {
-        spyOn(settingsService, 'get').andReturn({ provider: 'git' });
+        spyOn(settingsService, 'get').and.returnValue({ provider: 'git' });
 
         var controller = createController();
 
@@ -202,7 +202,7 @@
 
       describe('and the current provider is github', function () {
         it('Should add the github username and repository to the url', function () {
-          spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki' });
+          spyOn(settingsService, 'get').and.returnValue({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki' });
 
           var controller = createController();
 
@@ -211,11 +211,6 @@
           expect($scope.content).toEqual('<a href="/static/janbaer/wiki/staticfile.pdf" target="_blank">Test</a>');
         });
       });
-
-      afterEach(function () {
-        settingsService.get.reset();
-      });
-
     });
 
     describe('When we host a github wiki it should remove the wiki at the begin of the link', function () {
@@ -226,7 +221,7 @@
         var $controller = $injector.get('$controller');
 
         var pageService = $injector.get('PageService');
-        spyOn(pageService, 'getPage').andReturn($q.when('<a href="wiki/page1">Page1</a>'));
+        spyOn(pageService, 'getPage').and.returnValue($q.when('<a href="wiki/page1">Page1</a>'));
 
         var settingsService = $injector.get('SettingsService');
 

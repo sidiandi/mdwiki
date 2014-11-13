@@ -2,10 +2,8 @@
 
 var request = require('supertest'),
     express = require('express'),
-    should = require('should'),
     sinon = require('sinon'),
     Q = require('q'),
-    storage = require('../../lib/pageStorageFS'),
     errors = require('../../lib/errors'),
     GithubProvider = require('../../lib/githubContentProvider.js'),
     paramHandler = require('../../lib/requestParamHandler.js'),
@@ -44,7 +42,7 @@ describe('pagerequesthandler tests', function () {
         request(app).get('/api/janbaer/wiki/page')
               .expect('Content-Type', 'text/html; charset=utf-8')
               .expect(200, '<h1>Test</h1>')
-              .end(function (err, res) {
+              .end(function (err) {
                 if (err) {
                   return done(err);
                 }
@@ -66,7 +64,7 @@ describe('pagerequesthandler tests', function () {
         request(app).get('/api/janbaer/wiki/page/index')
           .expect('Content-Type', 'text/html; charset=utf-8')
           .expect(200, '<h1>Test</h1>')
-          .end(function (err, res) {
+          .end(function (err) {
             if (err) {
               return done(err);
             }
@@ -84,7 +82,7 @@ describe('pagerequesthandler tests', function () {
         request(app).get('/api/janbaer/wiki/page/index?format=markdown')
               .expect('Content-Type', 'text/plain; charset=utf-8')
               .expect(200, '#Test')
-              .end(function (err, res) {
+              .end(function (err) {
                 if (err) {
                   return done(err);
                 }
@@ -105,7 +103,7 @@ describe('pagerequesthandler tests', function () {
         request(app).get('/api/janbaer/wiki/page/nonexistingPage')
           .expect('Content-Type', /^text\/plain/)
           .expect(404)
-          .end(function (err, res) {
+          .end(function (err) {
             if (err) {
               return done(err);
             }
@@ -129,7 +127,7 @@ describe('pagerequesthandler tests', function () {
           .send({ commitMessage: 'this is the update'})
           .expect('Content-Type', /^text\/plain/)
           .expect(400)
-          .end(function (err, res) {
+          .end(function (err) {
             if (err) {
               return done(err);
             }
@@ -159,7 +157,7 @@ describe('pagerequesthandler tests', function () {
           .send({ commitMessage: commitMessage, markdown: content})
           .expect('Content-Type', 'text/html; charset=utf-8')
           .expect(200, expectedResponse)
-          .end(function (err, res) {
+          .end(function (err) {
             if (err) {
               return done(err);
             }
@@ -192,7 +190,7 @@ describe('pagerequesthandler tests', function () {
           .set('Content-Type', 'application/json')
           .send({ commitMessage: commitMessage })
           .expect(200)
-          .end(function (err, res) {
+          .end(function (err) {
             if (err) {
               return done(err);
             }

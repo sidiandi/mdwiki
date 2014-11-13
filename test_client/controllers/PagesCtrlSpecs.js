@@ -1,61 +1,59 @@
-'use strict';
+(function () {
+  'use strict';
 
-describe('PagesCtrl Spec', function () {
-
-  beforeEach(function () {
-    module('mdwiki');
-    module('mdwiki.controllers');
-  });
-
-  describe('When page exists', function () {
-    var $rootScope, $scope, pageCtrl, pageService, deferred;
-
-    beforeEach(inject(function ($injector, $q) {
-      $rootScope = $injector.get('$rootScope');
-      $scope = $rootScope.$new();
-      var $controller = $injector.get('$controller');
-
-      pageService = $injector.get('PageService');
-      deferred = $q.defer();
-      spyOn(pageService, 'getPages').andReturn(deferred.promise);
-
-      pageCtrl = $controller('PagesCtrl', {
-        $scope: $scope,
-        pageService: pageService
-      });
-    }));
-
-    it('it should call the service the fetch all pages and set it into the content', function () {
-
-      $scope.$apply(function () {
-        deferred.resolve([ {name: 'index'}, {name: 'page1'}]);
-      });
-
-      expect($scope.pages).not.toBeUndefined;
-      expect($scope.pages.length).toEqual(2);
-      expect($scope.pages).toEqual($rootScope.pages);
+  describe('PagesCtrl Spec', function () {
+    beforeEach(function () {
+      module('mdwiki');
+      module('mdwiki.controllers');
     });
 
-    describe('Filter excludeDefaultPage tests', function () {
-      it('it should filter the index page', function () {
-        expect($scope.excludeDefaultPage({name: 'index'})).toBe(false);
+    describe('When page exists', function () {
+      var $rootScope, $scope, pageCtrl, pageService, deferred;
+
+      beforeEach(inject(function ($injector, $q) {
+        $rootScope = $injector.get('$rootScope');
+        $scope = $rootScope.$new();
+        var $controller = $injector.get('$controller');
+
+        pageService = $injector.get('PageService');
+        deferred = $q.defer();
+        spyOn(pageService, 'getPages').and.returnValue(deferred.promise);
+
+        pageCtrl = $controller('PagesCtrl', {
+          $scope: $scope,
+          pageService: pageService
+        });
+      }));
+
+      it('it should call the service the fetch all pages and set it into the content', function () {
+
+        $scope.$apply(function () {
+          deferred.resolve([ {name: 'index'}, {name: 'page1'}]);
+        });
+
+        expect($scope.pages).toBeDefined();
+        expect($scope.pages.length).toEqual(2);
+        expect($scope.pages).toEqual($rootScope.pages);
       });
 
-      it('it should filter the home page', function () {
-        expect($scope.excludeDefaultPage({name: 'home'})).toBe(false);
-      });
+      describe('Filter excludeDefaultPage tests', function () {
+        it('it should filter the index page', function () {
+          expect($scope.excludeDefaultPage({name: 'index'})).toBe(false);
+        });
 
-      it('it should filter the home page also when it begins with an capital letter', function () {
-        expect($scope.excludeDefaultPage({name: 'Home'})).toBe(false);
-      });
+        it('it should filter the home page', function () {
+          expect($scope.excludeDefaultPage({name: 'home'})).toBe(false);
+        });
 
-      it('it should not filter the page1 page', function () {
-        expect($scope.excludeDefaultPage({name: 'page1'})).toBe(true);
-      });
+        it('it should filter the home page also when it begins with an capital letter', function () {
+          expect($scope.excludeDefaultPage({name: 'Home'})).toBe(false);
+        });
 
+        it('it should not filter the page1 page', function () {
+          expect($scope.excludeDefaultPage({name: 'page1'})).toBe(true);
+        });
+
+      });
     });
   });
-
-
-
-});
+})();

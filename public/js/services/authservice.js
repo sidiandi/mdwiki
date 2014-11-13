@@ -1,47 +1,46 @@
-'use strict';
+(function (services) {
+  'use strict';
 
-var services = services || angular.module('mdwiki.services', []);
+  services.factory('AuthService', ['$http', '$q', function ($http, $q) {
+    var getAuthenticatedUser = function () {
+      var deferred = $q.defer();
 
-services.factory('AuthService', ['$http', '$q', function ($http, $q) {
-  var user = '';
+      $http({
+        method: 'GET',
+        url: '/auth/user',
+        headers: {'Content-Type': 'application/json'},
+      })
+      .success(function (auth, status, headers, config) {
+        deferred.resolve(auth.user);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject(data);
+      });
 
-  var getAuthenticatedUser = function () {
-    var deferred = $q.defer();
+      return deferred.promise;
+    };
 
-    $http({
-      method: 'GET',
-      url: '/auth/user',
-      headers: {'Content-Type': 'application/json'},
-    })
-    .success(function (auth, status, headers, config) {
-      deferred.resolve(auth.user);
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(data);
-    });
+    var logout = function () {
+      var deferred = $q.defer();
 
-    return deferred.promise;
-  };
+      $http({
+        method: 'DELETE',
+        url: '/auth/user',
+      })
+      .success(function (data, status, headers, config) {
+        deferred.resolve(data);
+      })
+      .error(function (data, status, headers, config) {
+        deferred.reject(data);
+      });
 
-  var logout = function () {
-    var deferred = $q.defer();
+      return deferred.promise;
+    };
 
-    $http({
-      method: 'DELETE',
-      url: '/auth/user',
-    })
-    .success(function (data, status, headers, config) {
-      deferred.resolve(data);
-    })
-    .error(function (data, status, headers, config) {
-      deferred.reject(data);
-    });
+    return {
+      logout: logout,
+      getAuthenticatedUser: getAuthenticatedUser
+    };
+  }]);
+})(angular.module('mdwiki.services'));
 
-    return deferred.promise;
-  };
-
-  return {
-    logout: logout,
-    getAuthenticatedUser: getAuthenticatedUser
-  };
-}]);

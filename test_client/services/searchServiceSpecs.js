@@ -1,6 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-describe('SearchService spec', function () {
+  describe('SearchService spec', function () {
     var httpMock, searchService;
 
     beforeEach(function () {
@@ -13,7 +14,7 @@ describe('SearchService spec', function () {
         searchService = $injector.get('SearchService');
 
         var settingsService = $injector.get('SettingsService');
-        spyOn(settingsService, 'get').andReturn({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
+        spyOn(settingsService, 'get').and.returnValue({ provider: 'github', githubUser: 'janbaer', githubRepository: 'wiki', url: 'janbaer/wiki' });
       }));
 
     it('should call the search function with the given text to search', function () {
@@ -28,3 +29,6 @@ describe('SearchService spec', function () {
         httpMock.flush();
       });
   });
+})();
+
+

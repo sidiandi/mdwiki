@@ -1,7 +1,6 @@
 'use strict';
 
-var q = require('q'),
-    paramHandler = require('../lib/requestParamHandler.js');
+var paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {
   var provider = paramHandler.createProviderFromRequest(req);

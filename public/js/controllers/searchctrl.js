@@ -1,8 +1,7 @@
-'use strict';
+(function (controllers) {
+  'use strict';
 
-var controllers = controllers || angular.module('mdwiki.controllers', []);
-
-controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchService', function ($scope, $location, $route, searchService) {
+  controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchService', function ($scope, $location, $route, searchService) {
     $scope.textToSearch = '';
     $scope.searchResult = searchService.searchResult;
     $scope.message = '';
@@ -25,3 +24,5 @@ controllers.controller('SearchCtrl', ['$scope', '$location', '$route', 'SearchSe
         });
     };
   }]);
+})(angular.module('mdwiki.controllers'));
+

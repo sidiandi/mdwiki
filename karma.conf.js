@@ -13,7 +13,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bower/jquery/jquery.js',
+      'bower/jquery/dist/jquery.js',
       'bower/bootstrap/dist/js/bootstrap.js',
       'bower/angular/angular.js',
       'bower/angular-animate/angular-animate.js',
@@ -25,11 +25,12 @@ module.exports = function (config) {
       'bower/angular-ui-codemirror/ui-codemirror.js',
       'bower/ngDialog/js/ngDialog.js',
       'bower/angular-mocks/angular-mocks.js',
+      'public/js/app.js',
       'public/js/controllers/*.js',
       'public/js/services/*.js',
       'public/js/directives.js',
       'public/js/filters.js',
-      'public/js/app.js',
+      'test_client/jasmine-aliases.js',
       'test_client/**/*Specs.js'
     ],
 
@@ -41,6 +42,12 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['spec', 'growl'],
+
+    specReporter : {
+      suppressPassed: true,
+      suppressFailed: false,
+      suppressSkipped: true
+    },
 
     // web server port
     port: 9876,

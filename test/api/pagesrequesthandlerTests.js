@@ -5,7 +5,6 @@ var request = require('supertest'),
     should = require('should'),
     sinon = require('sinon'),
     Q = require('q'),
-    errors = require('../../lib/errors'),
     GithubProvider = require('../../lib/githubContentProvider.js'),
     paramHandler = require('../../lib/requestParamHandler.js'),
     pagesRequestHandler = require('../../api/pagesrequesthandler');

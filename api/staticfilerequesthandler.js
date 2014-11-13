@@ -1,8 +1,6 @@
 'use strict';
 
-var fs = require('fs'),
-    path = require('path'),
-    logger = require('../lib/logger'),
+var logger = require('../lib/logger'),
     paramHandler = require('../lib/requestParamHandler.js');
 
 module.exports = function (req, res) {

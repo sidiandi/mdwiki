@@ -1,7 +1,6 @@
 'use strict';
 
-var should = require('should'),
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     oauth = require('../../lib/oauth.js'),
     requestParamHandler = require('../../lib/requestParamHandler.js'),
     githubContentProvider = require('../../lib/githubContentProvider.js');

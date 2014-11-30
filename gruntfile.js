@@ -63,6 +63,8 @@ module.exports = function (grunt) {
           'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
           'bower/codemirror/mode/markdown/markdown.js',
+          'bower/bootstrap-material-design/dist/js/material.js',
+          'bower/bootstrap-material-design/dist/js/ripples.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -72,7 +74,10 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'bower/bootswatch/spacelab/bootstrap.css',
+          'bower/bootstrap/dist/css/bootstrap.css',
+          'bower/bootstrap-material-design/dist/css/material.css',
+          'bower/bootstrap-material-design/dist/css/ripples.min.css',
+          'bower/bootstrap-material-design/dist/css/material-wfont.css',
           'bower/font-awesome/css/font-awesome.css',
           'bower/codemirror/lib/codemirror.css',
           'bower/ngDialog/css/ngDialog.css',
@@ -177,7 +182,7 @@ module.exports = function (grunt) {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       },
       copyFonts: {
-        command: 'cp -R ./bower/font-awesome/font/ ./public/font'
+        command: 'cp -R ./bower/font-awesome/font/ ./public/font && cp -R ./bower/bootstrap-material-design/dist/fonts/Material-Design-Icons.* ./public/fonts'
       }
     },
     clean: {

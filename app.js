@@ -17,9 +17,16 @@ oauth.setup(app, ['github'], isProductionMode ? require('./config/oauthconfig.js
 expressSetup.defineRoutes(app, oauth, isProductionMode);
 
 var port = process.env.PORT || 3000;
-var hostname = process.env.HOST || 'localhost';
+var hostname = process.env.HOST;
 
 logger.info('Starting server in %s mode', app.get('env'));
-app.listen(port, hostname, function () {
-  logger.info('Listening on port %s over hostname %s', port, hostname);
-});
+
+if (hostname) {
+  app.listen(port, hostname, function () {
+    logger.info('Listening on port %s over hostname %s', port, hostname);
+  });
+} else {
+  app.listen(port, function () {
+    logger.info('Listening on port %s...', port);
+  });
+}

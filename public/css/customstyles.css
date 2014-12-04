@@ -22,26 +22,76 @@ form {
   height: 55px;
   margin-right: 10px;
   margin-top: -7px;
+  float: left;
 }
 
 .content-error {
   margin-top: 20px;
 }
 
-button > a, button > a:hover {
+.authtoolbar__button, .edittoolbar__button {
+  display: none;
+}
+
+.authtoolbar__form {
+  margin-left: 0px;
+}
+
+.authtoolbar__button.user {
+  display: inline;
+}
+
+.navbar-nav {
+  float: left;
+  margin: 0;
+}
+
+.navbar-form {
+  border: none;
+  box-shadow: none;
+  padding-top: 10px;
+}
+
+.input-sm {
+  font-size: 14px;
+}
+
+.navbar-form .btn {
+  margin: -14px 0px 0px 0px;
+  padding: 15px 5px 10px 5px;
   color: white;
-  text-decoration: none;
+}
+
+.search-box {
+  display: none;
+}
+
+.navbar {
+  max-height: 50px;
 }
 
 @media (min-width: 768px) {
-  .navbar {
-    max-height: 50px;
+  .search-box {
+    display: block;
+  }
+
+  .searchbox__form{
+    padding-top: 10px;
+    margin: 0px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-form {
+    margin: 0px 0px 0px 0px;
+  }
+
+  .edittoolbar__form, .authtoolbar__form {
+    padding-top: 15px;
+    margin: 0px !important;
   }
 
   .navbar-form .btn {
-    margin: -14px 0px 0px 0px;
-    padding: 15px 0px 10px 15px;
-    color: white;
     min-width: 75px;
   }
 
@@ -60,31 +110,20 @@ button > a, button > a:hover {
     padding-bottom: 5px !important;
   }
 
-
-
   .dropdown-menu {
     max-height: 600px;
     overflow: scroll;
   }
 
-  .input-sm {
-    font-size: 14px;
+  .authtoolbar__button, .edittoolbar__button {
+    display: inline;
+  }
+
+  .search-box {
+    display: block;
   }
 }
 
-@media (max-width: 767px) {
-/*  form[name='searchForm'] .btn {
-    display: none;
-  }
-
-  form[name='searchForm'] input {
-    margin-left: 10px;
-  }
-
-  #pullbutton {
-    margin-left: 10px;
-  }*/
-}
 
 .content-view.ng-enter, .content-view.ng-leave {
   -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;

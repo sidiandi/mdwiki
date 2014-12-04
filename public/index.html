@@ -15,76 +15,68 @@
     <div class="container">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M6" bs-tooltip >
-      </div>
-
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse navbar-ex1-collapse" ng-cloak>
+        <a href="/">
+          <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M6" bs-tooltip >
+        </a>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/"><i class="icon-home icon-large"></i> Home</a></li>
-            <li class="dropdown">
-              <a class="dropdown-toggle pagesMenu" data-toggle="dropdown">
-                Pages <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu pull-left" ng-controller="PagesCtrl">
-                <li ng-repeat="page in pages | filter:excludeDefaultPage | orderBy:name">
-                  <a ng-href="/{{ page.name }}">{{ page.title }}</a></li>
-              </ul>
-            </li>
+          <li class="active">
+          <li class="dropdown">
+            <a class="dropdown-toggle pagesMenu" data-toggle="dropdown">
+              Pages <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu pull-left" ng-controller="PagesCtrl">
+              <li ng-repeat="page in pages | filter:excludeDefaultPage | orderBy:name">
+                <a ng-href="/{{ page.name }}">{{ page.title }}</a></li>
+            </ul>
+          </li>
         </ul>
-        <div class="nav navbar-nav" ng-controller="SearchCtrl">
-          <form name="searchForm" class="navbar-form navbar-left" role="search" ng-submit="search()">
+        <div class="nav navbar-nav search-box" ng-controller="SearchCtrl">
+          <form name="searchForm" class="navbar-form navbar-left searchbox__form" role="search" ng-submit="search()">
             <div class="form-group">
               <input type="search" class="form-control input-sm" placeholder="Search" ng-model="textToSearch" required>
             </div>
           </form>
         </div>
         <div class="nav navbar-nav" ng-controller="EditContentCtrl">
-          <form class="navbar-form navbar-left" ng-show="canEditPage" ng-if="isAuthenticated" >
+          <form class="navbar-form navbar-left edittoolbar__form" ng-show="canEditPage" ng-if="isAuthenticated" >
             <button class="btn btn-default" title="create a new page" ng-click="create()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding modifier="alt+shift" key="N" invoke="create()" condition="isAuthenticated && !isEditorVisible" />
-              <i class="icon-file-text-alt"></i><span>New</span>
+              <i class="icon-file-text-alt"></i><span class="edittoolbar__button">New</span>
             </button>
             <button class="btn btn-default" title="Edit current page" ng-click="edit()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding modifier="ctrl" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />
               <keybinding modifier="alt+shift" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />
-              <i class="icon-edit"></i><span>Edit</span>
+              <i class="icon-edit"></i><span class="edittoolbar__button">Edit</span>
             </button>
             <button class="btn btn-default" title="Delete current page" ng-click="delete()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding modifier="alt+shift" key="D" invoke="delete()" condition="isAuthenticated && !isEditorVisible" />
-              <i class="icon-remove"></i><span>Delete</span>
+              <i class="icon-remove"></i><span class="edittoolbar__button">Delete</span>
             </button>
             <button class="btn btn-default" title="Commit changes" ng-click="save()" ng-show="isEditorVisible" bs-tooltip>
-              <i class="icon-save"></i><span>Commit</span>
+              <i class="icon-save"></i><span class="edittoolbar__button">Commit</span>
             </button>
             <button class="btn btn-default" title="Abort changes" ng-click="cancelEdit()" ng-show="isEditorVisible" bs-tooltip>
-              <i class="icon-undo"></i><span>Cancel</span>
+              <i class="icon-undo"></i><span class="edittoolbar__button">Cancel</span>
             </button>
           </form>
         </div>
         <div class="nav navbar-nav navbar-right">
-          <form class="navbar-form navbar-left" ng-controller="AuthCtrl" >
+          <form class="navbar-form navbar-left authtoolbar__form" ng-controller="AuthCtrl" >
+            <button id="connectButton" type="button" title="Connect to a git repository"
+                    class="btn btn-default" bs-tooltip >
+              <a href="/git/connect"><i class="icon-github"></i><span class="authtoolbar__button">Connect</span></a>
+            </button>
             <button type="button" title="Login with your github account"
                     class="btn btn-default" ng-hide="isAuthenticated" bs-tooltip>
-              <a href="/auth/github" target="_self"><i class="icon-signin"></i><span>Login</span></a>
+              <a href="/auth/github" target="_self"><i class="icon-signin"></i><span class="authtoolbar__button">Login</span></a>
             </button>
             <button type="button" title="Logout from your github account"
                     class="btn btn-default" ng-show="isAuthenticated" ng-click="logout()" bs-tooltip >
-              <i class="icon-signout"><span class="user">{{ user }}</span></i>
-            </button>
-            <button id="connectButton" type="button" title="Connect to a git repository"
-                    class="btn btn-default" bs-tooltip >
-              <a href="/git/connect"><i class="icon-github"></i><span>Connect</span></a>
+              <i class="icon-signout"><span class="authtoolbar__button user">{{ user }}</span></i>
             </button>
           </form>
         </div>
-      </div><!-- /.navbar-collapse -->
+      </div>
     </div>
   </nav>
 

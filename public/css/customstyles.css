@@ -70,6 +70,17 @@ form {
   max-height: 50px;
 }
 
+.navbar-nav .open .dropdown-menu {
+  background-color: white !important;
+}
+.dropdown-menu > li > a {
+  color: black !important;
+}
+
+.pagesMenu {
+  max-width: 85px;
+}
+
 @media (min-width: 768px) {
   .search-box {
     display: block;
@@ -153,7 +164,7 @@ form {
   left:-100%;
 }
 
-#connectButton > a {
+.btn > a {
   color: White;
   text-decoration: none;
 }

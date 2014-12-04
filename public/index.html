@@ -39,7 +39,7 @@
         </div>
         <div class="nav navbar-nav" ng-controller="EditContentCtrl">
           <form class="navbar-form navbar-left edittoolbar__form" ng-show="canEditPage" ng-if="isAuthenticated" >
-            <button class="btn btn-default" title="create a new page" ng-click="create()" ng-hide="isEditorVisible" bs-tooltip>
+            <button class="btn btn-default" title="Create a new page" ng-click="create()" ng-hide="isEditorVisible" bs-tooltip>
               <keybinding modifier="alt+shift" key="N" invoke="create()" condition="isAuthenticated && !isEditorVisible" />
               <i class="icon-file-text-alt"></i><span class="edittoolbar__button">New</span>
             </button>
@@ -66,13 +66,13 @@
                     class="btn btn-default" bs-tooltip >
               <a href="/git/connect"><i class="icon-github"></i><span class="authtoolbar__button">Connect</span></a>
             </button>
-            <button type="button" title="Login with your github account"
-                    class="btn btn-default" ng-hide="isAuthenticated" bs-tooltip>
-              <a href="/auth/github" target="_self"><i class="icon-signin"></i><span class="authtoolbar__button">Login</span></a>
-            </button>
             <button type="button" title="Logout from your github account"
                     class="btn btn-default" ng-show="isAuthenticated" ng-click="logout()" bs-tooltip >
               <i class="icon-signout"><span class="authtoolbar__button user">{{ user }}</span></i>
+            </button>
+            <button type="button" title="Login with your github account"
+                    class="btn btn-default" ng-hide="isAuthenticated" bs-tooltip>
+              <a href="/auth/github" target="_self"><i class="icon-signin"></i><span class="authtoolbar__button">Login</span></a>
             </button>
           </form>
         </div>

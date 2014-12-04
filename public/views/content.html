@@ -8,7 +8,7 @@
              auto-focus auto-select ng-model="commitMessage">
     </div>
     <div class="ngdialog-buttons">
-        <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
+        <button class="btn btn-primary btn-raised" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
     </div>
   </form>
 </script>
@@ -23,7 +23,7 @@
              auto-focus auto-select ng-model="pageName">
     </div>
     <div class="ngdialog-buttons">
-        <button class="ngdialog-button ngdialog-button-primary" ng-click="closeDialog()" ng-disabled="createPage.$invalid">OK</button>
+        <button class="btn btn-primary" ng-click="closeDialog()" ng-disabled="createPage.$invalid">OK</button>
     </div>
   </form>
 </script>
@@ -34,8 +34,8 @@
       <div class="alert alert-danger">Are you sure that you want to delete the current page?</div>
     </div>
     <div class="ngdialog-buttons">
-        <button class="ngdialog-button ngdialog-button-primary" ng-click="confirmDialog()">OK</button>
-        <button class="ngdialog-button ngdialog-button-secondary" ng-click="cancelDialog()">Cancel</button>
+        <button class="btn btn-primary" ng-click="confirmDialog()">OK</button>
+        <button class="btn btn-default" ng-click="cancelDialog()">Cancel</button>
     </div>
   </form>
 </script>

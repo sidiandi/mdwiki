@@ -23,8 +23,9 @@
               Pages <span class="caret"></span>
             </a>
             <ul class="dropdown-menu pull-left" ng-controller="PagesCtrl">
-              <li ng-repeat="page in pages | filter:excludeDefaultPage | orderBy:name">
-                <a ng-href="/{{ page.name }}">{{ page.title }}</a></li>
+              <li ng-repeat="page in pages | filter:excludeDefaultPage | orderBy:'name'">
+                <a ng-href="/{{ page.name }}">{{ page.title }}</a>
+              </li>
             </ul>
           </li>
         </ul>

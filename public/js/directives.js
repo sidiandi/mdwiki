@@ -83,14 +83,16 @@
     };
   }]);
 
-  directives.directive('autoFocus', function () {
-    return {
-      restrict: 'AC',
-      link: function (scope, element) {
-        element[0].focus();
-      }
-    };
-  });
+  directives.directive('autoFocus', ['$timeout', function ($timeout) {
+      return {
+        restrict: 'AC',
+        link: function (scope, element) {
+          $timeout(function () {
+            element[0].focus();
+          }, 5);
+        }
+      };
+    }]);
 
   directives.directive('autoSelect', ['$timeout', function ($timeout) {
     return {
@@ -99,7 +101,7 @@
         element.bind('focus', function () {
           $timeout(function () {
             element[0].select();
-          }, 1);
+          }, 10);
         });
       }
     };

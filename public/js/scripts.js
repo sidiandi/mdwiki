@@ -43269,6 +43269,28 @@ window.ripples = {
 })(angular.module('mdwiki.services'));
 
 
+(function (services, CodeMirror) {
+  'use strict';
+
+  services.factory('EditorService', ['$rootScope', '$q',
+    function($rootScope, $q) {
+      var getSelectedText = function () {
+        var deferred = $q.defer();
+
+        $rootScope.$broadcast('CodeMirror', function (codemirror) {
+          deferred.resolve(codemirror.getSelection());
+        });
+
+        return deferred.promise;
+      };
+
+      return {
+        getSelectedText: getSelectedText
+      };
+    }
+  ]);
+})(angular.module('mdwiki.services'), window.CodeMirror);
+
 (function (services) {
   'use strict';
 
@@ -43577,14 +43599,22 @@ window.ripples = {
 (function (controllers) {
   'use strict';
 
-  controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', function ($rootScope, $scope, ngDialog) {
-    $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
+  controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', 'EditorService',
+    function ($rootScope, $scope, ngDialog, editorService) {
+      $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
 
-    $scope.closeDialog = function () {
-      ngDialog.close();
-      $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
-    };
-  }]);
+      editorService.getSelectedText().then(function (selectedText) {
+        if (selectedText) {
+          $scope.commitMessage = selectedText;
+        }
+      });
+
+      $scope.closeDialog = function () {
+        ngDialog.close();
+        $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
+      };
+    }
+  ]);
 })(angular.module('mdwiki.controllers'));
 
 
@@ -43810,88 +43840,90 @@ window.ripples = {
 (function (controllers) {
   'use strict';
 
-  controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog', function ($rootScope, $scope, $location, $window, ngDialog) {
-    var nonEditablePaths = ['/search', '/git/connect'];
-    $scope.isAuthenticated = false;
-    $scope.isEditorVisible = false;
-    $scope.canEditPage = false;
+  controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', 'ngDialog',
+    function ($rootScope, $scope, $location, $window, ngDialog) {
+      var nonEditablePaths = ['/search', '/git/connect'];
+      $scope.isAuthenticated = false;
+      $scope.isEditorVisible = false;
+      $scope.canEditPage = false;
 
-    var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
-      var canEditPage = isAuthenticated;
+      var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
+        var canEditPage = isAuthenticated;
 
-      if (canEditPage) {
-        nonEditablePaths.forEach(function (nonEditablePath) {
-          if (nonEditablePath === path) {
-            canEditPage = false;
-          }
+        if (canEditPage) {
+          nonEditablePaths.forEach(function (nonEditablePath) {
+            if (nonEditablePath === path) {
+              canEditPage = false;
+            }
+          });
+        }
+        return canEditPage;
+      };
+
+      $scope.create = function () {
+        ngDialog.open({
+          template: 'createNewPageDialog',
+          className: 'ngdialog-theme-default',
+          controller: 'NewPageDialogCtrl',
         });
-      }
-      return canEditPage;
-    };
+      };
 
-    $scope.create = function () {
-      ngDialog.open({
-        template: 'createNewPageDialog',
-        className: 'ngdialog-theme-default',
-        controller: 'NewPageDialogCtrl',
+      $scope.delete = function () {
+        if ($rootScope.pageName === 'index') {
+          $window.alert('It is not a good idea to delete your start page!');
+          return;
+        }
+
+        ngDialog.open({
+          template: 'deletePageDialog',
+          className: 'ngdialog-theme-default',
+          controller: 'DeletePageDialogCtrl',
+        });
+      };
+
+      $scope.edit = function () {
+        $rootScope.$broadcast('edit');
+      };
+
+      $scope.cancelEdit = function () {
+        $rootScope.$broadcast('cancelEdit');
+      };
+
+      $scope.save = function () {
+        ngDialog.open({
+          template: 'commitMessageDialog',
+          className: 'ngdialog-theme-default',
+          controller: 'CommitMessageDialogCtrl',
+        });
+      };
+
+      var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
+        $scope.isAuthenticated = data.isAuthenticated;
+        $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
       });
-    };
 
-    $scope.delete = function () {
-      if ($rootScope.pageName === 'index') {
-        $window.alert('It is not a good idea to delete your start page!');
-        return;
-      }
-
-      ngDialog.open({
-        template: 'deletePageDialog',
-        className: 'ngdialog-theme-default',
-        controller: 'DeletePageDialogCtrl',
+      var isEditorVisibleUnregister = $rootScope.$on('isEditorVisible', function (event, data) {
+        $scope.isEditorVisible = data.isEditorVisible;
       });
-    };
 
-    $scope.edit = function () {
-      $rootScope.$broadcast('edit');
-    };
-
-    $scope.cancelEdit = function () {
-      $rootScope.$broadcast('cancelEdit');
-    };
-
-    $scope.save = function () {
-      ngDialog.open({
-        template: 'commitMessageDialog',
-        className: 'ngdialog-theme-default',
-        controller: 'CommitMessageDialogCtrl',
+      var beforeSaveUnregister = $rootScope.$on('beforeSave', function () {
+        $scope.save();
       });
-    };
 
-    var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
-      $scope.isAuthenticated = data.isAuthenticated;
+      var routeChangeSuccessUnregister = $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+        $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
+      });
+
       $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-    });
 
-    var isEditorVisibleUnregister = $rootScope.$on('isEditorVisible', function (event, data) {
-      $scope.isEditorVisible = data.isEditorVisible;
-    });
-
-    var beforeSaveUnregister = $rootScope.$on('beforeSave', function () {
-      $scope.save();
-    });
-
-    var routeChangeSuccessUnregister = $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-      $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-    });
-
-    $scope.canEditPage = isEditPagePossible($scope.isAuthenticated, nonEditablePaths, $location.path());
-
-    $scope.$on('$destroy', function () {
-      beforeSaveUnregister();
-      isAuthenticatedUnregister();
-      isEditorVisibleUnregister();
-      routeChangeSuccessUnregister();
-    });
-  }]);
+      $scope.$on('$destroy', function () {
+        beforeSaveUnregister();
+        isAuthenticatedUnregister();
+        isEditorVisibleUnregister();
+        routeChangeSuccessUnregister();
+      });
+    }
+  ]);
 })(angular.module('mdwiki.controllers'));
 
 

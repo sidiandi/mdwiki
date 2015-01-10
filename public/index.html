@@ -70,8 +70,11 @@
               <i class="icon-signout"><span class="authtoolbar__button user">{{ user }}</span></i>
             </button>
             <button type="button" title="Login with your github account"
-                    class="btn btn-default" ng-hide="isAuthenticated" bs-tooltip>
-              <a href="/auth/github" target="_self"><i class="icon-signin"></i><span class="authtoolbar__button">Login</span></a>
+                    class="btn btn-default"
+                    ng-hide="isAuthenticated"
+                    ng-click="login()"
+                    bs-tooltip>
+              <i class="icon-signin"></i><span class="authtoolbar__button">Login</span>
             </button>
           </form>
         </div>

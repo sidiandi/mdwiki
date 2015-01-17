@@ -17,7 +17,7 @@ module.exports = function (req, res) {
     .catch(function (error) {
       console.error(error);
       res.setHeader('Content-Type', 'text/plain');
-      res.send(500, 'server error: ' + error);
+      res.status(500).send('server error: ' + error);
       res.end();
     })
     .done();

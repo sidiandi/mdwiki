@@ -25,16 +25,15 @@ var getPage = function (req, res) {
       res.setHeader('Content-Type', contentType);
       // the Buffer solves the problem with the automatic UTF-8 conversion
       res.setHeader('Content-Length', new Buffer(pageContent).length);
-      res.status(200);
-      res.send(pageContent);
+      res.status(200).send(pageContent);
     })
     .catch(function (error) {
       if (error instanceof errors.FileNotFoundError) {
         res.setHeader('Content-Type', 'text/plain');
-        res.send(404, 'page not found');
+        res.status(404).send('page not found');
       } else {
         res.setHeader('Content-Type', 'text/plain');
-        res.send(500, 'server error: ' + error);
+        res.status(500).send('server error: ' + error);
       }
     })
     .done(function () {
@@ -56,7 +55,7 @@ var sendResponse = function (response, content, statusCode) {
 var sendErrorResponse = function (response, error, statusCode) {
   statusCode = statusCode || 500;
   response.setHeader('Content-Type', 'text/plain');
-  response.send(statusCode, 'server error: ' + error);
+  response.status(statusCode).send('server error: ' + error);
   response.end();
 };
 

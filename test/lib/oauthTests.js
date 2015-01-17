@@ -71,9 +71,10 @@ describe('oauth Tests', function () {
         var req = { };
         var res = sinon.stub({
           /* jshint unused: false */
-          send: function (code, text) { },
+          send: function (text) { },
           setHeader: function () { },
-          end: function () {}
+          end: function () {},
+          status: function (code) {}
         });
         var next = sinon.spy();
 
@@ -82,7 +83,8 @@ describe('oauth Tests', function () {
 
         // ASSERT
         next.called.should.be.false;
-        res.send.calledWith(401, 'Not authenticated').should.be.true;
+        res.status.calledWith(401).should.be.true;
+        res.send.calledWith('Not authenticated').should.be.true;
       });
     });
   });

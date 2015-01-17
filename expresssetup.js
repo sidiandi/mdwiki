@@ -7,10 +7,14 @@ var express = require('express'),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
     searchRequestHandler = require('./api/searchrequesthandler'),
     staticFileRequestHandler = require('./api/staticfilerequesthandler'),
-    serverConfigRequestHandler = require('./api/serverconfigrequesthandler');
+    serverConfigRequestHandler = require('./api/serverconfigrequesthandler'),
+    bodyParser = require('body-parser');
 
 module.exports.middleware = function (app, isProductionMode) {
-  app.use(require('body-parser')());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
   app.use(require('method-override')());
   app.use(require('static-favicon')(__dirname + '/public/images/favicon.ico'));
   app.use(require('cookie-parser')('7pb0HHz9Mwq5yZfw'));
@@ -18,10 +22,10 @@ module.exports.middleware = function (app, isProductionMode) {
 
   if (isProductionMode) {
     app.use(require('compression')());
-    app.use(require('morgan')('dev'));
+    app.use(require('morgan')('combined'));
     app.use(require('errorhandler')());
   } else {
-    app.use(require('morgan')());
+    app.use(require('morgan')('tiny'));
     app.use(require('errorhandler')({ dumpExceptions: true, showStack: true }));
   }
 };
@@ -36,19 +40,19 @@ module.exports.defineRoutes = function (app, oauth, isProductionMode) {
   app.get('/js/scripts.js', function (req, res) {
     if (isProductionMode) {
       logger.info('Send minified script');
-      res.sendfile('./public/js/scripts.min.js');
+      res.sendFile(__dirname + '/public/js/scripts.min.js');
     } else {
-      res.sendfile('./public/js/scripts.js');
+      res.sendFile(__dirname + '/public/js/scripts.js');
     }
   });
 
   app.get('/css/styles.css', function (req, res) {
     if (isProductionMode) {
       logger.info('Send minified styles');
-      res.sendfile('./public/css/styles.min.css');
+      res.sendFile(__dirname + '/public/css/styles.min.css');
     }
     else {
-      res.sendfile('./public/css/styles.css');
+      res.sendFile(__dirname + '/public/css/styles.css');
     }
   });
 
@@ -73,6 +77,6 @@ module.exports.defineRoutes = function (app, oauth, isProductionMode) {
   app.get('/static/:githubUser/:githubRepository/*', staticFileRequestHandler);
 
   app.get('*', function (req, res) {
-    res.sendfile('./public/index.html');
+    res.sendFile(__dirname + '/public/index.html');
   });
 };

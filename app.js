@@ -4,7 +4,7 @@ var express = require('express'),
     logger = require('./lib/logger'),
     oauth = require('./lib/oauth'),
     expressSetup = require('./expresssetup.js'),
-    keepAlive = require('./lib/keepAlive.js');
+    keepAlive = require('./lib/keepalive.js');
 
 var app = express();
 

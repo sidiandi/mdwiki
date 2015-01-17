@@ -1,12 +1,13 @@
 {
   "name": "mdwiki",
   "description": "A simple markdown driven wiki",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": [
-    "Jan Baer",
+    "Jan Baer"
+  ],
+  "contributors": [
     "Diego Ustariz"
   ],
-  "contributors ": [],
   "repository": {
     "type": "git",
     "url": "https://github.com/mdwiki/mdwiki"
@@ -19,8 +20,8 @@
   ],
   "main": "./app.js",
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.3.x"
+    "node": "0.11.x",
+    "npm": "2.2.x"
   },
   "dependencies": {
     "body-parser": "^1.9.2",

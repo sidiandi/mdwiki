@@ -87,7 +87,7 @@ describe('githubContentProvider Tests', function () {
         provider.getPageContentAsHtml('index')
           .then(function (content) {
             should.exists(content);
-            content.should.be.equal('<h1>Test</h1>');
+            content.should.be.equal('<h1 id="test">Test</h1>\n');
           })
           .done(done);
       });
@@ -200,7 +200,7 @@ describe('githubContentProvider Tests', function () {
           branch: 'master',
           sha: '123456',
         };
-        var expectedHtml = '<h1>content of git page</h1>';
+        var expectedHtml = '<h1 id="content-of-git-page">content of git page</h1>\n';
 
         provider.oauth = '12345678';
         provider.savePage('this is a update for git page', 'git', '#content of git page')
@@ -234,7 +234,7 @@ describe('githubContentProvider Tests', function () {
           content: 'I2NvbnRlbnQgb2YgbmV3IHBhZ2U=',
           branch: 'master'
         };
-        var expectedHtml = '<h1>content of new page</h1>';
+        var expectedHtml = '<h1 id="content-of-new-page">content of new page</h1>\n';
 
         provider.oauth = '12345678';
         provider.savePage('created a new page', 'newPage', '#content of new page')

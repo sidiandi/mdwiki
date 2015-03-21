@@ -1,202 +1,146 @@
-body {
-  padding-top: 50px;
+html, body {
+  font-family: 'Roboto', sans-serif;
+  font-size:14px;
+  height:100%;
+  margin: 0px;
+  padding: 0px;
 }
 
-form {
-  margin-top: 20px;
+/* Toolbar area */
+
+.menu {
+  background-color: transparent;
+  border: none;
+  height: 38px;
+  margin: 16px;
+  width: 36px;
 }
 
-.ng-invalid.ng-dirty {
-    border-color:red;
+md-toolbar h1 {
+  margin: auto;
 }
 
-.pagesMenu {
-  cursor: pointer;
-}
-
-.navbar-brand {
-  display: inline;
-}
-
-.logo {
+md-toolbar .logo {
   height: 55px;
-  margin-right: 10px;
-  margin-top: -7px;
-  float: left;
 }
 
-.content-error {
-  margin-top: 20px;
+/* Sidenav area */
+md-sidenav.md-locked-open {
+  display: block;
 }
 
-.authtoolbar__button, .edittoolbar__button {
-  display: none;
-}
-
-.authtoolbar__form {
-  margin-left: 0px;
-}
-
-.authtoolbar__button.user {
-  display: inline;
-}
-
-.navbar-nav {
-  float: left;
+md-sidenav ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
 
-.navbar-form {
+menu-link .md-button {
+  display: block;
+  padding: 0 16px 0 32px;
+  font-weight: 400;
+  text-align: left;
+  line-height: 40px;
+  text-transform: none;
+  width: 100%;
+}
+
+md-list .md-button.selected {
+  color: #03a9f4;
+}
+
+md-sidenav  md-list {
+  padding: 0px 0px 8px 0px;
+}
+
+/* Primary content area */
+
+#content {
+  overflow: hidden;
+}
+
+#content  {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 5px;
+}
+
+#content .md-button.share {
+  background-color: transparent;
   border: none;
-  box-shadow: none;
-  padding-top: 10px;
+  width: 48px;
+  height: 48px;
+  margin: 8px auto 16px 0;
+  position: absolute;
+  top: 10px;
+  right: 25px;
 }
 
-.navbar-form .btn {
-  min-width: 25px;
-}
-
-.input-sm {
-  font-size: 14px;
-}
-
-.navbar-form .btn {
-  margin: -14px 0px 0px 0px;
-  padding: 15px 5px 10px 5px;
-  color: white;
-}
-
-.search-box {
-  display: none;
-}
-
-.navbar {
-  max-height: 50px;
-}
-
-.navbar-nav .open .dropdown-menu {
-  background-color: white !important;
-}
-.dropdown-menu > li > a {
-  color: black !important;
-}
-
-.pagesMenu {
-  max-width: 85px;
-}
-
-@media (min-width: 768px) {
-  .search-box {
-    display: block;
-  }
-
-  .searchbox__form{
-    padding-top: 10px;
-    margin: 0px !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  .navbar-form {
-    margin: 0px 0px 0px 0px;
-  }
-
-  .edittoolbar__form, .authtoolbar__form {
-    padding-top: 15px;
-    margin: 0px !important;
-  }
-
-  .navbar-form .btn {
-    min-width: 75px;
-  }
-
-  .navbar-form .btn span {
-    margin-left: 5px;
-    margin-right: 10px;
-  }
-
-  .navbar-nav a {
-    padding-top: 15px !important;
-    padding-bottom: 15px !important;
-  }
-
-  .navbar-nav ul > li > a {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
-  }
-
-  .dropdown-menu {
-    max-height: 600px;
-    overflow: scroll;
-  }
-
-  .authtoolbar__button, .edittoolbar__button {
-    display: inline;
-  }
-
-  .search-box {
-    display: block;
-  }
-}
-
-
-.content-view.ng-enter, .content-view.ng-leave {
-  -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
-  -moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
-  -o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
-  transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s;
-
-  position:relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.content-view.ng-enter {
-  left:100%;
-}
-.content-view.ng-enter.ng-enter-active {
-  left: 0;
-}
-
-.content-view.ng-leave {
-
-}
-
-.content-view.ng-leave.ng-leave-active {
-  left:-100%;
-}
-
-.btn > a {
-  color: White;
-  text-decoration: none;
-}
-
-span.user {
-  margin-left: 5px;
-}
-
-.CodeMirror {
+#content md-icon.avatar {
   margin-top: 10px;
-  border: 1px solid #eee;
+}
+
+#content .md-button.share > md-icon {
+  fill:black;
+  width:36px;
+  height:36px;
+}
+
+md-button.menuBtn > md-icon {
+  fill:white;
+  width:24px;
+  height:24px;
+}
+
+#content .md-button.share:active > md-icon {
+  background-color: #dadada;
+  border-radius: 75%;
+  padding:4px;
+  transition: all 100ms ease-out 30ms;
+}
+
+#content img {
+  display: block;
   height: auto;
-}
-.CodeMirror-scroll {
-  overflow-y: scroll;
-  overflow-x: hidden;
+  max-width: 500px;
 }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+/* Utils */
+
+.content-wrapper {
+  position: relative;
 }
 
-div.ng-binding > p {
-  margin-top: 10px;
+/* Typography support coming in 0.8.0 */
+
+md-toolbar h1 {
+  font-size: 1.250em;
+  font-weight: 400;
 }
 
-.ngdialog-buttons {
-  text-align: right;
+.avatar {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
+  margin: 0px;
+  vertical-align: middle;
+  zoom:0.70;
+  transform: translateZ(0);
+  -webkit-transform: scale(0.70);
+  -moz-transform:scale(0.70);
 }
 
 
+md-bottom-sheet  md-icon {
+  margin-right:20px;
+}
+
+span.name {
+  font-weight: bold;
+  font-size:1.1em;
+  padding-left:5px;
+}

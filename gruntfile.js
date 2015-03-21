@@ -50,21 +50,24 @@ module.exports = function (grunt) {
     },
 
     concat: {
+      options: {
+        sourceMap: false,
+        sourceMapStyle: 'embed',
+      },
       js: {
         src: [
-          'bower/bootstrap/dist/js/bootstrap.js',
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',
           'bower/angular-resource/angular-resource.js',
           'bower/angular-route/angular-route.js',
           'bower/angular-sanitize/angular-sanitize.js',
           'bower/angular-cache/dist/angular-cache.js',
+          'bower/angular-aria/angular-aria.js',
+          'bower/angular-material/angular-material.js',
           'bower/ngDialog/js/ngDialog.js',
           'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
           'bower/codemirror/mode/markdown/markdown.js',
-          'bower/bootstrap-material-design/dist/js/material.js',
-          'bower/bootstrap-material-design/dist/js/ripples.js',
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -74,10 +77,7 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'bower/bootstrap/dist/css/bootstrap.css',
-          'bower/bootstrap-material-design/dist/css/material.css',
-          'bower/bootstrap-material-design/dist/css/ripples.min.css',
-          'bower/bootstrap-material-design/dist/css/material-wfont.css',
+          'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
           'bower/codemirror/lib/codemirror.css',
           'bower/ngDialog/css/ngDialog.css',
@@ -139,12 +139,12 @@ module.exports = function (grunt) {
 
       karma: {
         files: ['public/js/**/*.js', 'test_client/**/*Specs.js', '!public/js/scripts.js', '!public/js/scripts.min.js', '!public/js/lib/**/*.js'],
-        tasks: ['jshint', 'karma:unit', 'concat:js', 'uglify']
+        tasks: ['jshint', 'karma:unit', 'concat:js']
       },
 
       styles: {
         files: ['public/css/customstyles.css'],
-        tasks: ['concat:css', 'cssmin']
+        tasks: ['concat:css']
       },
 
       livereload: {

@@ -22,6 +22,8 @@ module.exports = function (config) {
       'bower/angular-sanitize/angular-sanitize.js',
       'bower/angular-touch/angular-touch.js',
       'bower/angular-cache/dist/angular-cache.js',
+      'bower/angular-aria/angular-aria.js',
+      'bower/angular-material/angular-material.js',
       'bower/angular-ui-codemirror/ui-codemirror.js',
       'bower/ngDialog/js/ngDialog.js',
       'bower/angular-mocks/angular-mocks.js',

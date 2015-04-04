@@ -16,7 +16,7 @@ config/*.json*
 content/
 docs/
 
-public/js/scripts.min.js
-public/css/styles.min.css
+public/js/*.min.js
+public/css/*.min.css
 
 nssm.exe

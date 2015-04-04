@@ -27,47 +27,31 @@ module.exports = function (grunt) {
       }
     },
 
-    cssmin: {
-      minify: {
-        expand: true,
-        cwd: 'public/css/',
-        src: ['styles.css'],
-        dest: 'public/css/',
-        ext: '.min.css'
-      }
-    },
-
-    uglify: {
-      scripts: {
-        options: {
-          // the banner is inserted at the top of the output
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-        },
-        files: {
-          'public/js/scripts.min.js': ['public/js/scripts.js'],
-        }
-      }
-    },
-
     concat: {
       options: {
-        sourceMap: false,
-        sourceMapStyle: 'embed',
+        sourceMap: true,
+        sourceMapStyle: 'inline',
+        stripBanners: true
       },
-      js: {
+      vendor_js: {
         src: [
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',
           'bower/angular-resource/angular-resource.js',
           'bower/angular-route/angular-route.js',
           'bower/angular-sanitize/angular-sanitize.js',
-          'bower/angular-cache/dist/angular-cache.js',
           'bower/angular-aria/angular-aria.js',
           'bower/angular-material/angular-material.js',
+          'bower/angular-cache/dist/angular-cache.js',
           'bower/ngDialog/js/ngDialog.js',
           'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
-          'bower/codemirror/mode/markdown/markdown.js',
+          'bower/codemirror/mode/markdown/markdown.js'
+        ],
+        dest: 'public/js/vendor.js'
+      },
+      js: {
+        src: [
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -82,9 +66,9 @@ module.exports = function (grunt) {
           'bower/codemirror/lib/codemirror.css',
           'bower/ngDialog/css/ngDialog.css',
           'bower/ngDialog/css/ngDialog-theme-default.css',
-          'public/css/customstyles.css'
+          'public/css/markdown.css'
         ],
-        dest: 'public/css/styles.css'
+        dest: 'public/css/vendor.css'
       }
     },
 
@@ -118,6 +102,20 @@ module.exports = function (grunt) {
         script: 'app.js',
         options: {
           args: [],
+          ext: 'js',
+          ignore: ['public/**', 'node_modules/**', 'bower/**', 'test/**'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000'
+          },
+          cwd: __dirname
+        }
+      },
+      debug: {
+        script: 'app.js',
+        options: {
+          args: [],
           nodeArgs: ['--debug'],
           ext: 'js',
           ignore: ['public/**', 'node_modules/**', 'bower/**', 'test/**'],
@@ -142,10 +140,10 @@ module.exports = function (grunt) {
         tasks: ['jshint', 'karma:unit', 'concat:js']
       },
 
-      styles: {
-        files: ['public/css/customstyles.css'],
-        tasks: ['concat:css']
-      },
+      // styles: {
+      //   files: ['public/css/customstyles.css'],
+      //   tasks: ['concat:css']
+      // },
 
       livereload: {
         files: ['public/**/*.html', 'public/js/scripts.js', 'public/css/styles.css'],
@@ -193,7 +191,7 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma:unit', 'concat:js', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
@@ -201,11 +199,8 @@ module.exports = function (grunt) {
   // Test and Watch task
   grunt.registerTask('tw', ['jshint', 'mochaTest', 'karma:unit', 'watch']);
 
-  // Minify tasks
-  grunt.registerTask('minify', ['cssmin', 'uglify']);
-
-  // deploy task
-  grunt.registerTask('deploy', ['concat', 'minify', 'exec:copyFonts']);
+  // build task
+  grunt.registerTask('build', ['concat', 'exec:copyFonts']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

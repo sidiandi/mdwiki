@@ -43,8 +43,7 @@ module.exports = function (grunt) {
           'bower/angular-aria/angular-aria.js',
           'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
-          'bower/ngDialog/js/ngDialog.js',
-          'bower/angular-ui-codemirror/ui-codemirror.js',
+            'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
           'bower/codemirror/mode/markdown/markdown.js'
         ],
@@ -64,8 +63,6 @@ module.exports = function (grunt) {
           'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
           'bower/codemirror/lib/codemirror.css',
-          'bower/ngDialog/css/ngDialog.css',
-          'bower/ngDialog/css/ngDialog-theme-default.css',
           'public/css/markdown.css'
         ],
         dest: 'public/css/vendor.css'

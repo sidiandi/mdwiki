@@ -1,9 +1,10 @@
 (function (controllers) {
   'use strict';
 
-  controllers.controller('CommitMessageDialogCtrl', ['$rootScope', '$scope', 'ngDialog', 'EditorService',
-    function ($rootScope, $scope, ngDialog, editorService) {
-      $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
+  controllers.controller('CommitMessageDialogCtrl', ['$scope', '$mdDialog', 'EditorService',
+    function ($scope, $mdDialog, editorService) {
+      $scope.pageName = '';
+      $scope.commitMessage = 'Some changes for ' + $scope.pageName;
 
       editorService.getSelectedText().then(function (selectedText) {
         if (selectedText) {
@@ -11,9 +12,19 @@
         }
       });
 
-      $scope.closeDialog = function () {
-        ngDialog.close();
-        $rootScope.$broadcast('save', { commitMessage: $scope.commitMessage });
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+
+      $scope.closeDialog = function (cancel) {
+        $mdDialog.hide({
+          cancel: cancel,
+          commitMessage: $scope.commitMessage
+        });
       };
     }
   ]);

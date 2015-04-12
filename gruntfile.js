@@ -43,7 +43,7 @@ module.exports = function (grunt) {
           'bower/angular-aria/angular-aria.js',
           'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
-            'bower/angular-ui-codemirror/ui-codemirror.js',
+          'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
           'bower/codemirror/mode/markdown/markdown.js'
         ],

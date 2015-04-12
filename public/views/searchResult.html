@@ -1,7 +1,8 @@
-<h3>Search result:</h3>
-<ul>
-    <li ng-repeat="result in searchResult">
-        <h4><a href="/{{ result.name }}">{{result.name}}</a></h4>
-        <div ng-bind-html="result.fileContext"></div>
-    </li>
-</ul>
+<div>
+  <h2>Search result:</h2>
+  <ul>
+      <li class="SearchResult-listItem" ng-repeat="result in searchResult">
+        <a href="/{{ result.name }}">{{result.name}}</a>
+      </li>
+  </ul>
+</div>

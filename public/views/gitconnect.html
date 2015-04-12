@@ -1,31 +1,27 @@
-<form name="cloneRepositoryForm">
-  <fieldset>
-    <div>
-      <legend>Connect to a GitHub repository</legend>
-    </div>
+<md-card class="ConnectRepositoryForm-container">
+  <md-card-content class="ConnectRepositoryForm-Content">
+    <h1>Connect to a GitHub repository</h1>
 
-    <div class="alert alert-info" ng-hide="hasError">{{ message }}</div>
-    <div class="alert alert-danger" ng-show="hasError">{{ message }}</div>
+    <form name="connectRepositoryForm">
+      <md-input-container>
+        <label>Github user name</label>
+        <input type="text" class="form-control" id="githubUser" placeholder="{{ githubUserPlaceHolderText }}"
+               required ng-model="githubUser" ng-disabled="isBusy">
+      </md-input-container>
+      <md-input-container>
+        <label>Repository name</label>
+        <input type="text" class="form-control" id="repositoryName" placeholder="{{ repositoryNamePlaceHolderText }}"
+               required ng-model="repositoryName" ng-disabled="isBusy">
+      </md-input-container>
 
-    <div class="form-group">
-      <label>Github user name</label>
-      <input type="text" class="form-control" id="githubUser" placeholder="{{ githubUserPlaceHolderText }}" required
-             ng-model="githubUser" ng-disabled="isBusy">
-    </div>
-    <div class="form-group">
-      <label>Repository name</label>
-      <input type="text" class="form-control" id="repositoryName" placeholder="{{ repositoryNamePlaceHolderText }}" required
-             ng-model="repositoryName" ng-disabled="isBusy">
-    </div>
-
-    <button ng-click='connect()' class="btn btn-primary"
-            ng-disabled='cloneRepositoryForm.$invalid || isBusy'>Connect</button>
-
-    <img src="images/progress.gif" alt="Cloning" title="Cloning"
-        ng-show="isBusy">
-
-  </fieldset>
-</form>
+      <md-button class="md-raised md-primary" ng-click="connect()"
+                 ng-disabled="connectRepositoryForm.$invalid || isBusy">Connect</md-button>
+    </form>
+  </md-card-content>
+  <md-card-footer class="ConnectRepositoryForm-footer">
+    <md-progress-linear md-mode="indeterminate" ng-show="isBusy"></md-progress-linear>
+  </md-card-footer>
+</md-card>
 
 
 

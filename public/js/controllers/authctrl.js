@@ -22,6 +22,10 @@
           });
       };
 
+      $scope.connect = function () {
+        $window.location.href = '/git/connect';
+      };
+
       $scope.$watch('user', function (newValue, oldValue) {
         $rootScope.isAuthenticated = newValue !== null;
         $scope.isAuthenticated = $rootScope.isAuthenticated;

@@ -70,27 +70,8 @@
     };
   }]);
 
-  directives.directive('onEnter', ['$timeout',
+  directives.directive('autoFocus', ['$timeout',
     function ($timeout) {
-      return {
-        restrict: 'A',
-        scope: {
-          onEnter: '&'
-        },
-        link: function (scope, element, attr) {
-          element.bind('keydown', function (event) {
-            if (event.keyCode === 13) {
-              scope.$apply(function () {
-                scope.$eval(scope.onEnter);
-              });
-            }
-          });
-        }
-      };
-    }
-  ]);
-
-  directives.directive('autoFocus', ['$timeout', function ($timeout) {
       return {
         restrict: 'AC',
         link: function (scope, element) {
@@ -99,7 +80,57 @@
           }, 5);
         }
       };
-    }]);
+    }
+  ]);
+
+  directives.directive('onEnter', [
+    function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.bind('keydown', function (event) {
+            if (event.keyCode === 13) {
+              scope.$apply(function () {
+                scope.$eval(attr.onEnter);
+              });
+            }
+          });
+        }
+      };
+    }
+  ]);
+
+  directives.directive('onMouseenter', [
+    function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.mouseenter(function () {
+            scope.$apply(function () {
+              scope.$eval(attr.onMouseenter);
+            });
+          });
+        }
+      };
+    }
+  ]);
+
+  directives.directive('onMouseout', ['$timeout',
+    function ($timeout) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.mouseleave(function () {
+            $timeout(function () {
+              scope.$apply(function () {
+                scope.$eval(attr.onMouseout);
+              });
+            }, 50);
+          });
+        }
+      };
+    }
+  ]);
 
   directives.directive('autoSelect', ['$timeout', function ($timeout) {
     return {

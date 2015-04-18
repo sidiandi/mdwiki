@@ -8,7 +8,7 @@
       $scope.isAuthenticated = false;
       $scope.isEditorVisible = false;
       $scope.canEditPage = false;
-      $scope.showPopup = false;
+      $scope.popupIsVisible = false;
 
       var isEditPagePossible = function (isAuthenticated, nonEditablePaths, path) {
         var canEditPage = isAuthenticated;
@@ -24,11 +24,19 @@
       };
 
       $scope.showOrHidePopup = function () {
-        $scope.showPopup = !$scope.showPopup;
+        $scope.popupIsVisible = !$scope.popupIsVisible;
+      };
+
+      $scope.showPopup = function () {
+        $scope.popupIsVisible = true;
+      };
+
+      $scope.hidePopup = function () {
+        $scope.popupIsVisible = false;
       };
 
       $scope.create = function (event) {
-        $scope.showPopup = false;
+        $scope.hidePopup();
 
         $mdDialog.show({
           controller: ['$scope', '$mdDialog', CreateNewPageController],
@@ -43,7 +51,7 @@
       };
 
       $scope.delete = function (event) {
-        $scope.showPopup = false;
+        $scope.hidePopup();
 
         if ($rootScope.pageName === 'index') {
           var alertDialog = $mdDialog.alert()
@@ -73,7 +81,7 @@
       };
 
       $scope.edit = function () {
-        $scope.showPopup = false;
+        $scope.popupIsVisible = false;
         $rootScope.$broadcast('edit');
       };
 

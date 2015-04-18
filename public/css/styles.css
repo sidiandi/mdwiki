@@ -132,16 +132,22 @@ md-dialog button {
 
 .Fab-container {
   z-index: 99;
-}
-
-.fabPopup {
-  height: 129px;
   position: fixed;
-  right: 14px;
-  bottom: 87px;
+  bottom: 5px;
+  right: 10px;
+  height: 200px;
+  width: 58px;
+  display: flex;
+  flex-direction: column;
 }
 
-.fabPopup > button {
+.FabPopup-container {
+  height: 129px;
+  order: 1;
+  margin-bottom: 5px;
+}
+
+.FabPopup-container > button {
   color: white;
   padding-top: 10px;
   height: 40px !important;
@@ -149,36 +155,32 @@ md-dialog button {
   margin-bottom: 5px;
 }
 
-#createPageButton {
-  background-color: #66BB6A;
-}
-
-#editPageButton {
-  background-color: #2196F3;
-}
-
-#deletePageButton {
-  background-color: #db4437;
-}
-
-.fabPopup > button > md-icon {
+.FabPopup-container > button > md-icon {
   height: 22px;
   width: 22px;
 }
 
-.fabMain {
-  position: fixed;
-  right: 5px;
-  bottom: 24px;
+.FabPopup-container > button:nth-of-type(1) {
+  background-color: #66BB6A !important;
+}
+.FabPopup-container > button:nth-of-type(2) {
+  background-color: #2196F3 !important;
+}
+.FabPopup-container > button:nth-of-type(3) {
+  background-color: #db4437 !important;
 }
 
-.fabMain > button {
+.FabMainButton-container {
+  order: 2;
+}
+
+.FabMainButton-container > button {
   background-color: #db4437 !important;
   color: white;
   padding-top: 10px;
 }
 
-.fabMain > button > md-icon {
+.FabMainButton-container > button > md-icon {
   height: 24px;
   width: 24px;
   font-size: 16px;

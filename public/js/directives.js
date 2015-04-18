@@ -70,6 +70,26 @@
     };
   }]);
 
+  directives.directive('onEnter', ['$timeout',
+    function ($timeout) {
+      return {
+        restrict: 'A',
+        scope: {
+          onEnter: '&'
+        },
+        link: function (scope, element, attr) {
+          element.bind('keydown', function (event) {
+            if (event.keyCode === 13) {
+              scope.$apply(function () {
+                scope.$eval(scope.onEnter);
+              });
+            }
+          });
+        }
+      };
+    }
+  ]);
+
   directives.directive('autoFocus', ['$timeout', function ($timeout) {
       return {
         restrict: 'AC',

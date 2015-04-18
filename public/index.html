@@ -29,7 +29,7 @@
         <md-icon md-font-icon="icon-search"></md-icon>
       </md-button>
       <md-input-container class="SearchInput-container">
-        <input type="text" class="SearchInput-textbox" ng-model="textToSearch">
+        <input type="text" class="SearchInput-textbox" ng-model="textToSearch" on-enter="search()" auto-focus >
       </md-input-container>
     </div>
     <div class="AuthToolbar-container" layout="row" ng-controller="AuthCtrl">

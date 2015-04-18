@@ -53,19 +53,6 @@
 (function (directives) {
   'use strict';
 
-  directives.directive('bsTooltip', function () {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        element.tooltip({
-          animation: true,
-          placement: 'bottom',
-          delay: { show: 100, hide: 100 }
-        });
-      }
-    };
-  });
-
   directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
     var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 
@@ -134,6 +121,26 @@
       }
     };
   }]);
+
+  directives.directive('onEnter', ['$timeout',
+    function ($timeout) {
+      return {
+        restrict: 'A',
+        scope: {
+          onEnter: '&'
+        },
+        link: function (scope, element, attr) {
+          element.bind('keydown', function (event) {
+            if (event.keyCode === 13) {
+              scope.$apply(function () {
+                scope.$eval(scope.onEnter);
+              });
+            }
+          });
+        }
+      };
+    }
+  ]);
 
   directives.directive('autoFocus', ['$timeout', function ($timeout) {
       return {
@@ -890,7 +897,7 @@
         return canEditPage;
       };
 
-      $scope.showOrHidePopup = function (event) {
+      $scope.showOrHidePopup = function () {
         $scope.showPopup = !$scope.showPopup;
       };
 

@@ -28,7 +28,7 @@ if (hostname) {
     logger.info('Listening on port %s over hostname %s', port, hostname);
   });
 } else {
-  hostname = 'localhost';
+  hostname = '0.0.0.0';
   app.listen(port, function () {
     logger.info('Listening on port %s...', port);
   });

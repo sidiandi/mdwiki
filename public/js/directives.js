@@ -1,19 +1,6 @@
 (function (directives) {
   'use strict';
 
-  directives.directive('bsTooltip', function () {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        element.tooltip({
-          animation: true,
-          placement: 'bottom',
-          delay: { show: 100, hide: 100 }
-        });
-      }
-    };
-  });
-
   directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
     var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 

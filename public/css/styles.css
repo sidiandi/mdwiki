@@ -8,12 +8,24 @@ html, body {
 
 /* Toolbar area */
 
-.menu {
+.Menu-button {
   background-color: transparent;
   border: none;
   height: 38px;
-  margin: 16px;
+  /* margin: 12px 0px 12px 0px; */
   width: 36px;
+  min-width: 0px;
+  align-self: center;
+}
+
+.Menu-icon {
+  fill:white;
+  width:24px;
+  height:24px;
+}
+
+.md-font {
+  color: white;
 }
 
 md-toolbar h1 {
@@ -21,7 +33,12 @@ md-toolbar h1 {
 }
 
 
-md-toolbar .logo {
+.AppLogo-link {
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.AppLogo-image {
   height: 55px;
 }
 
@@ -34,9 +51,6 @@ md-toolbar .md-button {
   min-width: 60px;
 }
 
-md-toolbar > .menu.md-button {
-  min-width: 0px;
-}
 
 /* Sidenav area */
 md-sidenav.md-locked-open {
@@ -77,16 +91,26 @@ md-content {
   margin-left: 15px;
 }
 
-.md-button.menuBtn > md-icon {
-  fill:white;
-  width:24px;
-  height:24px;
-}
-
 .SearchToolbar-container {
   flex: 1 1 auto;
   justify-content: flex-end;
   padding-right: 10px;
+  /* margin-left: 10px; */
+  background: rgba(255,255,255,.15);
+  align-self: center;
+}
+
+.SearchInput-container {
+  flex: 1 1 50px;
+  padding-bottom: 8px;
+  height: 35px;
+  align-self: center;
+}
+
+.SearchInput-textbox {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: white !important;
+  border: 0;
 }
 
 .AuthToolbar-container {
@@ -233,18 +257,10 @@ md-dialog button {
   padding-left: 0;
 }
 
-.SearchInput-container: {
-  padding-bottom: 16px;
-}
-
-.SearchInput-textbox {
-
-}
 
 .SearchResult-listItem {
   line-height: 1.7em;
   font-size: 1.2em;
-
 }
 
 .SearchResult-listItem a {

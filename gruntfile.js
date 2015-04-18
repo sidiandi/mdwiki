@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 
     concat: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
         sourceMapStyle: 'inline',
         stripBanners: true
       },
@@ -41,6 +41,7 @@ module.exports = function (grunt) {
           'bower/angular-route/angular-route.js',
           'bower/angular-sanitize/angular-sanitize.js',
           'bower/angular-aria/angular-aria.js',
+          'bower/angular-touch/angular-touch.js',
           'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
           'bower/angular-ui-codemirror/ui-codemirror.js',
@@ -60,7 +61,7 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'bower/angular-material/angular-material.css',
+          // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
           'bower/codemirror/lib/codemirror.css',
           'public/css/markdown.css'
@@ -177,7 +178,8 @@ module.exports = function (grunt) {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       },
       copyFonts: {
-        command: 'cp -R ./bower/font-awesome/font/ ./public/font && cp -R ./bower/bootstrap-material-design/dist/fonts/Material-Design-Icons.* ./public/fonts'
+        command: 'cp -R ./bower/font-awesome/font/ ./public/font'
+        //command: 'cp -R ./bower/font-awesome/font/ ./public/font && cp -R ./bower/bootstrap-material-design/dist/fonts/Material-Design-Icons.* ./public/fonts'
       }
     },
     clean: {

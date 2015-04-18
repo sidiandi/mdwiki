@@ -6,6 +6,7 @@
     'ngSanitize',
     'ngAnimate',
     'ngMaterial',
+    'ngTouch',
     'jmdobry.angular-cache',
     'ui.codemirror',
     'mdwiki.controllers',
@@ -35,8 +36,6 @@
         });
 
       $locationProvider.html5Mode(true);
-
-      $mdIconProvider.icon('menu' , './images/svg/menu.svg' , 24);
 
       $mdThemingProvider.theme('default')
                         .primaryPalette('blue')

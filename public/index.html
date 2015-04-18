@@ -3,23 +3,25 @@
 <head>
   <title>MD Wiki</title>
   <base href="/" target="_blank, _self, _parent, _top">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1">
   <meta name="description" content="A simple wiki that is using markdown">
   <meta name="author" content="Jan Baer">
+  <meta name="apple-mobile-web-app-title" content="MD Wiki">
 
   <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
   <link rel="stylesheet" href="/css/vendor.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 </head>
 <body ng-app="mdwiki" layout="column">
   <md-toolbar layout="row" ng-controller="SidebarCtrl as sidebar" ng-cloak>
-    <md-button class="menu" hide-gt-md ng-click="sidebar.toggleList('left')" aria-label="Show pages">
+    <md-button class="Menu-button" hide-gt-md ng-click="sidebar.toggleList('left')" aria-label="Show pages">
       <md-tooltip>Show pages</md-tooltip>
-      <md-icon md-svg-icon="menu" ></md-icon>
+      <md-icon class="Menu-icon" md-font-icon="icon-reorder" ></md-icon>
     </md-button>
-    <a href="/" hide-sm>
-      <img src="images/wiki.png" id="logo" class="logo" alt="Wiki" title="Markdown Wiki M7" aria-label="Markdown Wiki M7" >
+    <a href="/" class="AppLogo-link" hide-sm>
+      <img src="images/wiki.png" class="AppLogo-image" alt="Wiki" title="Markdown Wiki M7" aria-label="Markdown Wiki M7" >
       <md-tooltip>Markdown Wiki M7</md-tooltip>
     </a>
     <div class="SearchToolbar-container" layout="row" ng-controller="SearchCtrl">
@@ -50,9 +52,7 @@
   </md-toolbar>
 
   <div flex layout="row" ng-cloak>
-    <md-sidenav class="md-whiteframe-z2"
-                md-is-locked-open="$mdMedia('gt-md')"
-                md-component-id="left">
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-is-locked-open="$mdMedia('gt-md')" md-component-id="left">
       <div ng-controller="SidebarCtrl as sidebar">
         <md-toolbar ng-show="sidebar.isNotLockedOpen('left')"></md-toolbar>
       </div>
@@ -69,7 +69,7 @@
     </md-content>
   </div>
 
-  <div class="Fab-container" ng-controller="EditContentCtrl" ng-hide="isEditorVisible">
+  <div class="Fab-container" ng-controller="EditContentCtrl" ng-hide="isEditorVisible" ng-cloak>
     <div class="fabPopup" layout="column" layout-align="end center" ng-show="showPopup" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
       <md-button id="createPageButton" class="md-fab md-raised" ng-click="create($event)" aria-label="New page">
         <md-icon md-font-icon="icon-plus"></md-icon>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="fabMain" ng-show="canEditPage && !isEditorVisible">
-      <md-button class="md-fab md-raised" ng-click="showOrHidePopup()" aria-label="New page">
+      <md-button class="md-fab md-raised" ng-click="showOrHidePopup($event)" aria-label="New page">
         <md-icon md-font-icon="icon-pencil"></md-icon>
       </md-button>
     </div>

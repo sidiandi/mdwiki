@@ -667,7 +667,7 @@
 
       $scope.codemirrorLoaded = function (editor) {
         CodeMirror.commands.save = function () {
-          $rootScope.$broadcast('beforeSave');
+          $scope.saveChanges();
         };
       };
 

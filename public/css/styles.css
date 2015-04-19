@@ -191,6 +191,7 @@ md-dialog button {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
+  width: 100%;
 }
 .EditContent-container > EditContent-content {
   -webkit-flex: 1;
@@ -232,7 +233,12 @@ md-dialog button {
 }
 .ConnectRepositoryForm-container {
   width: 460px;
-  height: 285px;
+  height: 315px;
+}
+@media (min-width: 456px) {
+  .ConnectRepositoryForm-container {
+    height: 285px;
+  }
 }
 .ConnectRepositoryForm-Content {
   -webkit-order: 1;

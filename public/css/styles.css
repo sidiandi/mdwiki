@@ -258,6 +258,10 @@ md-dialog button {
 .SearchResult-listItem a:hover {
   text-decoration: underline;
 }
+.EditContentCancel-icon span.md-font,
+.EditContentSave-icon span.md-font {
+  color: black;
+}
 [ng\:cloak],
 [ng-cloak],
 [data-ng-cloak],

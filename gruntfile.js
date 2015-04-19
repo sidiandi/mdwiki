@@ -27,6 +27,30 @@ module.exports = function (grunt) {
       }
     },
 
+    less: {
+      development: {
+        options: {
+          sourceMap: false
+        },
+        files: {
+          'public/css/styles.temp.css': 'public/css/styles.less'
+        }
+      }
+    },
+
+    autoprefixer: {
+      options: {
+        browsers: ['last 2 versions']
+      },
+      single_file: {
+        options: {
+          // Target-specific options go here.
+        },
+        src: 'public/css/styles.temp.css',
+        dest: 'public/css/styles.css'
+      }
+    },
+
     concat: {
       options: {
         sourceMap: false,
@@ -138,10 +162,10 @@ module.exports = function (grunt) {
         tasks: ['jshint', 'karma:unit', 'concat:js']
       },
 
-      // styles: {
-      //   files: ['public/css/customstyles.css'],
-      //   tasks: ['concat:css']
-      // },
+      less: {
+        files: ['public/css/**/*.less'],
+        tasks: ['less', 'autoprefixer', 'exec:rmTemp']
+      },
 
       livereload: {
         files: ['public/**/*.html', 'public/js/scripts.js', 'public/css/styles.css'],
@@ -179,7 +203,9 @@ module.exports = function (grunt) {
       },
       copyFonts: {
         command: 'cp -R ./bower/font-awesome/font/ ./public/font'
-        //command: 'cp -R ./bower/font-awesome/font/ ./public/font && cp -R ./bower/bootstrap-material-design/dist/fonts/Material-Design-Icons.* ./public/fonts'
+      },
+      rmTemp: {
+        command: 'rm -f ./public/css/styles.temp.css'
       }
     },
     clean: {
@@ -199,7 +225,7 @@ module.exports = function (grunt) {
   grunt.registerTask('tw', ['jshint', 'mochaTest', 'karma:unit', 'watch']);
 
   // build task
-  grunt.registerTask('build', ['concat', 'exec:copyFonts']);
+  grunt.registerTask('build', ['less', 'autoprefixer', 'exec:rmTemp', 'concat', 'exec:copyFonts']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

@@ -21,12 +21,10 @@
 <body ng-app="mdwiki" layout="column">
   <md-toolbar layout="row" ng-controller="SidebarCtrl as sidebar" ng-cloak>
     <md-button class="Menu-button" hide-gt-md ng-click="sidebar.toggleList('left')" aria-label="Show pages">
-      <md-tooltip hide-sm>Show pages</md-tooltip>
       <md-icon class="Menu-icon" md-font-icon="icon-reorder" ></md-icon>
     </md-button>
     <a href="/" class="AppLogo-link" hide-sm>
       <img src="images/wiki.png" class="AppLogo-image" alt="Wiki" title="Markdown Wiki M7" aria-label="Markdown Wiki M7" >
-      <md-tooltip hide-sm>Markdown Wiki M7</md-tooltip>
     </a>
     <div class="SearchToolbar-container" layout="row" ng-controller="SearchCtrl">
       <md-button ng-click="search()" aria-label="search">
@@ -38,17 +36,14 @@
     </div>
     <div class="AuthToolbar-container" layout="row" ng-controller="AuthCtrl">
       <md-button ng-click="connect()" title="Connect to a git repository">
-        <md-tooltip hide-gt-md>Connect to a git repository</md-tooltip>
         <md-icon md-font-icon="icon-github"></md-icon>
         <span hide-sm hide-md>Connect</span>
       </md-button>
       <md-button ng-click="login()" ng-hide="isAuthenticated" title="Login with your github account">
-        <md-tooltip hide-gt-md>Login with your github account</md-tooltip>
         <md-icon md-font-icon="icon-signin"></md-icon>
         <span hide-sm hide-md>Login</span>
       </md-button>
       <md-button ng-click="logout()" ng-show="isAuthenticated" title="Logout from your github account">
-        <md-tooltip hide-gt-md>Logout from your github account</md-tooltip>
         <md-icon md-font-icon="icon-signout"></md-icon>
         <span hide-sm hide-md>{{ user }}</span>
       </md-button>
@@ -81,17 +76,14 @@
       <md-button id="createPageButton" class="md-fab md-raised"
                  ng-show="popupIsVisible" ng-click="create($event)" aria-label="New page">
         <md-icon md-font-icon="icon-plus"></md-icon>
-        <md-tooltip md-direction="left">Create a new page</md-tooltip>
       </md-button>
       <md-button id="editPageButton" class="md-fab md-raised"
                  ng-show="popupIsVisible" ng-click="edit()" aria-label="Edit page">
         <md-icon md-font-icon="icon-edit"></md-icon>
-        <md-tooltip md-direction="left" hide-sm>Edit the page</md-tooltip>
       </md-button>
       <md-button id="deletePageButton" class="md-fab md-raised"
                  ng-show="popupIsVisible" ng-click="delete($event)" aria-label="Delete page">
         <md-icon md-font-icon="icon-remove"></md-icon>
-        <md-tooltip md-direction="left" hide-sm>Delete the page</md-tooltip>
       </md-button>
       <keybinding modifier="alt+shift" key="N" invoke="create($event)" condition="isAuthenticated && !isEditorVisible" />
       <keybinding modifier="ctrl" key="E" invoke="edit()" condition="isAuthenticated && !isEditorVisible" />

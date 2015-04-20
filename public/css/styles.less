@@ -224,8 +224,21 @@ md-dialog button {
 .CodeMirror {
   margin-top: 10px;
   border: 1px solid #eee;
-  height: auto;
+  flex: 1;
 }
+
+.EditContent-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.EditContentCancel-icon, .EditContentSave-icon {
+  span.md-font {
+    color: black;
+  }
+}
+
 .CodeMirror-scroll {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -263,7 +276,6 @@ md-dialog button {
   padding-left: 0;
 }
 
-
 .SearchResult-listItem {
   line-height: 1.7em;
   font-size: 1.2em;
@@ -276,13 +288,6 @@ md-dialog button {
 .SearchResult-listItem a:hover {
   text-decoration: underline;
 }
-
-.EditContentCancel-icon, .EditContentSave-icon {
-  span.md-font {
-    color: black;
-  }
-}
-
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;

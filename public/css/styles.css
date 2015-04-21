@@ -218,13 +218,6 @@ md-dialog button {
           flex: 1 1 20px;
   text-align: right;
 }
-.CodeMirror {
-  margin-top: 10px;
-  border: 1px solid #eee;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
 .EditContent-content {
   -webkit-flex: 1;
       -ms-flex: 1;
@@ -239,6 +232,14 @@ md-dialog button {
 .EditContentCancel-icon span.md-font,
 .EditContentSave-icon span.md-font {
   color: black;
+}
+.CodeMirror {
+  margin-top: 10px;
+  border: 1px solid #eee;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  height: 100%;
 }
 .CodeMirror-scroll {
   overflow-y: scroll;

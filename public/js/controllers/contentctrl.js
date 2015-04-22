@@ -190,7 +190,7 @@
       });
 
       var deleteUnregister = $rootScope.$on('delete', function (event, data) {
-        deletePage(data.pageName);
+        deletePage($scope.pageName);
       });
 
       var editUnregister = $rootScope.$on('edit', function () {

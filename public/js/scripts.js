@@ -829,7 +829,7 @@
       });
 
       var deleteUnregister = $rootScope.$on('delete', function (event, data) {
-        deletePage(data.pageName);
+        deletePage($scope.pageName);
       });
 
       var editUnregister = $rootScope.$on('edit', function () {
@@ -950,7 +950,7 @@
         })
         .then(function(dialogResult) {
           if (!dialogResult.cancel) {
-            $rootScope.$broadcast('edit', { pageName: dialogResult.pageName });
+            $rootScope.$broadcast('create', { pageName: dialogResult.pageName });
           }
         });
       };
@@ -981,7 +981,7 @@
 
         $mdDialog.show(confirmDialog)
           .then(function() {
-            $rootScope.$broadcast('edit');
+            $rootScope.$broadcast('delete');
           });
       };
 
@@ -989,7 +989,6 @@
         $scope.popupIsVisible = false;
         $rootScope.$broadcast('edit');
       };
-
 
       var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {
         $scope.isAuthenticated = data.isAuthenticated;

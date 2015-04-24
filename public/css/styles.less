@@ -1,58 +1,67 @@
-html,
-body {
+html, body {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   height: 100%;
   padding: 0px;
 }
+
 /* Toolbar area */
+
 .Menu-button {
   background-color: transparent;
   border: none;
   height: 38px;
   width: 36px;
   min-width: 0px;
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
+  align-self: center;
 }
+
 .Menu-icon {
-  fill: white;
-  width: 24px;
-  height: 24px;
+  fill:white;
+  width:24px;
+  height:24px;
 }
+
 .md-font {
   color: white;
 }
+
 md-toolbar h1 {
   margin: auto;
 }
+
+
 .AppLogo-link {
   cursor: pointer;
   margin-left: 10px;
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
+  align-self: center;
 }
+
 .AppLogo-image {
   height: 40px;
 }
+
 md-toolbar h1 {
   font-size: 1.250em;
   font-weight: 400;
 }
+
 md-toolbar .md-button {
   min-width: 40px;
 }
+
+
 /* Sidenav area */
 md-sidenav.md-locked-open {
   display: block;
 }
+
 md-sidenav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 menu-link .md-button {
   display: block;
   padding: 0 16px 0 32px;
@@ -62,65 +71,65 @@ menu-link .md-button {
   text-transform: none;
   width: 100%;
 }
+
 md-list .md-button.selected {
   color: #03a9f4;
 }
+
 md-sidenav md-list {
   padding: 0px 0px 8px 0px;
 }
+
 /* Primary content area */
 md-content {
   padding: 10px;
   width: 100%;
 }
+
 .ViewContent-container {
   margin-left: 15px;
 }
+
 .SearchToolbar-container {
-  -webkit-flex: 1 1 auto;
-      -ms-flex: 1 1 auto;
-          flex: 1 1 auto;
-  -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  flex: 1 1 auto;
+  justify-content: flex-end;
   padding-right: 10px;
   margin-right: 5px;
   margin-left: 15px;
-  background: rgba(255, 255, 255, 0.15);
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
+  background: rgba(255,255,255,.15);
+  align-self: center;
 }
+
 .SearchInput-container {
-  -webkit-flex: 1 1 50px;
-      -ms-flex: 1 1 50px;
-          flex: 1 1 50px;
+  flex: 1 1 50px;
   padding-bottom: 8px;
   height: 35px;
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
+  align-self: center;
 }
+
 .SearchInput-textbox {
   border-color: rgba(0, 0, 0, 0.12) !important;
   color: white !important;
   border: 0;
 }
+
 .AuthToolbar-container {
-  -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  justify-content: flex-end;
   padding-right: 5px;
 }
+
 .EditToolbar {
   margin-left: 20px;
 }
+
 .dialog-button {
   min-width: 100px;
 }
+
 md-dialog button {
   min-width: 100px;
 }
+
 .Fab-container {
   z-index: 99;
   position: fixed;
@@ -128,20 +137,16 @@ md-dialog button {
   right: 10px;
   height: 200px;
   width: 58px;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
+
 .FabPopup-container {
   height: 129px;
-  -webkit-order: 1;
-      -ms-flex-order: 1;
-          order: 1;
+  order: 1;
   margin-bottom: 5px;
 }
+
 .FabPopup-container > button {
   color: white;
   padding-top: 10px;
@@ -149,10 +154,12 @@ md-dialog button {
   width: 40px !important;
   margin-bottom: 5px;
 }
+
 .FabPopup-container > button > md-icon {
   height: 22px;
   width: 22px;
 }
+
 .FabPopup-container > button:nth-of-type(1) {
   background-color: #66BB6A !important;
 }
@@ -162,131 +169,127 @@ md-dialog button {
 .FabPopup-container > button:nth-of-type(3) {
   background-color: #db4437 !important;
 }
+
 .FabMainButton-container {
-  -webkit-order: 2;
-      -ms-flex-order: 2;
-          order: 2;
+  order: 2;
 }
+
 .FabMainButton-container > button {
   background-color: #db4437 !important;
   color: white;
   padding-top: 10px;
 }
+
 .FabMainButton-container > button > md-icon {
   height: 24px;
   width: 24px;
   font-size: 16px;
 }
+
 .animate-enter {
   transition: 1s linear all;
   opacity: 0;
 }
+
 .animate-enter.animate-enter-active {
   opacity: 1;
 }
+
 .EditContent-container {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   width: 100%;
 }
+
 .EditContent-container > EditContent-content {
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  flex: 1;
 }
+
 .EditContent-toolbar {
   position: fixed;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  justify-content: flex-end;
   width: 100%;
   top: 95px;
   left: 0;
   padding-right: 28px;
   z-index: 100;
 }
+
 .EditContent-toolbar div:nth-child(2) {
-  -webkit-flex: 1 1 20px;
-      -ms-flex: 1 1 20px;
-          flex: 1 1 20px;
+  flex: 1 1 20px;
   text-align: right;
 }
+
 .EditContent-content {
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  flex: 1;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
-.EditContentCancel-icon span.md-font,
-.EditContentSave-icon span.md-font {
-  color: black;
+
+.EditContentCancel-icon, .EditContentSave-icon {
+  span.md-font {
+    color: black;
+  }
 }
+
 .CodeMirror {
   margin-top: 10px;
   border: 1px solid #eee;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  flex: 1;
   height: 100%;
 }
+
 .CodeMirror-scroll {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+// Dialog for Save and New
+.ModalDialog-dialog {
+
+}
+
 .ModalDialog-content {
   padding-top: 10px;
   width: 400px;
 }
-.ConnectRepositoryForm-container {
+
+.ConnectRepositoryForm-container{
   width: 460px;
   height: 315px;
-}
-@media (min-width: 456px) {
-  .ConnectRepositoryForm-container {
+
+  @media(min-width: 456px) {
     height: 285px;
   }
 }
+
 .ConnectRepositoryForm-Content {
-  -webkit-order: 1;
-      -ms-flex-order: 1;
-          order: 1;
+  order: 1;
 }
-.ConnectRepositoryForm-footer {
-  -webkit-order: 2;
-      -ms-flex-order: 2;
-          order: 2;
+
+.ConnectRepositoryForm-footer{
+  order: 2;
 }
+
 .md-subheader {
   font-size: 1.4em;
   padding-left: 0;
 }
+
 .SearchResult-listItem {
   line-height: 1.7em;
   font-size: 1.2em;
 }
+
 .SearchResult-listItem a {
   text-decoration: none;
 }
+
 .SearchResult-listItem a:hover {
   text-decoration: underline;
 }
-[ng\:cloak],
-[ng-cloak],
-[data-ng-cloak],
-[x-ng-cloak],
-.ng-cloak,
-.x-ng-cloak {
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }

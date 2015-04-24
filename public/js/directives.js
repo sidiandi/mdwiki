@@ -1,19 +1,6 @@
 (function (directives) {
   'use strict';
 
-  directives.directive('bsTooltip', function () {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-        element.tooltip({
-          animation: true,
-          placement: 'bottom',
-          delay: { show: 100, hide: 100 }
-        });
-      }
-    };
-  });
-
   directives.directive('keybinding', ['$document', '$parse', '$window', function ($document, $parse, $window) {
     var isMac = /Mac|iPod|iPhone|iPad/.test($window.navigator.platform);
 
@@ -83,7 +70,8 @@
     };
   }]);
 
-  directives.directive('autoFocus', ['$timeout', function ($timeout) {
+  directives.directive('autoFocus', ['$timeout',
+    function ($timeout) {
       return {
         restrict: 'AC',
         link: function (scope, element) {
@@ -92,7 +80,57 @@
           }, 5);
         }
       };
-    }]);
+    }
+  ]);
+
+  directives.directive('onEnter', [
+    function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.bind('keydown', function (event) {
+            if (event.keyCode === 13) {
+              scope.$apply(function () {
+                scope.$eval(attr.onEnter);
+              });
+            }
+          });
+        }
+      };
+    }
+  ]);
+
+  directives.directive('onMouseenter', [
+    function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.mouseenter(function () {
+            scope.$apply(function () {
+              scope.$eval(attr.onMouseenter);
+            });
+          });
+        }
+      };
+    }
+  ]);
+
+  directives.directive('onMouseout', ['$timeout',
+    function ($timeout) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+          element.mouseleave(function () {
+            $timeout(function () {
+              scope.$apply(function () {
+                scope.$eval(attr.onMouseout);
+              });
+            }, 50);
+          });
+        }
+      };
+    }
+  ]);
 
   directives.directive('autoSelect', ['$timeout', function ($timeout) {
     return {

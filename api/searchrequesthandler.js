@@ -8,9 +8,6 @@ var search = function (req, res) {
 
   provider.search(req.body.textToSearch)
     .then(function (searchResult) {
-      console.log('textToSearch:' + req.body.textToSearch);
-      console.log('searchResult.....:' + searchResult);
-
       var stringifiedResult = JSON.stringify(searchResult);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');

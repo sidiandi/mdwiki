@@ -23,32 +23,6 @@
       return element;
     };
 
-    describe('bsTooltip', function () {
-      var element, scope,
-          html = '<button data-original-title="Pull latest changes" bs-tooltip>Click me</button>';
-
-      beforeEach(function () {
-
-        scope = rootScope.$new();
-
-      });
-
-      describe('When the element was created', function () {
-
-        it('should call the popup function', function () {
-          // ARRANGE
-          spyOn($.fn, 'tooltip').and.callThrough();
-
-          // ACT
-          element = createAndCompileHtml(scope, html);
-
-          // ASSERT
-          expect($.fn.tooltip).toHaveBeenCalled();
-        });
-
-      });
-    });
-
   });
 })();
 

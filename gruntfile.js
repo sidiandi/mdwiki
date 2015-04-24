@@ -27,44 +27,55 @@ module.exports = function (grunt) {
       }
     },
 
-    cssmin: {
-      minify: {
-        expand: true,
-        cwd: 'public/css/',
-        src: ['styles.css'],
-        dest: 'public/css/',
-        ext: '.min.css'
-      }
-    },
-
-    uglify: {
-      scripts: {
+    less: {
+      development: {
         options: {
-          // the banner is inserted at the top of the output
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+          sourceMap: false
         },
         files: {
-          'public/js/scripts.min.js': ['public/js/scripts.js'],
+          'public/css/styles.temp.css': 'public/css/styles.less'
         }
       }
     },
 
+    autoprefixer: {
+      options: {
+        browsers: ['last 2 versions']
+      },
+      single_file: {
+        options: {
+          // Target-specific options go here.
+        },
+        src: 'public/css/styles.temp.css',
+        dest: 'public/css/styles.css'
+      }
+    },
+
     concat: {
-      js: {
+      options: {
+        sourceMap: false,
+        sourceMapStyle: 'inline',
+        stripBanners: true
+      },
+      vendor_js: {
         src: [
-          'bower/bootstrap/dist/js/bootstrap.js',
           'bower/angular/angular.js',
           'bower/angular-animate/angular-animate.js',
           'bower/angular-resource/angular-resource.js',
           'bower/angular-route/angular-route.js',
           'bower/angular-sanitize/angular-sanitize.js',
+          'bower/angular-aria/angular-aria.js',
+          'bower/angular-touch/angular-touch.js',
+          'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
-          'bower/ngDialog/js/ngDialog.js',
           'bower/angular-ui-codemirror/ui-codemirror.js',
           'bower/codemirror/lib/codemirror.js',
-          'bower/codemirror/mode/markdown/markdown.js',
-          'bower/bootstrap-material-design/dist/js/material.js',
-          'bower/bootstrap-material-design/dist/js/ripples.js',
+          'bower/codemirror/mode/markdown/markdown.js'
+        ],
+        dest: 'public/js/vendor.js'
+      },
+      js: {
+        src: [
           'public/js/app.js',
           'public/js/directives.js',
           'public/js/services/*.js',
@@ -74,17 +85,12 @@ module.exports = function (grunt) {
       },
       css: {
         src: [
-          'bower/bootstrap/dist/css/bootstrap.css',
-          'bower/bootstrap-material-design/dist/css/material.css',
-          'bower/bootstrap-material-design/dist/css/ripples.min.css',
-          'bower/bootstrap-material-design/dist/css/material-wfont.css',
+          // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
           'bower/codemirror/lib/codemirror.css',
-          'bower/ngDialog/css/ngDialog.css',
-          'bower/ngDialog/css/ngDialog-theme-default.css',
-          'public/css/customstyles.css'
+          'public/css/markdown.css'
         ],
-        dest: 'public/css/styles.css'
+        dest: 'public/css/vendor.css'
       }
     },
 
@@ -118,6 +124,20 @@ module.exports = function (grunt) {
         script: 'app.js',
         options: {
           args: [],
+          ext: 'js',
+          ignore: ['public/**', 'node_modules/**', 'bower/**', 'test/**'],
+          delayTime: 1,
+          legacyWatch: true,
+          env: {
+            PORT: '3000'
+          },
+          cwd: __dirname
+        }
+      },
+      debug: {
+        script: 'app.js',
+        options: {
+          args: [],
           nodeArgs: ['--debug'],
           ext: 'js',
           ignore: ['public/**', 'node_modules/**', 'bower/**', 'test/**'],
@@ -139,12 +159,12 @@ module.exports = function (grunt) {
 
       karma: {
         files: ['public/js/**/*.js', 'test_client/**/*Specs.js', '!public/js/scripts.js', '!public/js/scripts.min.js', '!public/js/lib/**/*.js'],
-        tasks: ['jshint', 'karma:unit', 'concat:js', 'uglify']
+        tasks: ['jshint', 'karma:unit', 'concat:js']
       },
 
-      styles: {
-        files: ['public/css/customstyles.css'],
-        tasks: ['concat:css', 'cssmin']
+      less: {
+        files: ['public/css/**/*.less'],
+        tasks: ['less', 'autoprefixer', 'exec:rmTemp']
       },
 
       livereload: {
@@ -182,7 +202,10 @@ module.exports = function (grunt) {
         command: 'plato -r -d docs/generated/analysis/server -l .jshintrc -t "MDWiki Server" -x .json app.js api/*.js lib/*.js'
       },
       copyFonts: {
-        command: 'cp -R ./bower/font-awesome/font/ ./public/font && cp -R ./bower/bootstrap-material-design/dist/fonts/Material-Design-Icons.* ./public/fonts'
+        command: 'cp -R ./bower/font-awesome/font/ ./public/font'
+      },
+      rmTemp: {
+        command: 'rm -f ./public/css/styles.temp.css'
       }
     },
     clean: {
@@ -193,7 +216,7 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma:unit', 'concat', 'concurrent']);
+  grunt.registerTask('default', ['jshint', 'mochaTest', 'karma:unit', 'concat:js', 'concurrent']);
 
   // Test task
   grunt.registerTask('test', ['jshint', 'mochaTest', 'karma:unit']);
@@ -201,11 +224,8 @@ module.exports = function (grunt) {
   // Test and Watch task
   grunt.registerTask('tw', ['jshint', 'mochaTest', 'karma:unit', 'watch']);
 
-  // Minify tasks
-  grunt.registerTask('minify', ['cssmin', 'uglify']);
-
-  // deploy task
-  grunt.registerTask('deploy', ['concat', 'minify', 'exec:copyFonts']);
+  // build task
+  grunt.registerTask('build', ['less', 'autoprefixer', 'exec:rmTemp', 'concat', 'exec:copyFonts']);
 
   // Coverage tasks
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverageMocha', 'exec:coverageKarma', 'exec:analysisClient', 'exec:analysisServer']);

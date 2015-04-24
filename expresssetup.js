@@ -3,6 +3,7 @@
 var express = require('express'),
     logger = require('./lib/logger'),
     path = require('path'),
+    util = require('util'),
     pageRequestHandler = require('./api/pagerequesthandler'),
     pagesRequestHandler = require('./api/pagesrequesthandler'),
     searchRequestHandler = require('./api/searchrequesthandler'),
@@ -37,22 +38,19 @@ module.exports.staticRoutes = function (app) {
 };
 
 module.exports.defineRoutes = function (app, oauth, isProductionMode) {
-  app.get('/js/scripts.js', function (req, res) {
+  var regExUrl = /^\/(js|css)\/(\w+)\.(js|css)$/
+
+  app.get(regExUrl, function (req, res) {
     if (isProductionMode) {
       logger.info('Send minified script');
-      res.sendFile(__dirname + '/public/js/scripts.min.js');
-    } else {
-      res.sendFile(__dirname + '/public/js/scripts.js');
-    }
-  });
+      var match = regExUrl.exec(req.url);
+      var path = match[1];
+      var fileName = match[2];
+      var extension = match[3];
 
-  app.get('/css/styles.css', function (req, res) {
-    if (isProductionMode) {
-      logger.info('Send minified styles');
-      res.sendFile(__dirname + '/public/css/styles.min.css');
-    }
-    else {
-      res.sendFile(__dirname + '/public/css/styles.css');
+      res.sendFile(__dirname + util.format('/public/%s/%s.min.%s', path, fileName, extension));
+    } else {
+      res.sendFile(__dirname + '/public' + req.url);
     }
   });
 

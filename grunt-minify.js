@@ -8,7 +8,7 @@ module.exports = function (grunt) {
       minify: {
         expand: true,
         cwd: 'public/css/',
-        src: ['styles.css'],
+        src: ['vendor.css', 'styles.css'],
         dest: 'public/css/',
         ext: '.min.css'
       }
@@ -21,6 +21,7 @@ module.exports = function (grunt) {
           banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
         },
         files: {
+          'public/js/vendor.min.js': ['public/js/vendor.js'],
           'public/js/scripts.min.js': ['public/js/scripts.js']
         }
       }

@@ -1,49 +1,56 @@
 <script type="text/ng-template" id="commitMessageDialog">
-  <form name="commitMessageForm">
-    <div class="modal-header">
-        <h3>Enter a commit message</h3>
+  <md-dialog class="ModalDialog-dialog" aria-label="Save changes">
+    <md-content>
+      <md-subheader class="md-subheader">Save changes</md-subheader>
+      <div class="ModalDialog-content">
+        <form name="commitMessageForm">
+          <md-input-container>
+            <label>Commit message</label>
+            <input type="text" class="form-control" name="commitMessage"
+                   required ng-model="commitMessage">
+          </md-input-container>
+        </form>
+      </div>
+    </md-content>
+    <div class="md-actions" layout="row">
+      <md-button ng-click="closeDialog(true)">Cancel</md-button>
+      <md-button ng-click="closeDialog(false)" class="md-primary" ng-disabled="commitMessageForm.$invalid">Ok</md-button>
     </div>
-    <div class="ngdialog-message">
-      <input type="text" class="form-control" id="commitMessageText" placeholder="Enter a commit message" required
-             auto-focus auto-select ng-model="commitMessage">
-    </div>
-    <div class="ngdialog-buttons">
-        <button class="btn btn-primary btn-raised" ng-click="closeDialog()" ng-disabled="commitMessageForm.$invalid">OK</button>
-    </div>
-  </form>
+  </md-dialog>
 </script>
 
 <script type="text/ng-template" id="createNewPageDialog">
-  <form name="createPage">
-    <div class="modal-header">
-        <h3>Enter a name for the new page</h3>
+  <md-dialog class="ModalDialog-dialog" aria-label="Create a new page">
+    <md-content>
+      <md-subheader class="md-subheader">New page</md-subheader>
+      <div class="ModalDialog-content">
+        <form name="newPageForm">
+          <md-input-container>
+            <label>Page name</label>
+            <input type="text" class="form-control" name="pageName"
+                   required ng-model="pageName">
+          </md-input-container>
+        </form>
+      </div>
+    </md-content>
+    <div class="md-actions" layout="row">
+      <md-button ng-click="closeDialog(true)">Cancel</md-button>
+      <md-button ng-click="closeDialog(false)" class="md-primary" ng-disabled="newPageForm.$invalid">Ok</md-button>
     </div>
-    <div class="ngdialog-message">
-      <input type="text" class="form-control" id="pageNameText" placeholder="Enter a pagename" required
-             auto-focus auto-select ng-model="pageName">
-    </div>
-    <div class="ngdialog-buttons">
-        <button class="btn btn-primary" ng-click="closeDialog()" ng-disabled="createPage.$invalid">OK</button>
-    </div>
-  </form>
+  </md-dialog>
 </script>
 
-<script type="text/ng-template" id="deletePageDialog">
-  <form name="deletePageForm">
-    <div class="ngdialog-message">
-      <div class="alert alert-danger">Are you sure that you want to delete the current page?</div>
-    </div>
-    <div class="ngdialog-buttons">
-        <button class="btn btn-primary" ng-click="confirmDialog()">OK</button>
-        <button class="btn btn-default" ng-click="cancelDialog()">Cancel</button>
-    </div>
-  </form>
-</script>
-
-<div class="content-error alert alert-danger" ng-show="hasError">{{ errorMessage }}</div>
-<div ng-hide="isEditorVisible">
-  <div ng-bind-html="content" ng-hide="hasError"></div>
+<div class="ViewContent-container" ng-hide="isEditorVisible">
+  <div ng-bind-html="content" class="markdown-body"></div>
 </div>
-<div ng-show="isEditorVisible">
-  <div ui-codemirror="{ onLoad : codemirrorLoaded }" ui-refresh="refresh" ui-save="save()" ng-model="markdown"></div>
+<div class="EditContent-container" ng-show="isEditorVisible">
+  <div class="EditContent-toolbar" flex layout="row" layout-align="start end">
+    <md-button aria-label="Cancel changes" ng-click="cancelEdit()">
+      <md-icon md-font-icon="icon-remove" class="EditContentCancel-icon"></md-icon>
+    </md-button>
+    <md-button aria-label="Save changes" ng-click="saveChanges($event)">
+      <md-icon md-font-icon="icon-save" class="EditContentSave-icon"></md-icon>
+    </md-button>
+  </div>
+  <div class="EditContent-content" ui-codemirror="{ onLoad : codemirrorLoaded }" ui-refresh="refresh" ui-save="save()" ng-model="markdown"></div>
 </div>

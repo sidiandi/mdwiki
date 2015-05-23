@@ -648,11 +648,8 @@
       $scope.content = '';
       $scope.markdown = '';
       $scope.pageName = '';
-      $scope.errorMessage = '';
-      $scope.hasError = false;
       $scope.refresh = false;
       $scope.isEditorVisible = false;
-      $scope.commitMessage = '';
 
       $scope.codemirror = {
         lineWrapping : true,
@@ -692,6 +689,15 @@
         return $dom.html();
       };
 
+      var showError = function (errorMessage) {
+        $mdToast.show(
+          $mdToast.simple()
+            .content(errorMessage)
+            .position('bottom fit')
+            .hideDelay(3000)
+        );
+      };
+
       var getPage = function (pageName) {
         var deferred = $q.defer();
 
@@ -705,8 +711,7 @@
             if (pageName === startPage && error.code === 404) {
               $location.path('/git/connect');
             } else {
-              $scope.errorMessage = 'Content not found!';
-              $scope.hasError = true;
+              showError('Content not found!');
             }
             deferred.reject(error);
           });
@@ -743,51 +748,8 @@
             if (pageName === startPage && error.code === 404) {
               $location.path('/git/connect');
             } else {
-              $scope.errorMessage = 'Content not found: ' + error.message;
-              $scope.hasError = true;
+              showError('Content not found: ' + error.message);
             }
-          });
-      };
-
-      var createPage = function (pageName) {
-        pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
-          .then(function (pageContent) {
-            $scope.pageName = pageName;
-            $rootScope.pages.push({
-              fileName: pageName + '.md',
-              name: pageName,
-              title: pageName
-            });
-            $location.path('/' + pageName).search('edit');
-          })
-          .catch(function (error) {
-            $scope.errorMessage = 'Create new page failed: ' + error.message;
-            $scope.hasError = true;
-          });
-      };
-
-      var removePageFromPages = function (pages, pageName) {
-        var index = -1;
-
-        pages.forEach(function (page) {
-          if (page.name === pageName) {
-            index = pages.indexOf(page);
-          }
-        });
-        if (index >= 0) {
-          pages.splice(index, 1);
-        }
-      };
-
-      var deletePage = function (pageName) {
-        pageService.deletePage(pageName)
-          .then(function () {
-            removePageFromPages($rootScope.pages, pageName);
-            $location.path('/');
-          })
-          .catch(function (error) {
-            $scope.errorMessage = 'Delete the current page failed: ' + error.message;
-            $scope.hasError = true;
           });
       };
 
@@ -798,8 +760,7 @@
             hideEditor();
           })
           .catch(function (error) {
-            $scope.errorMessage = 'Save current page failed: ' + error.message;
-            $scope.hasError = true;
+            showError('Save current page failed: ' + error.message);
           });
       };
 
@@ -819,48 +780,6 @@
           }
         });
       };
-
-      var saveUnregister = $rootScope.$on('save', function (event, data) {
-        savePage($scope.pageName, data.commitMessage, $scope.markdown);
-      });
-
-      var createUnregister = $rootScope.$on('create', function (event, data) {
-        createPage(data.pageName);
-      });
-
-      var deleteUnregister = $rootScope.$on('delete', function (event, data) {
-        deletePage($scope.pageName);
-      });
-
-      var editUnregister = $rootScope.$on('edit', function () {
-        editPage($scope.pageName);
-      });
-
-      var cancelEditUnregister = $rootScope.$on('cancelEdit', function () {
-        hideEditor();
-      });
-
-      var unregisterHasError = $scope.$watch('hasError', function (hasError) {
-        if (hasError) {
-          $scope.hasError = false;
-
-          $mdToast.show(
-            $mdToast.simple()
-              .content($scope.errorMessage)
-              .position('bottom fit')
-              .hideDelay(3000)
-          );
-        }
-      });
-
-      $scope.$on('$destroy', function () {
-        cancelEditUnregister();
-        createUnregister();
-        deleteUnregister();
-        editUnregister();
-        saveUnregister();
-        unregisterHasError();
-      });
 
       getPage(pageName).then(function () {
         if ($routeParams.edit && $rootScope.isAuthenticated) {
@@ -906,8 +825,8 @@
 (function (controllers, angular, document) {
   'use strict';
 
-  controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', '$mdDialog',
-    function ($rootScope, $scope, $location, $window, $mdDialog) {
+  controllers.controller('EditContentCtrl', ['$rootScope', '$scope', '$location', '$window', '$mdDialog', '$mdToast', 'PageService',
+    function ($rootScope, $scope, $location, $window, $mdDialog, $mdToast, pageService) {
       var nonEditablePaths = ['/search', '/git/connect'];
 
       $scope.isAuthenticated = false;
@@ -926,6 +845,50 @@
           });
         }
         return canEditPage;
+      };
+
+      var showError = function (errorMessage) {
+        $mdToast.show(
+          $mdToast.simple()
+            .content(errorMessage)
+            .position('bottom fit')
+            .hideDelay(3000)
+        );
+      };
+
+      var createPage = function (pageName) {
+        pageService.savePage(pageName, 'create new page ' + pageName, '#' + pageName)
+          .then(function (pageContent) {
+            $location.path('/' + pageName).search('edit');
+          })
+          .catch(function (error) {
+            showError('Create new page failed: ' + error.message);
+          });
+      };
+
+      var removePageFromPages = function (pages, pageName) {
+        var index = -1;
+
+        pages.forEach(function (page) {
+          if (page.name === pageName) {
+            index = pages.indexOf(page);
+          }
+        });
+
+        if (index >= 0) {
+          pages.splice(index, 1);
+        }
+      };
+
+      var deletePage = function (pageName) {
+        pageService.deletePage(pageName)
+          .then(function () {
+            removePageFromPages($rootScope.pages, pageName);
+            $location.path('/');
+          })
+          .catch(function (error) {
+            showError('Delete the current page has been failed: ' + error.message);
+          });
       };
 
       $scope.showOrHidePopup = function () {
@@ -950,7 +913,7 @@
         })
         .then(function(dialogResult) {
           if (!dialogResult.cancel) {
-            $rootScope.$broadcast('create', { pageName: dialogResult.pageName });
+            createPage(dialogResult.pageName);
           }
         });
       };
@@ -961,7 +924,7 @@
         if ($rootScope.pageName === 'index') {
           var alertDialog = $mdDialog.alert()
               .title('Delete start page?')
-              .content('It is not a good idea to delete your start page!')
+              .content('It\'s not a good idea to delete your start page!')
               .targetEvent(event)
               .ariaLabel('Delete start page forbidden')
               .ok('Ok');
@@ -981,13 +944,13 @@
 
         $mdDialog.show(confirmDialog)
           .then(function() {
-            $rootScope.$broadcast('delete');
+            deletePage($rootScope.pageName);
           });
       };
 
       $scope.edit = function () {
         $scope.popupIsVisible = false;
-        $rootScope.$broadcast('edit');
+        $location.path('/' + $rootScope.pageName).search('edit');
       };
 
       var isAuthenticatedUnregister = $rootScope.$on('isAuthenticated', function (event, data) {

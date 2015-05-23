@@ -83,11 +83,12 @@
     });
 
     describe('When Page not exists and the page name is not index', function () {
-      var $scope, $location, createController;
+      var $scope, $location, $mdToast, createController;
 
       beforeEach(inject(function ($injector, $rootScope, $q) {
         $scope = $rootScope.$new();
         $location = $injector.get('$location');
+        $mdToast = $injector.get('$mdToast');
 
         var $controller = $injector.get('$controller');
         var pageService = $injector.get('PageService');
@@ -97,6 +98,7 @@
         var settingsService = $injector.get('SettingsService');
 
         spyOn($location, 'path');
+        spyOn($mdToast, 'show');
 
         createController = function () {
           return $controller('ContentCtrl', {
@@ -110,12 +112,16 @@
         };
       }));
 
-      it('should the user show that the content was not found', function () {
+      beforeEach(function () {
         var controller = createController();
-
         $scope.$apply();
+      });
 
-        expect($scope.errorMessage).toEqual('Content not found!');
+      it('should the user show that the content was not found', function () {
+        expect($mdToast.show).toHaveBeenCalled();
+      });
+
+      it('Should not navigate to the page', function () {
         expect($location.path).not.toHaveBeenCalled();
       });
     });

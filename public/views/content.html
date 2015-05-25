@@ -6,8 +6,9 @@
         <form name="commitMessageForm">
           <md-input-container>
             <label>Commit message</label>
-            <input type="text" class="form-control" name="commitMessage"
-                   required ng-model="commitMessage">
+            <input type="text" class="form-control"
+                   name="commitMessage" ng-model="commitMessage"
+                   required auto-focus auto-select>
           </md-input-container>
         </form>
       </div>
@@ -27,8 +28,9 @@
         <form name="newPageForm">
           <md-input-container>
             <label>Page name</label>
-            <input type="text" class="form-control" name="pageName"
-                   required ng-model="pageName" md-focus>
+            <input type="text" class="form-control"
+                   name="pageName" ng-model="pageName"
+                   required auto-focus>
           </md-input-container>
         </form>
       </div>

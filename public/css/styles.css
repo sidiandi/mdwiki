@@ -24,6 +24,11 @@ body {
 .md-font {
   color: white;
 }
+md-content {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
 md-toolbar h1 {
   margin: auto;
 }
@@ -124,8 +129,8 @@ md-dialog button {
 .Fab-container {
   z-index: 99;
   position: fixed;
-  bottom: 5px;
-  right: 10px;
+  bottom: 10px;
+  right: 20px;
   height: 200px;
   width: 58px;
   display: -webkit-flex;

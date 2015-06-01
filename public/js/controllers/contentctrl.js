@@ -2,10 +2,10 @@
   'use strict';
 
   controllers.controller('ContentCtrl',
-    ['$rootScope', '$scope', '$routeParams', '$location', '$q', '$mdToast', '$mdDialog',
-     'PageService', 'SettingsService',
-    function ($rootScope, $scope, $routeParams, $location, $q, $mdToast, $mdDialog,
-              pageService, settingsService) {
+    ['$rootScope', '$scope', '$routeParams', '$location', '$q', '$window',
+     '$mdToast', '$mdDialog', 'PageService', 'SettingsService',
+    function ($rootScope, $scope, $routeParams, $location, $q, $window,
+              $mdToast, $mdDialog, pageService, settingsService) {
       $scope.content = '';
       $scope.markdown = '';
       $scope.pageName = '';
@@ -140,6 +140,19 @@
             savePage($scope.pageName, result.commitMessage, $scope.markdown);
           }
         });
+      };
+
+
+      $scope.navigate = function (direction) {
+        if ($window.history.length === 0) {
+          return;
+        }
+
+        if (direction === 'back') {
+          $window.history.back();
+        } else {
+          $window.history.forward();
+        }
       };
 
       getPage(pageName).then(function () {

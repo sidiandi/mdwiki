@@ -54,5 +54,11 @@
       <md-icon md-font-icon="icon-save" class="EditContentSave-icon"></md-icon>
     </md-button>
   </div>
-  <div class="EditContent-content" ui-codemirror="{ onLoad : codemirrorLoaded }" ui-refresh="refresh" ui-save="save()" ng-model="markdown"></div>
+  <div class="EditContent-content"
+       ui-codemirror="{ onLoad : codemirrorLoaded }"
+       ui-refresh="refresh"
+       ui-save="save()"
+       ng-model="markdown"
+       ng-swipe-left="navigate('back')"
+       ng-swipe-right="navigate('forward')"></div>
 </div>

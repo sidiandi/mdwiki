@@ -43,7 +43,11 @@
 </script>
 
 <div class="ViewContent-container" ng-hide="isEditorVisible">
-  <div ng-bind-html="content" class="markdown-body"></div>
+  <div class="markdown-body"
+       ng-bind-html="content"
+       md-swipe-left="navigate('back')"
+       md-swipe-right="navigate('forward')">
+  </div>
 </div>
 <div class="EditContent-container" ng-show="isEditorVisible">
   <div class="EditContent-toolbar" flex layout="row" layout-align="start end">
@@ -58,7 +62,5 @@
        ui-codemirror="{ onLoad : codemirrorLoaded }"
        ui-refresh="refresh"
        ui-save="save()"
-       ng-model="markdown"
-       ng-swipe-left="navigate('back')"
-       ng-swipe-right="navigate('forward')"></div>
+       ng-model="markdown"></div>
 </div>

@@ -55,26 +55,6 @@ describe('githubContentProvider Tests', function () {
             });
       });
     });
-
-    describe('When the github returns a error', function () {
-      beforeEach(function () {
-        sandbox.stub(request, 'get').yields(new Error('server error'), null, null);
-      });
-
-      it('should reject this error', function (done) {
-        var lastError;
-
-        provider.getPageContent('index')
-            .catch(function (error) {
-              lastError = error;
-            })
-            .done(function () {
-              should.exists(lastError);
-              lastError.message.should.be.equal('server error');
-              done();
-            });
-      });
-    });
   });
 
   describe('getPageContentAsHtml tests', function () {

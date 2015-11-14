@@ -176,14 +176,14 @@ describe('githubContentProvider Tests', function () {
         var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/git.md?access_token=12345678';
         var expectedMessage = {
           message: 'this is a update for git page',
-          content: 'I2NvbnRlbnQgb2YgZ2l0IHBhZ2U=',
+          content: 'IyBjb250ZW50IG9mIGdpdCBwYWdl',
           branch: 'master',
           sha: '123456',
         };
         var expectedHtml = '<h1 id="content-of-git-page">content of git page</h1>\n';
 
         provider.oauth = '12345678';
-        provider.savePage('this is a update for git page', 'git', '#content of git page')
+        provider.savePage('this is a update for git page', 'git', '# content of git page')
           .catch(function (error) {
             lastError = error;
           })
@@ -211,13 +211,13 @@ describe('githubContentProvider Tests', function () {
         var expectedUrl = 'https://api.github.com/repos/janbaer/wiki-content/contents/newPage.md?access_token=12345678';
         var expectedMessage = {
           message: 'created a new page',
-          content: 'I2NvbnRlbnQgb2YgbmV3IHBhZ2U=',
+          content: 'IyBjb250ZW50IG9mIG5ldyBwYWdl',
           branch: 'master'
         };
         var expectedHtml = '<h1 id="content-of-new-page">content of new page</h1>\n';
 
         provider.oauth = '12345678';
-        provider.savePage('created a new page', 'newPage', '#content of new page')
+        provider.savePage('created a new page', 'newPage', '# content of new page')
           .catch(function (error) {
             lastError = error;
           })

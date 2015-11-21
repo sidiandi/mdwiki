@@ -21,16 +21,15 @@ describe('githubContentProvider Tests', function () {
 
   describe('getPageContent tests', function () {
     describe('When the page exists', function () {
-      var pageContent = 'content of index.md';
       beforeEach(function () {
-        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, pageContent);
+        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '{"name": "index.md", "content": "Q29udGVudA=="}');
       });
 
       it('should return the content of the page', function (done) {
         provider.getPageContent('index')
           .then(function (content) {
             should.exists(content);
-            content.should.be.equal(pageContent);
+            content.should.be.equal('Content');
           })
           .done(done);
       });
@@ -60,7 +59,7 @@ describe('githubContentProvider Tests', function () {
   describe('getPageContentAsHtml tests', function () {
     describe('When the page exists', function () {
       beforeEach(function () {
-        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '# Test');
+        sandbox.stub(request, 'get').yields(null, { statusCode: 200 }, '{"name": "index.md", "content": "IyBUZXN0"}');
       });
 
       it('should return the content of the page as html', function (done) {

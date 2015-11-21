@@ -70,6 +70,7 @@
     "karma-spec-reporter": "0.0.13",
     "matchdep": "~0.3.0",
     "mocha": "~2.2.5",
+    "phantomjs": "^1.9.18",
     "should": "~6.0.3",
     "sinon": "~1.14.1",
     "supertest": "~1.0.1"

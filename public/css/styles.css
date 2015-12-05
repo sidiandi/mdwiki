@@ -79,7 +79,7 @@ md-dialog-content {
   width: 100%;
 }
 .ViewContent-container {
-  margin-left: 15px;
+  margin: 15px 0 0 15px;
 }
 .SearchToolbar-container {
   -webkit-flex: 1 1 auto;

@@ -28,6 +28,7 @@ module.exports = function (config) {
       'public/js/app.js',
       'public/js/controllers/*.js',
       'public/js/services/*.js',
+      'public/js/directives/**/*.js',
       'public/js/directives.js',
       'public/js/filters.js',
       'test_client/jasmine-aliases.js',
@@ -70,7 +71,7 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['ChromeCanary'],
+    browsers: ['PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,

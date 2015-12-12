@@ -20,6 +20,7 @@ module.exports = function (grunt) {
         'public/js/filters.js',
         'public/js/services/*.js',
         'public/js/controllers/*.js',
+        'public/js/directives/**/*.js',
         'test_client/**/*.js'
       ],
       options: {
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
 
     concat: {
       options: {
-        sourceMap: false,
+        sourceMap: true,
         sourceMapStyle: 'inline',
         stripBanners: true
       },
@@ -68,9 +69,7 @@ module.exports = function (grunt) {
           'bower/angular-touch/angular-touch.js',
           'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
-          'bower/angular-ui-codemirror/ui-codemirror.js',
-          'bower/codemirror/lib/codemirror.js',
-          'bower/codemirror/mode/markdown/markdown.js'
+          'public/js/prism.js'
         ],
         dest: 'public/js/vendor.js'
       },
@@ -87,8 +86,8 @@ module.exports = function (grunt) {
         src: [
           // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
-          'bower/codemirror/lib/codemirror.css',
-          'public/css/markdown.css'
+          'public/css/markdown.css',
+          'public/css/prism.css'
         ],
         dest: 'public/css/vendor.css'
       }

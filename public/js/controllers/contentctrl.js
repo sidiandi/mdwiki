@@ -1,4 +1,4 @@
-(function (controllers, CodeMirror) {
+(function (controllers) {
   'use strict';
 
   controllers.controller('ContentCtrl',
@@ -12,22 +12,9 @@
       $scope.refresh = false;
       $scope.isEditorVisible = false;
 
-      $scope.codemirror = {
-        lineWrapping : true,
-        lineNumbers: true,
-        readOnly: 'nocursor',
-        mode: 'markdown',
-      };
-
       var settings = settingsService.get();
       var startPage = settings.startPage || 'index';
       var pageName = $routeParams.page || startPage;
-
-      $scope.codemirrorLoaded = function (editor) {
-        CodeMirror.commands.save = function () {
-          $scope.saveChanges();
-        };
-      };
 
       var prepareLinks = function (html, settings) {
         var $dom = $('<div>' + html + '</div>');
@@ -142,7 +129,6 @@
         });
       };
 
-
       $scope.navigate = function (direction) {
         if ($window.history.length === 0) {
           return;
@@ -190,7 +176,7 @@
     };
   }
 
-})(angular.module('mdwiki.controllers'), window.CodeMirror);
+})(angular.module('mdwiki.controllers'));
 
 
 

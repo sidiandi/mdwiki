@@ -1,4 +1,4 @@
-(function (services, CodeMirror) {
+(function (services) {
   'use strict';
 
   services.factory('EditorService', ['$rootScope', '$q',
@@ -6,9 +6,7 @@
       var getSelectedText = function () {
         var deferred = $q.defer();
 
-        $rootScope.$broadcast('CodeMirror', function (codemirror) {
-          deferred.resolve(codemirror.getSelection());
-        });
+        deferred.resolve('');
 
         return deferred.promise;
       };
@@ -18,4 +16,4 @@
       };
     }
   ]);
-})(angular.module('mdwiki.services'), window.CodeMirror);
+})(angular.module('mdwiki.services'));

@@ -68,7 +68,8 @@ module.exports = function (grunt) {
           'bower/angular-aria/angular-aria.js',
           'bower/angular-touch/angular-touch.js',
           'bower/angular-material/angular-material.js',
-          'bower/angular-cache/dist/angular-cache.js'
+          'bower/angular-cache/dist/angular-cache.js',
+          'bower/simplemde/dist/simplemde.min.js'
         ],
         dest: 'public/js/vendor.js'
       },
@@ -86,6 +87,7 @@ module.exports = function (grunt) {
         src: [
           // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
+          'bower/simplemde/dist/simplemde.min.css',
           'public/css/markdown.css'
         ],
         dest: 'public/css/vendor.css'

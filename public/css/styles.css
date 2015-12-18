@@ -198,11 +198,6 @@ md-dialog button {
           flex-direction: column;
   width: 100%;
 }
-.EditContent-container > EditContent-content {
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
 .EditContent-toolbar {
   position: fixed;
   display: -webkit-flex;
@@ -294,4 +289,49 @@ md-dialog button {
 .ng-cloak,
 .x-ng-cloak {
   display: none !important;
+}
+.EditContent-content {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+.EditContent-content .code-input,
+.EditContent-content .code-output {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border: none;
+  font-family: 'PT Mono', monospace;
+  font-size: 0.8rem;
+  background: transparent;
+  white-space: pre-wrap;
+  line-height: 1.5em;
+  word-wrap: break-word;
+}
+.EditContent-content .code-input {
+  opacity: 0;
+  margin: 0;
+  color: #999;
+  resize: none;
+}
+.EditContent-content .code-output {
+  pointer-events: none;
+  z-index: 3;
+  margin: 0;
+  overflow-y: auto;
+}
+.EditContent-content .code-output code {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 1rem;
+  display: block;
+  color: #666;
+  font-size: 0.8rem;
+  font-family: 'PT Mono', monospace;
 }

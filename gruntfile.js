@@ -68,8 +68,7 @@ module.exports = function (grunt) {
           'bower/angular-aria/angular-aria.js',
           'bower/angular-touch/angular-touch.js',
           'bower/angular-material/angular-material.js',
-          'bower/angular-cache/dist/angular-cache.js',
-          'public/js/prism.js'
+          'bower/angular-cache/dist/angular-cache.js'
         ],
         dest: 'public/js/vendor.js'
       },
@@ -77,6 +76,7 @@ module.exports = function (grunt) {
         src: [
           'public/js/app.js',
           'public/js/directives.js',
+          'public/js/directives/**/*.js',
           'public/js/services/*.js',
           'public/js/controllers/*.js',
         ],
@@ -86,8 +86,7 @@ module.exports = function (grunt) {
         src: [
           // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
-          'public/css/markdown.css',
-          'public/css/prism.css'
+          'public/css/markdown.css'
         ],
         dest: 'public/css/vendor.css'
       }
@@ -162,7 +161,7 @@ module.exports = function (grunt) {
       },
 
       less: {
-        files: ['public/css/**/*.less'],
+        files: ['public/css/**/*.less', 'public/js/directives/**/*.less'],
         tasks: ['less', 'autoprefixer', 'exec:rmTemp']
       },
 

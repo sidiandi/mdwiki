@@ -1,3 +1,11 @@
 <div class="EditContent-content">
-  {{ markdown }}
+  <div class="EditContent-toolbar" flex layout="row" layout-align="start end">
+    <md-button aria-label="Cancel changes" ng-click="cancelEdit()">
+      <md-icon md-font-icon="icon-remove" class="EditContentCancel-icon"></md-icon>
+    </md-button>
+    <md-button aria-label="Save changes" ng-click="saveChanges($event)">
+      <md-icon md-font-icon="icon-save" class="EditContentSave-icon"></md-icon>
+    </md-button>
+  </div>
+  <textarea></textarea>
 </div>

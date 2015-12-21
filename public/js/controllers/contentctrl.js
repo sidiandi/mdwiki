@@ -112,24 +112,23 @@
           });
       };
 
-      $scope.cancelEdit = function () {
-        hideEditor();
-      };
-
-      $scope.saveChanges = function (event) {
+      function saveChanges(event, commitMessage, markdown) {
         $mdDialog.show({
-          controller: ['$rootScope', '$scope', '$mdDialog', 'EditorService', CommitMessageDialogController],
+          controller: CommitMessageDialogController,
           templateUrl: 'commitMessageDialog',
-          targetEvent: event,
+          locals: {
+            commitMessage: commitMessage || 'Some changes for ' + $scope.pageName
+          },
+          targetEvent: event
         })
         .then(function(result) {
           if (!result.cancel) {
-            savePage($scope.pageName, result.commitMessage, $scope.markdown);
+            savePage($scope.pageName, result.commitMessage, markdown);
           }
         });
-      };
+      }
 
-      $scope.navigate = function (direction) {
+      $scope.navigate = function(direction) {
         if ($window.history.length === 0) {
           return;
         }
@@ -141,6 +140,14 @@
         }
       };
 
+      $scope.$on('cancelEdit', function() {
+        hideEditor();
+      });
+
+      $scope.$on('saveChanges', function(event, args){
+        saveChanges(args.event, args.commitMessage, args.markdown);
+      });
+
       getPage(pageName).then(function () {
         if ($routeParams.edit && $rootScope.isAuthenticated) {
           editPage(pageName);
@@ -151,14 +158,8 @@
     }
   ]);
 
-  function CommitMessageDialogController($rootScope, $scope, $mdDialog, editorService) {
-    $scope.commitMessage = 'Some changes for ' + $rootScope.pageName;
-
-    editorService.getSelectedText().then(function (selectedText) {
-      if (selectedText) {
-        $scope.commitMessage = selectedText;
-      }
-    });
+  function CommitMessageDialogController($scope, $mdDialog, commitMessage) {
+    $scope.commitMessage = commitMessage;
 
     $scope.hide = function() {
       $mdDialog.hide();
@@ -177,7 +178,3 @@
   }
 
 })(angular.module('mdwiki.controllers'));
-
-
-
-

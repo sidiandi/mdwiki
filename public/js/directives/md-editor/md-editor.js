@@ -20,7 +20,25 @@
           element: textArea,
           spellChecker: false,
           status: false,
-          previewRender: false
+          previewRender: false,
+          toolbar: [
+            'bold',
+            'italic',
+            'strikethrough',
+            'heading',
+            '|',
+            'horizontal-rule',
+            'quote',
+            'unordered-list',
+            'ordered-list',
+            '|',
+            'link',
+            'image',
+            'code',
+            '|',
+            'preview',
+            'guide'
+          ]
         };
         var simpleMDE = new SimpleMDE(options);
         CodeMirror.commands.save = saveChanges;

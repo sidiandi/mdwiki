@@ -20,6 +20,7 @@ module.exports = function (grunt) {
         'public/js/filters.js',
         'public/js/services/*.js',
         'public/js/controllers/*.js',
+        'public/js/directives/**/*.js',
         'test_client/**/*.js'
       ],
       options: {
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
 
     concat: {
       options: {
-        sourceMap: false,
+        sourceMap: true,
         sourceMapStyle: 'inline',
         stripBanners: true
       },
@@ -68,9 +69,7 @@ module.exports = function (grunt) {
           'bower/angular-touch/angular-touch.js',
           'bower/angular-material/angular-material.js',
           'bower/angular-cache/dist/angular-cache.js',
-          'bower/angular-ui-codemirror/ui-codemirror.js',
-          'bower/codemirror/lib/codemirror.js',
-          'bower/codemirror/mode/markdown/markdown.js'
+          'bower/simplemde/dist/simplemde.min.js'
         ],
         dest: 'public/js/vendor.js'
       },
@@ -78,6 +77,7 @@ module.exports = function (grunt) {
         src: [
           'public/js/app.js',
           'public/js/directives.js',
+          'public/js/directives/**/*.js',
           'public/js/services/*.js',
           'public/js/controllers/*.js',
         ],
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
         src: [
           // 'bower/angular-material/angular-material.css',
           'bower/font-awesome/css/font-awesome.css',
-          'bower/codemirror/lib/codemirror.css',
+          'bower/simplemde/dist/simplemde.min.css',
           'public/css/markdown.css'
         ],
         dest: 'public/css/vendor.css'
@@ -163,7 +163,7 @@ module.exports = function (grunt) {
       },
 
       less: {
-        files: ['public/css/**/*.less'],
+        files: ['public/css/**/*.less', 'public/js/directives/**/*.less'],
         tasks: ['less', 'autoprefixer', 'exec:rmTemp']
       },
 

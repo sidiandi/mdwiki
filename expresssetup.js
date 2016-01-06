@@ -33,6 +33,7 @@ module.exports.middleware = function (app, isProductionMode) {
 
 module.exports.staticRoutes = function (app) {
   app.use('/font', express.static(path.join(__dirname, 'public/font')));
+  app.use('/js', express.static(path.join(__dirname, 'public/js')));
   app.use('/views', express.static(path.join(__dirname, 'public/views')));
   app.use('/images', express.static(path.join(__dirname, 'public/images')));
 };

@@ -198,11 +198,6 @@ md-dialog button {
           flex-direction: column;
   width: 100%;
 }
-.EditContent-container > EditContent-content {
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
 .EditContent-toolbar {
   position: fixed;
   display: -webkit-flex;
@@ -245,6 +240,7 @@ md-dialog button {
       -ms-flex: 1;
           flex: 1;
   height: 100%;
+  font-size: medium;
 }
 .CodeMirror-scroll {
   overflow-y: scroll;
@@ -294,4 +290,10 @@ md-dialog button {
 .ng-cloak,
 .x-ng-cloak {
   display: none !important;
+}
+.EditContent-content {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
 }

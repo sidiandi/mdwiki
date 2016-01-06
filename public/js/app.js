@@ -8,7 +8,6 @@
     'ngMaterial',
     'ngTouch',
     'jmdobry.angular-cache',
-    'ui.codemirror',
     'mdwiki.controllers',
     'mdwiki.services',
     'mdwiki.directives',

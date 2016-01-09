@@ -49,6 +49,9 @@ md-toolbar h1 {
 md-toolbar .md-button {
   min-width: 40px;
 }
+.Page-container {
+  height: calc(100% - 64px);
+}
 /* Sidenav area */
 md-sidenav.md-locked-open {
   display: block;

@@ -1,8 +1,11 @@
-<div>
-  <h2>Search result:</h2>
-  <ul>
-      <li class="SearchResult-listItem" ng-repeat="result in searchResult">
+<div class="SearchResult-container">
+  <div class="markdown-body">
+    <h1>Search result</h1>
+
+    <ul>
+      <li ng-repeat="result in searchResult">
         <a href="/{{ result.name }}">{{result.name}}</a>
       </li>
-  </ul>
+    </ul>
+  </div>
 </div>

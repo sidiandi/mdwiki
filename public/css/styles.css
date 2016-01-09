@@ -277,15 +277,8 @@ md-dialog button {
   font-size: 1.4em;
   padding-left: 0;
 }
-.SearchResult-listItem {
-  line-height: 1.7em;
-  font-size: 1.2em;
-}
-.SearchResult-listItem a {
-  text-decoration: none;
-}
-.SearchResult-listItem a:hover {
-  text-decoration: underline;
+.SearchResult-container {
+  margin: 15px;
 }
 [ng\:cloak],
 [ng-cloak],

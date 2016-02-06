@@ -246,6 +246,9 @@ md-dialog button {
   width: 100%;
 }
 /*// Dialog for Save and New*/
+.ModalDialog-dialog {
+  min-height: 243px;
+}
 .ModalDialog-content {
   padding-top: 10px;
   width: 400px;

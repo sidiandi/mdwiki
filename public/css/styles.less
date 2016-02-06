@@ -209,12 +209,8 @@ md-dialog button {
 
 .EditContent-toolbar {
   position: fixed;
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  top: 95px;
-  left: 0;
-  padding-right: 28px;
+  top: 75px;
+  right: 28px;
   z-index: 100;
 }
 
@@ -239,16 +235,17 @@ md-dialog button {
   margin-top: 10px;
   border: 1px solid #eee;
   flex: 1;
-  height: 100%;
+  height: auto;
   font-size: medium;
+  display: flex;
 }
 
 .CodeMirror-scroll {
-  overflow-y: scroll;
-  overflow-x: hidden;
+  height: auto;
+  width: 100%;
 }
 
-// Dialog for Save and New
+/*// Dialog for Save and New*/
 .ModalDialog-dialog {
 
 }

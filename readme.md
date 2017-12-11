@@ -26,3 +26,5 @@ edit your pages in your favored markdown editor and push the changes to github. 
 
 For more informations about the project see the [wiki](https://github.com/janbaer/mdwiki/wiki) page of this repository. 
 We will write more technical informations about the project there.
+
+Let's try a [local link](more.md)
